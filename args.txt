@@ -1,5 +1,5 @@
-publish src
-run scripts/test_coin_a.move --signers 0x3 0x4
-view storage/0x00000000000000000000000000000003/resources/0x00000000000000000000000000000002::CoinA::CoinA.bcs
-view storage/0x00000000000000000000000000000004/resources/0x00000000000000000000000000000002::CoinA::CoinA.bcs
+sandbox publish src
+sandbox run scripts/test_coin_a.move --signers 0x3 0x4
+sandbox view storage/0x00000000000000000000000000000003/resources/0x00000000000000000000000000000002::CoinA::CoinA.bcs
+sandbox view storage/0x00000000000000000000000000000004/resources/0x00000000000000000000000000000002::CoinA::CoinA.bcs
 
