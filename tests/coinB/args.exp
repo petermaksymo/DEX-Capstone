@@ -1,0 +1,11 @@
+Command `sandbox publish ../../src`:
+Command `sandbox run test_coin_b.move --signers 0x3 0x4`:
+[debug] 100
+[debug] 25
+[debug] 75
+[debug] 25
+[debug] 10
+[debug] 85
+[debug] 15
+[debug] 85
+[debug] 15
