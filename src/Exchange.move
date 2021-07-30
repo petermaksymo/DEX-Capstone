@@ -80,10 +80,31 @@ module Exchange{
 	//
 
 	//Initialize the exchange with commision rate and 0's for coins
-	public fun initialize(exchange_acct: &signer, comm_rate: u64) {
-		move_to<Exchange>(exchange_acct, Exchange { coin_a: CoinA::mint(0, exchange_acct), 
-							    coin_b: CoinB::mint(0, exchange_acct),
-							    LP_minted: 0,
+	public fun initialize(exchange_initializer: &signer, exchange_acct: &signer, comm_rate: u64, coin_a_amt: u64, coin_b_amt: u64) acquires LPCoin {
+		//Make sure initializer has enough funds
+		let initializer_addr = Signer::address_of(exchange_initializer);
+		assert(CoinA::exist_at(initializer_addr), 1);
+		assert(CoinA::get_value(initializer_addr) >= coin_a_amt, 2);
+		assert(CoinB::exist_at(initializer_addr), 1);
+		assert(CoinB::get_value(initializer_addr) >= coin_b_amt, 2);
+
+		//Transfer funds from exchange initializer to exchange 
+		let coin_a_transferred = CoinA::transfer_between(exchange_initializer, exchange_acct, coin_a_amt);
+		let coin_b_transferred = CoinB::transfer_between(exchange_initializer, exchange_acct, coin_b_amt);
+
+		//Calculate the amount of LP to give to intializer (setting equal to CoinA)
+		//FIXME: IDK if this is best way
+		let lp_coin_amt = coin_a_transferred;
+		let minted_lp_coin_amt = mint(lp_coin_amt, exchange_acct);
+		let transferred_lp_coin_amt = transfer_between(exchange_acct, exchange_initializer, lp_coin_amt);
+		let burned_lp_coin_amt = burn(exchange_acct);
+
+		assert(minted_lp_coin_amt == transferred_lp_coin_amt, 1);
+		assert(burned_lp_coin_amt == minted_lp_coin_amt, 1);
+
+		move_to<Exchange>(exchange_acct, Exchange { coin_a: coin_a_transferred, 
+							    coin_b: coin_b_transferred,
+							    LP_minted: transferred_lp_coin_amt,
 							    comm_rate: comm_rate});
 
 	}
@@ -109,7 +130,7 @@ module Exchange{
 	}
 
 	//Add liquidity to Pool
-	public fun add_liquidity(coin_a_amt: u64, provider: &signer, exchange: &signer): u64 acquires Exchange {
+	public fun add_liquidity(coin_a_amt: u64, provider: &signer, exchange: &signer): u64 acquires Exchange, LPCoin {
 		//Get exchange addr to avoid multiple calls to Signer::address_of
 		let exchange_addr = Signer::address_of(exchange);
 
@@ -124,71 +145,50 @@ module Exchange{
 		//Get Exchange
 		let exchange_obj = borrow_global_mut<Exchange>(exchange_addr);
 
-		//Check if pool is empty
-		if(exchange_obj.coin_a == 0 && exchange_obj.coin_b == 0 && exchange_obj.LP_minted == 0){
+		//Get current exchange balances
+		let exchange_coin_a_balance = exchange_obj.coin_a;
+		let exchange_coin_b_balance = exchange_obj.coin_b;
+		let exchange_lp_coin_balance = exchange_obj.LP_minted;
 
-			//If all 0 require equal amounts of all coins
-			//FIXME: This probably isn't the best idea...
-			let coin_b_amt = coin_a_amt;
-			let lp_coin_amt = coin_a_amt;
-			
-			//Check that Provider has the required funds
-			assert(CoinA::exist_at(provider_addr), 1);
-			assert(CoinA::get_value(provider_addr) >= coin_a_amt, 2);
-			assert(CoinB::exist_at(provider_addr), 1);
-			assert(CoinB::get_value(provider_addr) >= coin_b_amt, 2);
+		//Calculate required amount of CoinB from provider
+		let new_coin_b_balance = exchange_coin_b_balance + {{exchange_coin_b_balance * coin_a_amt} / exchange_coin_a_balance};
+		let coin_b_amt = new_coin_b_balance - exchange_coin_b_balance;
 
-			//Transfer CoinA funds from provider to exchange
-			let transferred_coin_a = CoinA::transfer_between(provider, exchange, coin_a_amt);
-			exchange_obj.coin_a = exchange_obj.coin_a + transferred_coin_a;
+		//Make sure provider has enough of each coin
+		assert(CoinA::exist_at(provider_addr), 1);
+		assert(CoinA::get_value(provider_addr) >= coin_a_amt, 2);
+		assert(CoinB::exist_at(provider_addr), 1);
+		assert(CoinB::get_value(provider_addr) >= coin_b_amt, 2);
 
-			//Transfer CoinB funds from provider to exchange
-			let transferred_coin_b = CoinB::transfer_between(provider, exchange, coin_b_amt);
-			exchange_obj.coin_b = exchange_obj.coin_b + transferred_coin_b;
+		//Calculate LP coin required to mint
+		let new_lp_coin_balance = exchange_lp_coin_balance + {{exchange_lp_coin_balance * coin_a_amt} / exchange_coin_a_balance};
+		let lp_coin_amt = new_lp_coin_balance - exchange_lp_coin_balance;
 
-			//Mint LPCoin for provider
-			let lp_minted = mint(lp_coin_amt, provider);
+		//Transfer CoinA funds from provider to exchange
+		let transferred_coin_a = CoinA::transfer_between(provider, exchange, coin_a_amt);
+		exchange_obj.coin_a = exchange_obj.coin_a + transferred_coin_a;
 
-			//Add LPCoin amount to exchange
-			exchange_obj.LP_minted = exchange_obj.LP_minted + lp_minted;
-
-			lp_minted
-		}else{
-			//If exchange isn't empty we need to calculate the proper amounts of each coin
-			let exchange_coin_a_balance = exchange_obj.coin_a;
-			let exchange_coin_b_balance = exchange_obj.coin_b;
-			let exchange_lp_coin_balance = exchange_obj.LP_minted;
-
-			//Calculate required amount of CoinB from provider
-			let new_coin_b_balance = exchange_coin_b_balance + {{exchange_coin_b_balance * coin_a_amt} / exchange_coin_a_balance};
-			let coin_b_amt = new_coin_b_balance - exchange_coin_b_balance;
-
-			//Make sure provider has enough of each coin
-			assert(CoinA::exist_at(provider_addr), 1);
-			assert(CoinA::get_value(provider_addr) >= coin_a_amt, 2);
-			assert(CoinB::exist_at(provider_addr), 1);
-			assert(CoinB::get_value(provider_addr) >= coin_b_amt, 2);
-
-			//Calculate LP coin required to mint
-			let new_lp_coin_balance = exchange_lp_coin_balance + {{exchange_lp_coin_balance * coin_a_amt} / exchange_coin_a_balance};
-			let lp_coin_amt = new_lp_coin_balance - exchange_lp_coin_balance;
-
-			//Transfer CoinA funds from provider to exchange
-			let transferred_coin_a = CoinA::transfer_between(provider, exchange, coin_a_amt);
-			exchange_obj.coin_a = exchange_obj.coin_a + transferred_coin_a;
-
-			//Transfer CoinB funds from provider to exchange
-			let transferred_coin_b = CoinB::transfer_between(provider, exchange, coin_b_amt);
-			exchange_obj.coin_b = exchange_obj.coin_b + transferred_coin_b;
+		//Transfer CoinB funds from provider to exchange
+		let transferred_coin_b = CoinB::transfer_between(provider, exchange, coin_b_amt);
+		exchange_obj.coin_b = exchange_obj.coin_b + transferred_coin_b;
+	
+		//Mint LPCoin for exchange
+		let lp_coin_minted = mint(lp_coin_amt, exchange);
 		
-			//Mint LPCoin for provider
-			let lp_minted = mint(lp_coin_amt, provider);
+		//Transfer LPCoin to provider
+		let lp_coin_transferred = transfer_between(exchange, provider, lp_coin_minted);
+		
+		//Burn LPCoin in exchange
+		let lp_coin_burned = burn(exchange);
 
-			//Add LPCoin amount to exhcange
-			exchange_obj.LP_minted = exchange_obj.LP_minted + lp_minted;
+		assert(lp_coin_minted == lp_coin_amt, 3);
+		assert(lp_coin_transferred == lp_coin_amt, 3);
+		assert(lp_coin_burned == lp_coin_amt, 3);
 
-			lp_minted
-		}
+		//Add LPCoin amount to exhcange
+		exchange_obj.LP_minted = exchange_obj.LP_minted + lp_coin_minted;
+
+		lp_coin_minted
 	}
 
 	//Function for removing liquidity
