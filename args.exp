@@ -1,5 +1,5 @@
-Command `publish src`:
-Command `run scripts/test_coin_a.move --signers 0x3 0x4`:
+Command `sandbox publish src`:
+Command `sandbox run scripts/test_coin_a.move --signers 0x3 0x4`:
 [debug] 100
 [debug] 25
 [debug] 75
@@ -7,11 +7,11 @@ Command `run scripts/test_coin_a.move --signers 0x3 0x4`:
 [debug] 10
 [debug] 85
 [debug] 15
-Command `view storage/0x00000000000000000000000000000003/resources/0x00000000000000000000000000000002::CoinA::CoinA.bcs`:
+Command `sandbox view storage/0x00000000000000000000000000000003/resources/0x00000000000000000000000000000002::CoinA::CoinA.bcs`:
 drop store key 0x2::CoinA::CoinA {
     value: 85
 }
-Command `view storage/0x00000000000000000000000000000004/resources/0x00000000000000000000000000000002::CoinA::CoinA.bcs`:
+Command `sandbox view storage/0x00000000000000000000000000000004/resources/0x00000000000000000000000000000002::CoinA::CoinA.bcs`:
 drop store key 0x2::CoinA::CoinA {
     value: 15
 }
