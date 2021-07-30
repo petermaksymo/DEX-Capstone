@@ -15,8 +15,8 @@ You can then run scripts with:
 move sandbox run scripts/<script_name>
 ```
 
-##Testing:
-Testing can be done with option coverage check:
+## Testing:
+Testing can be done with the optional coverage check:
 ```
 move sandbox test --track-cov ./
 ```

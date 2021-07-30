@@ -100,7 +100,7 @@ module Exchange{
 		let burned_lp_coin_amt = burn(exchange_acct);
 
 		assert(minted_lp_coin_amt == transferred_lp_coin_amt, 1);
-		assert(burned_lp_coin_amt == minted_lp_coin_amt, 1);
+		assert(burned_lp_coin_amt == 0, 1);
 
 		move_to<Exchange>(exchange_acct, Exchange { coin_a: coin_a_transferred, 
 							    coin_b: coin_b_transferred,
@@ -183,7 +183,7 @@ module Exchange{
 
 		assert(lp_coin_minted == lp_coin_amt, 3);
 		assert(lp_coin_transferred == lp_coin_amt, 3);
-		assert(lp_coin_burned == lp_coin_amt, 3);
+		assert(lp_coin_burned == 0, 3);
 
 		//Add LPCoin amount to exhcange
 		exchange_obj.LP_minted = exchange_obj.LP_minted + lp_coin_minted;
@@ -248,12 +248,23 @@ module Exchange{
 		//Transfer LPCoin from provider to exchange and burn
 		let transferred_lp_coin = transfer_between(provider, exchange, lp_coin_amt);
 		let burned_lp_coin = burn(exchange);
+		assert(transferred_lp_coin == lp_coin_amt, 2);
 		assert(burned_lp_coin == transferred_lp_coin, 3);
+
+		exchange_obj.LP_minted = exchange_obj.LP_minted - burned_lp_coin;
 
 		(coin_a_amt, coin_b_amt)
 	}
 
-	//Get pricing for exchange including commision rate
+	//Get pricing for output amount given input amount including commision rate
+	fun get_input_price(input_amount: u64, input_reserve: u64, output_reserve: u64): u64 {
+		//FIXME: change fixed amounts based on commision rate provided to exchange
+		let numerator = input_amount * 997 * output_reserve ;
+		let denominator = {input_reserve * 1000} + {input_amount * 997};
+		numerator / denominator
+	}
+
+	//Get pricing for input amount given output amount including commision rate
 	fun get_output_price(output_amount: u64, input_reserve: u64, output_reserve: u64): u64 {
 		//FIXME: change fixed amounts based on commision rate provided to exchange
 		let numerator = input_reserve * output_amount * 1000;
@@ -285,8 +296,8 @@ module Exchange{
 		let exchange_coin_b_balance = exchange_obj.coin_b;
 
 		//Calculate required CoinB from exchange
-		let coin_b_amt = get_output_price(coin_a_amt, exchange_coin_b_balance, exchange_coin_a_balance);
-	
+		let coin_b_amt = get_input_price(coin_a_amt, exchange_coin_a_balance, exchange_coin_b_balance);
+
 		//Make sure exchange has enough CoinB
 		assert(exchange_coin_b_balance >= coin_b_amt, 2);
 
@@ -325,7 +336,7 @@ module Exchange{
 		let exchange_coin_b_balance = exchange_obj.coin_b;
 
 		//Calculate required CoinB from exchange
-		let coin_a_amt = get_output_price(coin_b_amt, exchange_coin_a_balance, exchange_coin_b_balance);
+		let coin_a_amt = get_input_price(coin_b_amt, exchange_coin_b_balance, exchange_coin_a_balance);
 	
 		//Make sure exchange has enough CoinA
 		assert(exchange_coin_a_balance >= coin_a_amt, 2);
