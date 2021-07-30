@@ -23,8 +23,17 @@ module Exchange{
 
 	//Generate new LP coin resource at account's address with 
 	//number of LP coins = amount
-	fun mint(amount: u64, account: &signer): u64 {
-		move_to<LPCoin>(account, LPCoin { value: amount });
+	fun mint(amount: u64, account: &signer): u64 acquires LPCoin {
+		//Get account address
+		let account_addr = Signer::address_of(account);
+
+		//Check if account has coin
+		if(exist_at(account_addr)) {
+			let account_lp_coin = borrow_global_mut<LPCoin>(account_addr);
+			account_lp_coin.value = account_lp_coin.value + amount;
+		}else{
+			move_to<LPCoin>(account, LPCoin { value: amount });
+		};
 		amount
 	}
 
@@ -95,16 +104,13 @@ module Exchange{
 		//Calculate the amount of LP to give to intializer (setting equal to CoinA)
 		//FIXME: IDK if this is best way
 		let lp_coin_amt = coin_a_transferred;
-		let minted_lp_coin_amt = mint(lp_coin_amt, exchange_acct);
-		let transferred_lp_coin_amt = transfer_between(exchange_acct, exchange_initializer, lp_coin_amt);
-		let burned_lp_coin_amt = burn(exchange_acct);
+		let minted_lp_coin_amt = mint(lp_coin_amt, exchange_initializer);
 
-		assert(minted_lp_coin_amt == transferred_lp_coin_amt, 1);
-		assert(burned_lp_coin_amt == 0, 1);
+		assert(minted_lp_coin_amt == lp_coin_amt, 1);
 
 		move_to<Exchange>(exchange_acct, Exchange { coin_a: coin_a_transferred, 
 							    coin_b: coin_b_transferred,
-							    LP_minted: transferred_lp_coin_amt,
+							    LP_minted: minted_lp_coin_amt,
 							    comm_rate: comm_rate});
 
 	}
@@ -173,17 +179,9 @@ module Exchange{
 		exchange_obj.coin_b = exchange_obj.coin_b + transferred_coin_b;
 	
 		//Mint LPCoin for exchange
-		let lp_coin_minted = mint(lp_coin_amt, exchange);
+		let lp_coin_minted = mint(lp_coin_amt, provider);
 		
-		//Transfer LPCoin to provider
-		let lp_coin_transferred = transfer_between(exchange, provider, lp_coin_minted);
-		
-		//Burn LPCoin in exchange
-		let lp_coin_burned = burn(exchange);
-
 		assert(lp_coin_minted == lp_coin_amt, 3);
-		assert(lp_coin_transferred == lp_coin_amt, 3);
-		assert(lp_coin_burned == 0, 3);
 
 		//Add LPCoin amount to exhcange
 		exchange_obj.LP_minted = exchange_obj.LP_minted + lp_coin_minted;
