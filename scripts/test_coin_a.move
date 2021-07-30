@@ -1,6 +1,6 @@
 script {
-    use 0x1::Debug;
-    use 0x1::Signer;
+    use Std::Debug;
+    use Std::Signer;
     use 0x2::CoinA;
 
     fun main(acct_a: signer, acct_b: signer) {

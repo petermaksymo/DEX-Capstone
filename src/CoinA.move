@@ -1,6 +1,7 @@
 address 0x2{
 module CoinA {
-    use 0x1::Signer;
+
+    use Std::Signer;
 
     struct CoinA has key, store, drop {
         value: u64
