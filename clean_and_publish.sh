@@ -1,2 +1,2 @@
-move clean
-move publish src
+move sandbox clean
+move sandbox publish src
