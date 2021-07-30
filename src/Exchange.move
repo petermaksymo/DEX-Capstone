@@ -116,6 +116,11 @@ module Exchange{
 		//Get proivder addr to avoid multiple calls to Signer::address_of
 		let provider_addr = Signer::address_of(provider);
 
+		//Make sure exchange exists
+		assert(exists_at(exchange_addr), 1);
+		assert(CoinA::exist_at(exchange_addr), 1);
+		assert(CoinB::exist_at(exchange_addr), 1);
+		
 		//Get Exchange
 		let exchange_obj = borrow_global_mut<Exchange>(exchange_addr);
 
@@ -194,6 +199,11 @@ module Exchange{
 		//Get provider addr to avoid multiple calls to Signer::address_of
 		let provider_addr = Signer::address_of(provider);
 
+		//Make sure exchange exists
+		assert(exists_at(exchange_addr), 1);
+		assert(CoinA::exist_at(exchange_addr), 1);
+		assert(CoinB::exist_at(exchange_addr), 1);
+		
 		//Get exchange_obj
 		let exchange_obj = borrow_global_mut<Exchange>(exchange_addr);
 
@@ -241,6 +251,94 @@ module Exchange{
 		assert(burned_lp_coin == transferred_lp_coin, 3);
 
 		(coin_a_amt, coin_b_amt)
+	}
+
+	//Get pricing for exchange including commision rate
+	fun get_output_price(output_amount: u64, input_reserve: u64, output_reserve: u64): u64 {
+		//FIXME: change fixed amounts based on commision rate provided to exchange
+		let numerator = input_reserve * output_amount * 1000;
+		let denominator = {output_reserve - output_amount} * 997;
+		{numerator / denominator} + 1
+	}
+
+	public fun swap_coinA_to_coinB(coin_a_amt: u64, swapper: &signer, exchange: &signer): u64 acquires Exchange {
+		//Get exchange address to avoid multiple calls to Signer::address_of
+		let exchange_addr = Signer::address_of(exchange);
+
+		//Get swapper address to avoid multiple calls to Signer::address_of
+		let swapper_addr = Signer::address_of(swapper);
+
+		//Make sure exchange exists
+		assert(exists_at(exchange_addr), 1);
+		assert(CoinA::exist_at(exchange_addr), 1);
+		assert(CoinB::exist_at(exchange_addr), 1);
+		
+		//Get exchange
+		let exchange_obj = borrow_global_mut<Exchange>(exchange_addr);
+
+		//Make sure swapper has enough of CoinA
+		assert(CoinA::exist_at(swapper_addr), 1);
+		assert(CoinA::get_value(swapper_addr) >= coin_a_amt, 2);
+
+		//Get current exchange balances
+		let exchange_coin_a_balance = exchange_obj.coin_a;
+		let exchange_coin_b_balance = exchange_obj.coin_b;
+
+		//Calculate required CoinB from exchange
+		let coin_b_amt = get_output_price(coin_a_amt, exchange_coin_b_balance, exchange_coin_a_balance);
+	
+		//Make sure exchange has enough CoinB
+		assert(exchange_coin_b_balance >= coin_b_amt, 2);
+
+		//Transfer CoinA funds from swapper to exchange
+		let transferred_coin_a = CoinA::transfer_between(swapper, exchange, coin_a_amt);
+		exchange_obj.coin_a = exchange_obj.coin_a + transferred_coin_a;
+	
+		//Transfer CoinB funds from exchange to swapper
+		let transferred_coin_b = CoinB::transfer_between(exchange, swapper, coin_b_amt);
+		exchange_obj.coin_b = exchange_obj.coin_b - transferred_coin_b;
+
+		transferred_coin_b
+	}
+
+	public fun swap_coinB_to_coinA(coin_b_amt: u64, swapper: &signer, exchange: &signer): u64 acquires Exchange {
+		//Get exchange address to avoid multiple calls to Signer::address_of
+		let exchange_addr = Signer::address_of(exchange);
+
+		//Get swapper address to avoid multiple calls to Signer::address_of
+		let swapper_addr = Signer::address_of(swapper);
+
+		//Make sure exchange exists
+		assert(exists_at(exchange_addr), 1);
+		assert(CoinA::exist_at(exchange_addr), 1);
+		assert(CoinB::exist_at(exchange_addr), 1);
+		
+		//Get exchange
+		let exchange_obj = borrow_global_mut<Exchange>(exchange_addr);
+
+		//Make sure swapper has enough of CoinB
+		assert(CoinB::exist_at(swapper_addr), 1);
+		assert(CoinB::get_value(swapper_addr) >= coin_b_amt, 2);
+
+		//Get current exchange balances
+		let exchange_coin_a_balance = exchange_obj.coin_a;
+		let exchange_coin_b_balance = exchange_obj.coin_b;
+
+		//Calculate required CoinB from exchange
+		let coin_a_amt = get_output_price(coin_b_amt, exchange_coin_a_balance, exchange_coin_b_balance);
+	
+		//Make sure exchange has enough CoinA
+		assert(exchange_coin_a_balance >= coin_a_amt, 2);
+
+		//Transfer CoinB funds from swapper to exchange
+		let transferred_coin_b = CoinB::transfer_between(swapper, exchange, coin_b_amt);
+		exchange_obj.coin_b = exchange_obj.coin_b + transferred_coin_b;
+	
+		//Transfer CoinA funds from exchange to swapper
+		let transferred_coin_a = CoinA::transfer_between(exchange, swapper, coin_a_amt);
+		exchange_obj.coin_a = exchange_obj.coin_a - transferred_coin_a;
+
+		transferred_coin_a
 	}
 }
 }
