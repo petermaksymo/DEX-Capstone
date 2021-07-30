@@ -1,0 +1,6 @@
+# local move build and storage files
+/build/
+/storage/
+
+# IDE files
+.idea/
