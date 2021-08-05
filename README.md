@@ -12,7 +12,7 @@ Run our `clean_and_publish.sh` script to publish the DEX modules:
 ```
 You can then run scripts with:
 ```
-move sandbox run scripts/<script_name>
+./better_move.sh run scripts/<script_name>
 ```
 
 ## Testing:
@@ -20,3 +20,8 @@ Testing can be done with the optional coverage check:
 ```
 move sandbox test --track-cov ./
 ```
+
+To update the baseline of test cases:
+'''
+UPDATE_BASELINE=1 move sandbox test ./
+'''

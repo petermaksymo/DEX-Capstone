@@ -14,7 +14,7 @@ script {
 
         // Test exists_at and initialize
         Debug::print(&Exchange::exists_at(exch_addr));
-        Exchange::initialize(&acct_a, &exch_acct, 997, 100, 100);
+        Exchange::initialize(&acct_a, &exch_acct, 30, 100, 100);
         Debug::print(&Exchange::exists_at(exch_addr));
 
         TestExchange::print_exchange(&exch_acct);

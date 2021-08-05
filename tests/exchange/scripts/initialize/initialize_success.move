@@ -8,7 +8,7 @@ script {
         CoinB::mint(5000, &acct_a);
 
         // Test initialize
-        Exchange::initialize(&acct_a, &exch_acct, 997, 500, 5000);
+        Exchange::initialize(&acct_a, &exch_acct, 30, 500, 5000);
 
         CoinA::burn(&acct_a);
         CoinB::burn(&acct_a);

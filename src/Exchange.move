@@ -255,18 +255,18 @@ module Exchange{
 	}
 
 	//Get pricing for output amount given input amount including commision rate
-	fun get_input_price(input_amount: u64, input_reserve: u64, output_reserve: u64): u64 {
+	fun get_input_price(comm_rate: u64, input_amount: u64, input_reserve: u64, output_reserve: u64): u64 {
 		//FIXME: change fixed amounts based on commision rate provided to exchange
-		let numerator = input_amount * 997 * output_reserve ;
-		let denominator = {input_reserve * 1000} + {input_amount * 997};
+		let numerator = input_amount * (10000 - comm_rate) * output_reserve ;
+		let denominator = {input_reserve * 10000} + {input_amount * (10000 - comm_rate)};
 		numerator / denominator
 	}
 
 	//Get pricing for input amount given output amount including commision rate
-	fun get_output_price(output_amount: u64, input_reserve: u64, output_reserve: u64): u64 {
+	fun get_output_price(comm_rate: u64, output_amount: u64, input_reserve: u64, output_reserve: u64): u64 {
 		//FIXME: change fixed amounts based on commision rate provided to exchange
-		let numerator = input_reserve * output_amount * 1000;
-		let denominator = {output_reserve - output_amount} * 997;
+		let numerator = input_reserve * output_amount * 10000;
+		let denominator = {output_reserve - output_amount} * (10000 - comm_rate);
 		{numerator / denominator} + 1
 	}
 
@@ -292,9 +292,10 @@ module Exchange{
 		//Get current exchange balances
 		let exchange_coin_a_balance = exchange_obj.coin_a;
 		let exchange_coin_b_balance = exchange_obj.coin_b;
+		let exchange_comm_rate = exchange_obj.comm_rate;
 
 		//Calculate required CoinB from exchange
-		let coin_b_amt = get_input_price(coin_a_amt, exchange_coin_a_balance, exchange_coin_b_balance);
+		let coin_b_amt = get_input_price(exchange_comm_rate, coin_a_amt, exchange_coin_a_balance, exchange_coin_b_balance);
 
 		//Make sure exchange has enough CoinB
 		assert(exchange_coin_b_balance >= coin_b_amt, 2);
@@ -332,9 +333,10 @@ module Exchange{
 		//Get current exchange balances
 		let exchange_coin_a_balance = exchange_obj.coin_a;
 		let exchange_coin_b_balance = exchange_obj.coin_b;
+		let exchange_comm_rate = exchange_obj.comm_rate;
 
 		//Calculate required CoinB from exchange
-		let coin_a_amt = get_input_price(coin_b_amt, exchange_coin_b_balance, exchange_coin_a_balance);
+		let coin_a_amt = get_input_price(exchange_comm_rate, coin_b_amt, exchange_coin_b_balance, exchange_coin_a_balance);
 	
 		//Make sure exchange has enough CoinA
 		assert(exchange_coin_a_balance >= coin_a_amt, 2);
