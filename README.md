@@ -22,6 +22,6 @@ move sandbox test --track-cov ./
 ```
 
 To update the baseline of test cases:
-'''
+```
 UPDATE_BASELINE=1 move sandbox test ./
-'''
+```
