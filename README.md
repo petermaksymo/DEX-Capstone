@@ -63,4 +63,4 @@ To execute script
 ```
 dev execute 0000000000000000000000000a550c18 <path to script from the compiled result> [parameters]
 ```
-Note: Script execution can only be done with root account on local net as far we can tell. Other accounts have to be passed as an address. We will need to discuss the workflow once Noah and Peter come back
+Note: Script execution can only be done with root account on local net as far we can tell. The signer for the root account is automatically passed as the first argument. Other accounts have to be passed as an address. We will need to discuss the end-user workflow once Noah and Peter come back. 
