@@ -61,6 +61,6 @@ Note: Module has to be at address 0x1 to be sucessfully published
 
 To execute script
 ```
-dev execute 0000000000000000000000000a550c18 <path to script from the compiled result>
+dev execute 0000000000000000000000000a550c18 <path to script from the compiled result> [parameters]
 ```
-Note: we still have to figure out how to pass an argument to the script executed
+Note: Script execution can only be done with root account on local net as far we can tell. Other accounts have to be passed as an address. We will need to discuss the workflow once Noah and Peter come back
