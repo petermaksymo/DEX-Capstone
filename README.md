@@ -39,7 +39,7 @@ Then in a new terminal, run diem client with follow command (replace variable wi
 cargo run -p cli -- -c $CHAIN_ID -m $ROOT_KEY -u $endpoint --waypoint $WAYPOINT
 ```
 
-In diem client, compile modules to be published
+In diem client, enable custom_scripts `dev s` and then compile modules to be published
 ```
 dev c <path to src folder> language/move-stdlib/modules language/move-stdlib/nursery
 ```
@@ -57,10 +57,24 @@ To publish modules
 ```
 dev publish 0000000000000000000000000a550c18 <path to module from the compiled result>
 ```
-Note: Module has to be at address 0x1 to be sucessfully published 
+Note: Module has to be at address 0x1 to be successfully published 
 
 To execute script
 ```
 dev execute 0000000000000000000000000a550c18 <path to script from the compiled result> [parameters]
 ```
 Note: Script execution can only be done with root account on local net as far we can tell. The signer for the root account is automatically passed as the first argument. Other accounts have to be passed as an address. We will need to discuss the end-user workflow once Noah and Peter come back. 
+
+
+## Creating Parent VASP Account
+
+Generate an auth key and address using the client from the python sdk [client](https://github.com/diem/my-first-client/tree/master/python/src).
+
+Using the top half of the authentication_key as the dummy_prefix in create_parent_vasp_account.move.
+
+Compile the script and then execute it as the TC account, with the address of the account you created (from the client) as the argument.
+```
+dev execute <TC account address> <loaction of compiled code> <address of account>
+```
+
+You can inspect it with `query account_state <address>`
