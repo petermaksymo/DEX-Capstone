@@ -4,8 +4,10 @@
 
 Install the move cli with optional debug flag:
 ```
-cargo install --debug --git https://github.com/diem/diem#8bf547ff move-cli
+cargo install --debug --git https://github.com/diem/diem#6ab59227 move-cli
 ```
+CD into the `dex_modules` directory which contains our Move modules/scripts
+
 Run our `clean_and_publish.sh` script to publish the DEX modules:
 ```
 ./clean_and_publish.sh
@@ -16,14 +18,14 @@ You can then run scripts with:
 ```
 
 ## Testing:
-Testing can be done with the optional coverage check:
+Testing can be done with:
 ```
-move sandbox test --track-cov ./
+move sandbox exp-test
 ```
 
 To update the baseline of test cases:
 ```
-UPDATE_BASELINE=1 move sandbox test ./
+UPDATE_BASELINE=1 move sandbox exp-test
 ```
 
 ## Publishing to local test net:

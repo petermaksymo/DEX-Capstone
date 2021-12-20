@@ -44,7 +44,7 @@ module Exchange{
 
 	//Destroy resource located at account's address
 	fun burn(account: &signer): u64 acquires LPCoin {
-		assert(exist_at(Signer::address_of(account)), 1);
+		assert!(exist_at(Signer::address_of(account)), 1);
 		let LPCoin { value: value } = move_from<LPCoin>(Signer::address_of(account));
 		value
 	}
@@ -63,8 +63,8 @@ module Exchange{
 		//Make sure that from_addr has LP coins and that the 
 		//value at from_addr is at least as much as the tranfer amount
 		//Otherwise break -> MAKE THE USER GIVE US GOOD DATA
-		assert(exist_at(from_addr), 1);
-		assert(get_value(from_addr) >= transfer_amt, 2);
+		assert!(exist_at(from_addr), 1);
+		assert!(get_value(from_addr) >= transfer_amt, 2);
 
 		//If to_addr doesn't have LPCoin resource mint it for them
 		//with value of 0 (No free money for them :) )
@@ -92,10 +92,10 @@ module Exchange{
 	public fun initialize(exchange_initializer: &signer, exchange_acct: &signer, comm_rate: u64, coin_a_amt: u64, coin_b_amt: u64) acquires LPCoin {
 		//Make sure initializer has enough funds
 		let initializer_addr = Signer::address_of(exchange_initializer);
-		assert(CoinA::exist_at(initializer_addr), 1);
-		assert(CoinA::get_value(initializer_addr) >= coin_a_amt, 2);
-		assert(CoinB::exist_at(initializer_addr), 1);
-		assert(CoinB::get_value(initializer_addr) >= coin_b_amt, 2);
+		assert!(CoinA::exist_at(initializer_addr), 1);
+		assert!(CoinA::get_value(initializer_addr) >= coin_a_amt, 2);
+		assert!(CoinB::exist_at(initializer_addr), 1);
+		assert!(CoinB::get_value(initializer_addr) >= coin_b_amt, 2);
 
 		//Transfer funds from exchange initializer to exchange 
 		let coin_a_transferred = CoinA::transfer_between(exchange_initializer, exchange_acct, coin_a_amt);
@@ -106,7 +106,7 @@ module Exchange{
 		let lp_coin_amt = coin_a_transferred;
 		let minted_lp_coin_amt = mint(lp_coin_amt, exchange_initializer);
 
-		assert(minted_lp_coin_amt == lp_coin_amt, 1);
+		assert!(minted_lp_coin_amt == lp_coin_amt, 1);
 
 		move_to<Exchange>(exchange_acct, Exchange { coin_a: coin_a_transferred, 
 							    coin_b: coin_b_transferred,
@@ -144,9 +144,9 @@ module Exchange{
 		let provider_addr = Signer::address_of(provider);
 
 		//Make sure exchange exists
-		assert(exists_at(exchange_addr), 1);
-		assert(CoinA::exist_at(exchange_addr), 1);
-		assert(CoinB::exist_at(exchange_addr), 1);
+		assert!(exists_at(exchange_addr), 1);
+		assert!(CoinA::exist_at(exchange_addr), 1);
+		assert!(CoinB::exist_at(exchange_addr), 1);
 		
 		//Get Exchange
 		let exchange_obj = borrow_global_mut<Exchange>(exchange_addr);
@@ -161,10 +161,10 @@ module Exchange{
 		let coin_b_amt = new_coin_b_balance - exchange_coin_b_balance;
 
 		//Make sure provider has enough of each coin
-		assert(CoinA::exist_at(provider_addr), 1);
-		assert(CoinA::get_value(provider_addr) >= coin_a_amt, 2);
-		assert(CoinB::exist_at(provider_addr), 1);
-		assert(CoinB::get_value(provider_addr) >= coin_b_amt, 2);
+		assert!(CoinA::exist_at(provider_addr), 1);
+		assert!(CoinA::get_value(provider_addr) >= coin_a_amt, 2);
+		assert!(CoinB::exist_at(provider_addr), 1);
+		assert!(CoinB::get_value(provider_addr) >= coin_b_amt, 2);
 
 		//Calculate LP coin required to mint
 		let new_lp_coin_balance = exchange_lp_coin_balance + {{exchange_lp_coin_balance * coin_a_amt} / exchange_coin_a_balance};
@@ -181,7 +181,7 @@ module Exchange{
 		//Mint LPCoin for exchange
 		let lp_coin_minted = mint(lp_coin_amt, provider);
 		
-		assert(lp_coin_minted == lp_coin_amt, 3);
+		assert!(lp_coin_minted == lp_coin_amt, 3);
 
 		//Add LPCoin amount to exhcange
 		exchange_obj.LP_minted = exchange_obj.LP_minted + lp_coin_minted;
@@ -198,19 +198,19 @@ module Exchange{
 		let provider_addr = Signer::address_of(provider);
 
 		//Make sure exchange exists
-		assert(exists_at(exchange_addr), 1);
-		assert(CoinA::exist_at(exchange_addr), 1);
-		assert(CoinB::exist_at(exchange_addr), 1);
+		assert!(exists_at(exchange_addr), 1);
+		assert!(CoinA::exist_at(exchange_addr), 1);
+		assert!(CoinB::exist_at(exchange_addr), 1);
 		
 		//Get exchange_obj
 		let exchange_obj = borrow_global_mut<Exchange>(exchange_addr);
 
 		//Check that provider has required amount of LPCoin
-		assert(exist_at(provider_addr), 1);
-		assert(get_value(provider_addr) >= lp_coin_amt, 2);
+		assert!(exist_at(provider_addr), 1);
+		assert!(get_value(provider_addr) >= lp_coin_amt, 2);
 
 		//Check that Exchange has minted enough LPCoin
-		assert(exchange_obj.LP_minted >= lp_coin_amt, 2);
+		assert!(exchange_obj.LP_minted >= lp_coin_amt, 2);
 
 		//Get current exchange balances
 		let exchange_coin_a_balance = exchange_obj.coin_a;
@@ -226,14 +226,14 @@ module Exchange{
 		let coin_b_amt = exchange_coin_b_balance - new_coin_b_balance;
 
 		//Make sure new balances are less than old balances
-		assert(CoinA::exist_at(exchange_addr), 1);
-		assert(exchange_coin_a_balance >= new_coin_a_balance, 2);
-		assert(CoinB::exist_at(exchange_addr), 1);
-		assert(exchange_coin_b_balance >= new_coin_b_balance, 2);
+		assert!(CoinA::exist_at(exchange_addr), 1);
+		assert!(exchange_coin_a_balance >= new_coin_a_balance, 2);
+		assert!(CoinB::exist_at(exchange_addr), 1);
+		assert!(exchange_coin_b_balance >= new_coin_b_balance, 2);
 
 		//Make sure exchange has enough of CoinA and CoinB to satisfy request
-		assert(exchange_coin_a_balance >= coin_a_amt, 2);
-		assert(exchange_coin_b_balance >= coin_b_amt, 2);
+		assert!(exchange_coin_a_balance >= coin_a_amt, 2);
+		assert!(exchange_coin_b_balance >= coin_b_amt, 2);
 
 		//Transfer CoinA funds from exchange to provider
 		let transferred_coin_a = CoinA::transfer_between(exchange, provider, coin_a_amt);
@@ -246,8 +246,8 @@ module Exchange{
 		//Transfer LPCoin from provider to exchange and burn
 		let transferred_lp_coin = transfer_between(provider, exchange, lp_coin_amt);
 		let burned_lp_coin = burn(exchange);
-		assert(transferred_lp_coin == lp_coin_amt, 2);
-		assert(burned_lp_coin == transferred_lp_coin, 3);
+		assert!(transferred_lp_coin == lp_coin_amt, 2);
+		assert!(burned_lp_coin == transferred_lp_coin, 3);
 
 		exchange_obj.LP_minted = exchange_obj.LP_minted - burned_lp_coin;
 
@@ -278,16 +278,16 @@ module Exchange{
 		let swapper_addr = Signer::address_of(swapper);
 
 		//Make sure exchange exists
-		assert(exists_at(exchange_addr), 1);
-		assert(CoinA::exist_at(exchange_addr), 1);
-		assert(CoinB::exist_at(exchange_addr), 1);
+		assert!(exists_at(exchange_addr), 1);
+		assert!(CoinA::exist_at(exchange_addr), 1);
+		assert!(CoinB::exist_at(exchange_addr), 1);
 		
 		//Get exchange
 		let exchange_obj = borrow_global_mut<Exchange>(exchange_addr);
 
 		//Make sure swapper has enough of CoinA
-		assert(CoinA::exist_at(swapper_addr), 1);
-		assert(CoinA::get_value(swapper_addr) >= coin_a_amt, 2);
+		assert!(CoinA::exist_at(swapper_addr), 1);
+		assert!(CoinA::get_value(swapper_addr) >= coin_a_amt, 2);
 
 		//Get current exchange balances
 		let exchange_coin_a_balance = exchange_obj.coin_a;
@@ -298,7 +298,7 @@ module Exchange{
 		let coin_b_amt = get_input_price(exchange_comm_rate, coin_a_amt, exchange_coin_a_balance, exchange_coin_b_balance);
 
 		//Make sure exchange has enough CoinB
-		assert(exchange_coin_b_balance >= coin_b_amt, 2);
+		assert!(exchange_coin_b_balance >= coin_b_amt, 2);
 
 		//Transfer CoinA funds from swapper to exchange
 		let transferred_coin_a = CoinA::transfer_between(swapper, exchange, coin_a_amt);
@@ -319,16 +319,16 @@ module Exchange{
 		let swapper_addr = Signer::address_of(swapper);
 
 		//Make sure exchange exists
-		assert(exists_at(exchange_addr), 1);
-		assert(CoinA::exist_at(exchange_addr), 1);
-		assert(CoinB::exist_at(exchange_addr), 1);
+		assert!(exists_at(exchange_addr), 1);
+		assert!(CoinA::exist_at(exchange_addr), 1);
+		assert!(CoinB::exist_at(exchange_addr), 1);
 		
 		//Get exchange
 		let exchange_obj = borrow_global_mut<Exchange>(exchange_addr);
 
 		//Make sure swapper has enough of CoinB
-		assert(CoinB::exist_at(swapper_addr), 1);
-		assert(CoinB::get_value(swapper_addr) >= coin_b_amt, 2);
+		assert!(CoinB::exist_at(swapper_addr), 1);
+		assert!(CoinB::get_value(swapper_addr) >= coin_b_amt, 2);
 
 		//Get current exchange balances
 		let exchange_coin_a_balance = exchange_obj.coin_a;
@@ -339,7 +339,7 @@ module Exchange{
 		let coin_a_amt = get_input_price(exchange_comm_rate, coin_b_amt, exchange_coin_b_balance, exchange_coin_a_balance);
 	
 		//Make sure exchange has enough CoinA
-		assert(exchange_coin_a_balance >= coin_a_amt, 2);
+		assert!(exchange_coin_a_balance >= coin_a_amt, 2);
 
 		//Transfer CoinB funds from swapper to exchange
 		let transferred_coin_b = CoinB::transfer_between(swapper, exchange, coin_b_amt);

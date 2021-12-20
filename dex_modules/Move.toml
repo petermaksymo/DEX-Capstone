@@ -1,0 +1,22 @@
+[package]
+name = "dex_modules"
+version = "0.0.0"
+authors = ["Noah Patton", "Hanke (Hankle) Liu", "Peter Maksymowsky", "Jia Bao (Alan) Du"]
+
+[addresses]  # (Optional section) Declares named addresses in this package and instantiates named addresses in the package graph
+# One or more lines declaring named addresses in the following format
+# <addr_name> = "_" | "<hex_address>" # e.g., Std = "_" or Addr = "0xC0FFEECAFE"
+
+[dependencies] # (Optional section) Paths to dependencies and instantiations or renamings of named addresses from each dependency
+# One or more lines declaring dependencies in the following format
+# <string> = { local = <string>, addr_subst* = { (<string> = (<string> | "<hex_address>"))+ } } # local dependencies
+# <string> = { git = <URL ending in .git>, subdir=<path to dir containing Move.toml inside git repo>, rev=<git commit hash>, addr_subst* = { (<string> = (<string> | "<hex_address>"))+ } } # git dependencies
+MoveStdlib = { git = "https://github.com/diem/diem.git", subdir="language/move-stdlib", rev = "6ab59227a0b7093144c2393e63ee77458942377c", addr_subst = { "Std" = "0x1" } }
+DiemCoreFramework = { git = "https://github.com/diem/diem.git", subdir="diem-move/diem-framework/core", rev = "6ab59227a0b7093144c2393e63ee77458942377c", addr_subst = { "DiemFramework" = "0x1" } }
+
+[dev-addresses] # (Optional section) Same as [addresses] section, but only included in "dev" and "test" modes
+# One or more lines declaring dev named addresses in the following format
+# <addr_name> = "_" | "<hex_address>" # e.g., Std = "_" or Addr = "0xC0FFEECAFE"
+
+[dev-dependencies] # (Optional section) Same as [dependencies] section, but only included in "dev" and "test" modes
+MoveNursery = { git = "https://github.com/diem/diem.git", subdir="language/move-stdlib/nursery", rev = "6ab59227a0b7093144c2393e63ee77458942377c", addr_subst = { "Std" = "0x1" } }

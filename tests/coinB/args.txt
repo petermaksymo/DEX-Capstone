@@ -1,3 +1,0 @@
-sandbox publish ../../src
-sandbox run test_coin_b.move --signers 0x3 0x4
-

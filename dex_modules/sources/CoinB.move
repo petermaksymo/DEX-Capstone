@@ -17,7 +17,7 @@ module CoinB {
     }
 
     public fun burn(account: &signer): u64 acquires CoinB {
-        assert(exist_at(Signer::address_of(account)), 1);
+        assert!(exist_at(Signer::address_of(account)), 1);
         let CoinB { value: value } = move_from<CoinB>(Signer::address_of(account));
         value
     }
@@ -30,8 +30,8 @@ module CoinB {
         let from_addr = Signer::address_of(from_acct);
         let to_addr = Signer::address_of(to_acct);
 
-        assert(exist_at(from_addr), 1);
-        assert(get_value(from_addr) >= transferred_amt, 2);
+        assert!(exist_at(from_addr), 1);
+        assert!(get_value(from_addr) >= transferred_amt, 2);
 
         if(!exist_at(to_addr)) {
             mint(0, to_acct);
