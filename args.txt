@@ -1,4 +1,0 @@
-sandbox publish src
-sandbox test tests/coinA
-sandbox test tests/coinB
-

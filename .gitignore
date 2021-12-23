@@ -1,6 +1,8 @@
 # local move build and storage files
-/build/
-/storage/
+/dex_modules/build/
+/dex_modules/storage/
+/dex_modules/tests/build/
+/dex_modules/tests/storage/
 
 # IDE files
 .idea/
