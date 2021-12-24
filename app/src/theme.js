@@ -1,34 +1,53 @@
-import { createTheme } from '@mui/material/styles';
-import { red } from '@mui/material/colors';
-
 // Create a theme instance.
-const theme = createTheme({
+const theme = mode => ({
   palette: {
-    primary: {
-      main: '#556cd6',
-    },
-    secondary: {
-      main: '#19857b',
-    },
-    error: {
-      main: red.A400,
-    },
+    mode,
+    ...(mode === 'light'
+      ? {
+        type: 'light',
+        primary: {
+          main: '#2e7d32',
+        },
+        secondary: {
+          main: '#ffd54f',
+        },
+        background: {
+          default: '#f4f4f4',
+        },
+      }
+      : {
+        type: 'dark',
+        primary: {
+          main: '#00c853',
+        },
+        secondary: {
+          main: '#ffd740',
+        },
+      })
   },
-  components: {
-    MuiButton: {
-     styleOverrides: {
-       root: {
-         borderRadius: 12
-       }
-     }
+  shape: {
+    borderRadius: 16,
+  },
+  typography: {
+    fontSize: 14,
+    fontWeightLight: 300,
+    h1: {
+      fontSize: '4rem',
+      fontWeight: 400,
     },
-    MuiPaper: {
-     styleOverrides: {
-      root: {
-        borderRadius: 16
-       }
-     }
-    }
+    h2: {
+      fontSize: '3rem',
+      fontWeight: 400,
+    },
+    h3: {
+      fontSize: '2.5rem',
+    },
+    h4: {
+      fontSize: '2rem',
+    },
+    caption: {
+      lineHeight: 1.15,
+    },
   }
 });
 

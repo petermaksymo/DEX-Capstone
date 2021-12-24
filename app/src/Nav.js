@@ -13,12 +13,14 @@ import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
+import Brightness4Icon from '@mui/icons-material/Brightness4';
+import Brightness7Icon from '@mui/icons-material/Brightness7';
 
 import StyledLink from "../src/Link"
 
 const pages = ['Swap', 'Liquidity', 'Info'];
 
-const ResponsiveAppBar = () => {
+const ResponsiveAppBar = ({ darkMode, setDarkMode }) => {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
 
   const handleOpenNavMenu = (event) => {
@@ -40,7 +42,7 @@ const ResponsiveAppBar = () => {
             sx={{ mr: 2, display: { xs: 'none', md: 'flex' }, pointer: 'cursor' }}
           >
             <StyledLink href="/" style={{ color: 'unset', textDecoration: 'none' }}>
-              LP Swap
+              LS Swap
             </StyledLink>
           </Typography>
 
@@ -89,7 +91,7 @@ const ResponsiveAppBar = () => {
             sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' }, pointer: 'cursor' }}
           >
             <StyledLink href="/" style={{ color: 'unset', textDecoration: 'none' }}>
-              LP Swap
+              LS Swap
             </StyledLink>
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
@@ -106,7 +108,10 @@ const ResponsiveAppBar = () => {
             ))}
           </Box>
 
-          <Box sx={{ flexGrow: 0, cursor: 'pointer' }}>
+          <Box sx={{ flexGrow: 0, cursor: 'pointer', display: 'flex', gap: 2 }}>
+            <IconButton sx={{ ml: 1 }} onClick={() => setDarkMode(!darkMode)} color="inherit">
+              {darkMode ? <Brightness7Icon /> : <Brightness4Icon />}
+            </IconButton>
             <Link href="/garage">
               <Tooltip title="Go to garage">
                 <Avatar alt="User" src="/static/images/avatar/2.jpg" />
