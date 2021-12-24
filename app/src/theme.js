@@ -14,6 +14,22 @@ const theme = createTheme({
       main: red.A400,
     },
   },
+  components: {
+    MuiButton: {
+     styleOverrides: {
+       root: {
+         borderRadius: 12
+       }
+     }
+    },
+    MuiPaper: {
+     styleOverrides: {
+      root: {
+        borderRadius: 16
+       }
+     }
+    }
+  }
 });
 
 export default theme;
