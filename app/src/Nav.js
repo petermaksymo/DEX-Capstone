@@ -18,7 +18,7 @@ import Brightness7Icon from '@mui/icons-material/Brightness7';
 
 import StyledLink from "../src/Link"
 
-const pages = ['Swap', 'Liquidity', 'Info'];
+const pages = ['Swap', 'Liquidity', 'Info', 'Stats'];
 
 const ResponsiveAppBar = ({ darkMode, setDarkMode }) => {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
