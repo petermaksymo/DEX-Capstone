@@ -1,21 +1,22 @@
-
 export function getCoinData() {
-
   return {
     coin_a: {
-      name: 'Coin A',
-      color: '#FF8686',
-      price: 1.5
+      name: "Coin A",
+      short_name: "A",
+      color: "#FF8686",
+      price: 1.5,
     },
     coin_b: {
-      name: 'Coin B',
-      color: '#FBC4AB',
-      price: 3.5
+      name: "Coin B",
+      short_name: "B",
+      color: "#FBC4AB",
+      price: 3.5,
     },
     usd: {
-      name: 'USD',
-      color: '#6677DA',
-      price: 1.0
-    }
+      name: "USD",
+      short_name: "U",
+      color: "#6677DA",
+      price: 1.0,
+    },
   }
 }

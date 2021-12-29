@@ -1,18 +1,18 @@
-import { createTheme } from '@mui/material/styles';
+import { createTheme } from "@mui/material/styles"
 
 // Create a theme instance.
 const theme = createTheme({
   palette: {
-    type: 'light',
+    type: "light",
     primary: {
-      main: '#AB133E',
+      main: "#AB133E",
     },
     secondary: {
-      main: '#0E153E',
+      main: "#0E153E",
     },
     background: {
-      default: '#f4f4f4',
-    }
+      default: "#f4f4f4",
+    },
   },
   shape: {
     borderRadius: 10,
@@ -21,26 +21,26 @@ const theme = createTheme({
     fontSize: 16,
     fontWeightLight: 300,
     h1: {
-      fontSize: '4rem',
+      fontSize: "4rem",
       fontWeight: 400,
     },
     h2: {
-      fontSize: '3rem',
+      fontSize: "3rem",
       fontWeight: 400,
     },
     h3: {
-      fontSize: '2.5rem',
+      fontSize: "2.5rem",
     },
     h4: {
-      fontSize: '2rem',
+      fontSize: "2rem",
     },
     caption: {
       lineHeight: 1.15,
     },
     button: {
-      textTransform: 'none'
-    }
-  }
-});
+      textTransform: "none",
+    },
+  },
+})
 
-export default theme;
+export default theme
