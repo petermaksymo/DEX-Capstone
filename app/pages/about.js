@@ -5,7 +5,7 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Link from '../src/Link';
 
-export default function Info() {
+export default function About() {
   return (
     <Container maxWidth="sm">
       <Box sx={{ my: 4 }}>

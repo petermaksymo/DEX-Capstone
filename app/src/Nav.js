@@ -16,11 +16,18 @@ import MenuItem from '@mui/material/MenuItem';
 import Brightness4Icon from '@mui/icons-material/Brightness4';
 import Brightness7Icon from '@mui/icons-material/Brightness7';
 
+import Logo from '../src/logo'
 import StyledLink from "../src/Link"
 
-const pages = ['Swap', 'Liquidity', 'Info', 'Stats'];
+const pages = [
+  { title: 'My Garage', link: 'garage' },
+  { title: 'Swap Meet', link: 'swap' },
+  { title: 'Dealership', link: 'dealership' },
+  { title: 'Spec Sheet', link: 'specs' },
+  { title: 'About Us', link: 'about' },
+  ];
 
-const ResponsiveAppBar = ({ darkMode, setDarkMode }) => {
+const ResponsiveAppBar = () => {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
 
   const handleOpenNavMenu = (event) => {
@@ -32,19 +39,22 @@ const ResponsiveAppBar = ({ darkMode, setDarkMode }) => {
   };
 
   return (
-    <AppBar position="static" sx={{ borderRadius: 0 }}>
+    <AppBar position="fixed" sx={{ borderRadius: 0 }} color='secondary' elevation={0}>
       <Container maxWidth="xl">
         <Toolbar disableGutters>
-          <Typography
-            variant="h6"
-            noWrap
-            component="div"
-            sx={{ mr: 2, display: { xs: 'none', md: 'flex' }, pointer: 'cursor' }}
-          >
-            <StyledLink href="/" style={{ color: 'unset', textDecoration: 'none' }}>
-              LS Swap
-            </StyledLink>
-          </Typography>
+          <Link href='/'>
+            <Box sx={{ display: 'flex', cursor: 'pointer'}}>
+              <Logo/>
+              <Typography
+                variant="h6"
+                noWrap
+                component="div"
+                sx={{ mr: 2, my: 'auto', display: { xs: 'none', md: 'flex' }, pointer: 'cursor' }}
+              >
+                LS Swap
+              </Typography>
+            </Box>
+          </Link>
 
           <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
             <IconButton
@@ -76,9 +86,9 @@ const ResponsiveAppBar = ({ darkMode, setDarkMode }) => {
               }}
             >
               {pages.map((page) => (
-                  <Link href={`/${page.toLowerCase()}`} passHref>
-                    <MenuItem key={page} onClick={handleCloseNavMenu}>
-                      <Typography textAlign="center">{page}</Typography>
+                  <Link href={`/${page.link}`} passHref>
+                    <MenuItem key={page.link} onClick={handleCloseNavMenu}>
+                      <Typography textAlign="center">{page.title}</Typography>
                     </MenuItem>
                   </Link>
               ))}
@@ -96,26 +106,23 @@ const ResponsiveAppBar = ({ darkMode, setDarkMode }) => {
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
             {pages.map((page) => (
-              <Link href={`/${page.toLowerCase()}`} passHref>
+              <Link href={`/${page.link}`} passHref>
                 <Button
-                  key={page}
+                  key={page.link}
                   onClick={handleCloseNavMenu}
-                  sx={{ my: 2, color: 'white', display: 'block' }}
+                  sx={{ my: 1, color: 'white', display: 'block', textTransform: 'none', minWidth: 110 }}
                 >
-                  {page}
+                  {page.title}
                 </Button>
               </Link>
             ))}
           </Box>
 
-          <Box sx={{ flexGrow: 0, cursor: 'pointer', display: 'flex', gap: 2 }}>
-            <IconButton sx={{ ml: 1 }} onClick={() => setDarkMode(!darkMode)} color="inherit">
-              {darkMode ? <Brightness7Icon /> : <Brightness4Icon />}
-            </IconButton>
-            <Link href="/garage">
-              <Tooltip title="Go to garage">
-                <Avatar alt="User" src="/static/images/avatar/2.jpg" />
-              </Tooltip>
+          <Box sx={{ flexGrow: 0, display: 'flex', gap: 2 }}>
+            <Link href='/garage' passHref>
+              <Button variant='contained' color='primary'>
+              Sign in
+            </Button>
             </Link>
           </Box>
         </Toolbar>

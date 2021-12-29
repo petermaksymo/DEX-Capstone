@@ -13,7 +13,7 @@ export default function MyResponsiveLine({ data /* see data tab */ }) {
   }, [data])
 
   const nivoTheme = React.useMemo(() => ({
-    "background": theme.palette.background.paper,
+    "background": 'rgba(0, 0, 0, 0)',
     "textColor": theme.palette.text.primary,
     "fontSize": theme.typography.fontSize,
     "axis": {

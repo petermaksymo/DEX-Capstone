@@ -7,20 +7,13 @@ import { CacheProvider } from '@emotion/react';
 import theme from '../src/theme';
 import createEmotionCache from '../src/createEmotionCache';
 import Nav from "../src/Nav"
+import '../styles/global.css'
 
 // Client-side cache, shared for the whole session of the user in the browser.
 const clientSideEmotionCache = createEmotionCache();
 
 export default function MyApp(props) {
   const { Component, emotionCache = clientSideEmotionCache, pageProps } = props;
-  const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
-  const [darkMode, setDarkMode] = useState(prefersDarkMode)
-
-  const customTheme = React.useMemo(
-    () =>
-      createTheme(theme(darkMode ? 'dark' : 'light')),
-    [darkMode],
-  );
 
   return (
     <CacheProvider value={emotionCache}>
@@ -28,10 +21,10 @@ export default function MyApp(props) {
         <title>LS Swap</title>
         <meta name="viewport" content="initial-scale=1, width=device-width" />
       </Head>
-      <ThemeProvider theme={customTheme}>
+      <ThemeProvider theme={theme}>
         {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
         <CssBaseline />
-        <Nav darkMode={darkMode} setDarkMode={setDarkMode}/>
+        <Nav/>
         <Component {...pageProps} />
       </ThemeProvider>
     </CacheProvider>

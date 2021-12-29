@@ -1,35 +1,24 @@
+import { createTheme } from '@mui/material/styles';
+
 // Create a theme instance.
-const theme = mode => ({
+const theme = createTheme({
   palette: {
-    mode,
-    ...(mode === 'light'
-      ? {
-        type: 'light',
-        primary: {
-          main: '#2e7d32',
-        },
-        secondary: {
-          main: '#ffd54f',
-        },
-        background: {
-          default: '#f4f4f4',
-        },
-      }
-      : {
-        type: 'dark',
-        primary: {
-          main: '#00c853',
-        },
-        secondary: {
-          main: '#ffd740',
-        },
-      })
+    type: 'light',
+    primary: {
+      main: '#AB133E',
+    },
+    secondary: {
+      main: '#0E153E',
+    },
+    background: {
+      default: '#f4f4f4',
+    }
   },
   shape: {
-    borderRadius: 16,
+    borderRadius: 10,
   },
   typography: {
-    fontSize: 14,
+    fontSize: 16,
     fontWeightLight: 300,
     h1: {
       fontSize: '4rem',
@@ -48,6 +37,9 @@ const theme = mode => ({
     caption: {
       lineHeight: 1.15,
     },
+    button: {
+      textTransform: 'none'
+    }
   }
 });
 

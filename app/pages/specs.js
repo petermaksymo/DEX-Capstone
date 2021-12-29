@@ -9,7 +9,7 @@ import LineChart from '../src/LineChart'
 import { getGraphData } from '../lib/graphData'
 import Link from '../src/Link';
 
-export default function Stats({ data }) {
+export default function Specs({ data }) {
   return (
     <Container maxWidth="md">
       <Box sx={{ my: 4 }}>
