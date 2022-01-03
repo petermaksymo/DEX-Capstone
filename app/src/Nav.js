@@ -48,7 +48,9 @@ const ResponsiveAppBar = () => {
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           <Link href="/">
-            <Box sx={{ display: "flex", cursor: "pointer" }}>
+            <Box
+              sx={{ cursor: "pointer", display: { xs: "none", md: "flex" } }}
+            >
               <Logo />
               <Typography
                 variant="h6"
@@ -57,7 +59,6 @@ const ResponsiveAppBar = () => {
                 sx={{
                   mr: 2,
                   my: "auto",
-                  display: { xs: "none", md: "flex" },
                   pointer: "cursor",
                 }}
               >
@@ -112,8 +113,10 @@ const ResponsiveAppBar = () => {
               flexGrow: 1,
               display: { xs: "flex", md: "none" },
               pointer: "cursor",
+              alignItems: "center",
             }}
           >
+            <Logo />
             <StyledLink
               href="/"
               style={{ color: "unset", textDecoration: "none" }}

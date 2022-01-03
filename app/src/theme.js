@@ -14,11 +14,20 @@ const theme = createTheme({
       default: "#f4f4f4",
     },
   },
+  breakpoints: {
+    values: {
+      xs: 0,
+      sm: 425,
+      md: 843,
+      lg: 1024,
+      xl: 1444,
+    },
+  },
   shape: {
     borderRadius: 10,
   },
   typography: {
-    fontSize: 16,
+    fontSize: 14,
     fontWeightLight: 300,
     h1: {
       fontSize: "4rem",
@@ -33,6 +42,10 @@ const theme = createTheme({
     },
     h4: {
       fontSize: "2rem",
+    },
+    h5: {
+      fontSize: "1.5rem",
+      fontWeight: "bold",
     },
     caption: {
       lineHeight: 1.15,

@@ -1,7 +1,7 @@
-import { Typography } from "@mui/material"
+import Box from "@mui/material/Box"
 
 const Coin = ({ children, ...props }) => (
-  <div {...props}>
+  <Box {...props}>
     <svg
       width="100%"
       height="100%"
@@ -16,7 +16,7 @@ const Coin = ({ children, ...props }) => (
         {children}
       </text>
     </svg>
-  </div>
+  </Box>
 )
 
 export default Coin

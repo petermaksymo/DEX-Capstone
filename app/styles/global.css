@@ -14,6 +14,12 @@ main {
   box-sizing: border-box;
 }
 
+@media only screen and (max-width: 425px) {
+  #__next {
+    padding-top: 56px;
+  }
+}
+
 .swap {
   overflow: hidden;
   transition-duration: 0.5s;
