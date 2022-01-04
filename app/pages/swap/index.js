@@ -313,7 +313,7 @@ export default function Swap({ currencies }) {
       <div style={{ background: currencies[coin2].color, flex: 1 }}>
         <Container
           maxWidth="xl"
-          sx={{ height: "100%", mt: { xs: 4, sm: 6, md: 10 } }}
+          sx={{ height: "100%", pt: { xs: 4, sm: 6, md: 10 } }}
         >
           <CoinSwap coinNum={2} />
         </Container>

@@ -1,5 +1,5 @@
 import React from "react"
-import Link from "next/link"
+import map from "lodash/map"
 
 import Container from "@mui/material/Container"
 import Button from "@mui/material/Button"
@@ -8,48 +8,83 @@ import Paper from "@mui/material/Paper"
 import Typography from "@mui/material/Typography"
 import Box from "@mui/material/Box"
 
-export default function Liquidity({ currencies }) {
-  return (
-    <Container maxWidth="sm">
-      <Box sx={{ my: 4 }}>
-        <Typography variant="h3" component="h1" gutterBottom>
-          Your Liquidity
-        </Typography>
-      </Box>
+import HeaderText from "../../src/headerText"
+import LPCard from "../../src/lpCard"
+import LiquidityAddWithdrawCard from "../../src/liquidityAddWithdrawCard";
+import { getCoinData } from "../../lib/coins"
 
-      <Paper sx={{ display: "flex", flexDirection: "column" }}>
-        <Box sx={{ padding: 2 }}>
-          <Typography variant="h4">Your Liquidity</Typography>
-          <Typography variant="body2">
-            Trade in your LP tokens to get your pair of tokens back. Or open new
-            positions with the button below.
-          </Typography>
-        </Box>
-        <Divider />
-        <Box sx={{ padding: 2, display: "flex", flexFlow: "row wrap", gap: 1 }}>
-          <Typography>
-            No Liquidity Found, click on th button below to add liquidity.
-          </Typography>
-        </Box>
-        <Divider />
-        <Link href="/liquidity/add" passHref>
-          <Button
-            sx={{ margin: "16px auto", minWidth: "80%" }}
-            variant="contained"
-            color="primary"
-          >
-            Add Liquidity
-          </Button>
-        </Link>
-      </Paper>
-    </Container>
+export default function Dealership({ currencies, pools }) {
+
+  return (
+    <Box sx={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
+      <Box
+        sx={{
+          bgcolor: "#E37065",
+          color: "background.paper",
+          py: { xs: 1, sm: 2, md: 6 },
+        }}
+      >
+        <Container maxWidth="xl">
+          <HeaderText
+            header="Dealership - Add and Withdraw Liquidity"
+            description="Select which pool you would like to add or withdraw liquidity from  and the amount. You will receive LP tokens for adding liquidity and burn LP tokens for withdrawing liquidity."
+          />
+        </Container>
+      </Box>
+      <Box sx={{ bgcolor: "#FFF3F2", height: '100%', width: '100%' }}>
+        <Container
+          maxWidth="xl"
+          sx={{
+            display: "flex",
+            flexFlow: "row wrap",
+            gap: 4,
+            mt: { xs: 1, sm: 2, md: 4 },
+          }}
+        >
+          {map(pools, (pool) => (
+            <LPCard
+              coin1={currencies[pool.coin1]}
+              coin2={currencies[pool.coin2]}
+              stats={pool.stats}
+            />
+          ))}
+          <Box sx={{ width: '100%' }}>
+            <LiquidityAddWithdrawCard />
+          </Box>
+
+
+        </Container>
+      </Box>
+    </Box>
   )
 }
 
 export async function getStaticProps() {
   return {
     props: {
-      currencies: ["Coin1", "Coin2", "VBucks"],
+      currencies: getCoinData(),
+      pools: [
+        {
+          coin1: "coin_a",
+          coin2: "coin_b",
+          stats: {
+            pool_size: "50000",
+            share: "5.85%",
+            coin1Owned: "502.52",
+            coin2Owned: "4502.52",
+          },
+        },
+        {
+          coin1: "coin_b",
+          coin2: "coin_c",
+          stats: {
+            pool_size: "60000",
+            share: "2.85%",
+            coin1Owned: "302.52",
+            coin2Owned: "2502.52",
+          },
+        },
+      ],
     },
   }
 }

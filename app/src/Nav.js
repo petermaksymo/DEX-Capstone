@@ -1,5 +1,6 @@
 import * as React from "react"
 import Link from "next/link"
+import { useRouter } from "next/router"
 
 import AppBar from "@mui/material/AppBar"
 import Box from "@mui/material/Box"
@@ -9,15 +10,12 @@ import Typography from "@mui/material/Typography"
 import Menu from "@mui/material/Menu"
 import MenuIcon from "@mui/icons-material/Menu"
 import Container from "@mui/material/Container"
-import Avatar from "@mui/material/Avatar"
 import Button from "@mui/material/Button"
-import Tooltip from "@mui/material/Tooltip"
 import MenuItem from "@mui/material/MenuItem"
-import Brightness4Icon from "@mui/icons-material/Brightness4"
-import Brightness7Icon from "@mui/icons-material/Brightness7"
 
 import Logo from "../src/logo"
 import StyledLink from "../src/Link"
+import { useEffect } from "react"
 
 const pages = [
   { title: "My Garage", link: "garage" },
@@ -28,7 +26,13 @@ const pages = [
 ]
 
 const ResponsiveAppBar = () => {
+  const router = useRouter()
   const [anchorElNav, setAnchorElNav] = React.useState(null)
+  const [currentRoute, setCurrentRoute] = React.useState(
+    router.pathname.substring(1)
+  )
+
+  useEffect(() => setCurrentRoute(router.pathname.substring(1)), [router])
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget)
@@ -134,7 +138,10 @@ const ResponsiveAppBar = () => {
                     my: 1,
                     color: "white",
                     display: "block",
-                    textTransform: "none",
+                    textDecoration:
+                      page.link === currentRoute
+                        ? " underline !important;"
+                        : "none",
                     minWidth: 110,
                   }}
                 >

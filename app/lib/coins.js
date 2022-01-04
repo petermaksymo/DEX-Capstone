@@ -12,6 +12,12 @@ export function getCoinData() {
       color: "#FBC4AB",
       price: 3.5,
     },
+    coin_c: {
+      name: "Coin C",
+      short_name: "C",
+      color: "#EB83A0",
+      price: 5.5,
+    },
     usd: {
       name: "USD",
       short_name: "U",
