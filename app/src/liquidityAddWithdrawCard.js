@@ -120,6 +120,7 @@ export default function LiquidityAddWithdrawCard({ currencies }) {
               open={coin1DialogOpen}
               onClose={() => setCoin1DialogOpen(false)}
               setCoin={setCoin1}
+              currentCoins={[coin1, coin2]}
             />
           </Box>
           <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
@@ -157,6 +158,7 @@ export default function LiquidityAddWithdrawCard({ currencies }) {
               open={coin2DialogOpen}
               onClose={() => setCoin2DialogOpen(false)}
               setCoin={setCoin2}
+              currentCoins={[coin1, coin2]}
             />
           </Box>
         </Box>

@@ -12,7 +12,13 @@ import ListItemText from "@mui/material/ListItemText"
 
 import Coin from "./coin"
 
-const CoinPickerDialog = ({ currencies, setCoin, open, onClose }) => {
+const CoinPickerDialog = ({
+  currencies,
+  setCoin,
+  open,
+  onClose,
+  currentCoins,
+}) => {
   const theme = useTheme()
 
   const handleCoinSelect = (coin) => {
@@ -25,7 +31,10 @@ const CoinPickerDialog = ({ currencies, setCoin, open, onClose }) => {
       <DialogTitle>Select a coin:</DialogTitle>
       <MenuList>
         {map(currencies, (c, key) => (
-          <MenuItem onClick={() => handleCoinSelect(key)}>
+          <MenuItem
+            onClick={() => handleCoinSelect(key)}
+            disabled={currentCoins.includes(key)}
+          >
             <ListItemIcon sx={{ color: theme.palette.background.paper, mr: 2 }}>
               <Coin style={{ maxWidth: 40 }}>{c.short_name}</Coin>
             </ListItemIcon>

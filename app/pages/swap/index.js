@@ -139,123 +139,6 @@ export default function Swap({ currencies }) {
     )
   }
 
-  const CoinSwap = ({ coinNum }) => {
-    const stateValues = {
-      coin1,
-      coin2,
-      coin1Value,
-      coin2Value,
-      coin1DialogOpen,
-      coin2DialogOpen,
-    }
-
-    const stateSetters = {
-      setCoin1,
-      setCoin2,
-      setCoin1Value,
-      setCoin2Value,
-      setCoin1DialogOpen,
-      setCoin2DialogOpen,
-    }
-
-    return (
-      <Box
-        sx={{
-          display: "flex",
-          flexDirection: { xs: "column", md: "row" },
-          flexFlow: "wrap",
-          alignItems: { xs: "flex-start", md: "center" },
-          alignContent: "flex-start",
-          justifyContent: "space-between",
-          gap: 2,
-        }}
-      >
-        <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-          <Typography
-            variant="h5"
-            sx={{
-              fontWeight: "bold",
-              fontSize: { xs: 18, md: 24 },
-              minWidth: { xs: 50, md: 67 },
-            }}
-          >
-            {coinNum === 1 ? "FROM" : "TO"}
-          </Typography>
-          <Box
-            sx={{
-              cursor: "pointer",
-              maxWidth: { xs: 64, sm: 84, md: 114 },
-              textAlign: "center",
-            }}
-            onClick={() => stateSetters[`setCoin${coinNum}DialogOpen`](true)}
-          >
-            <Coin sx={{ mx: "12px", mt: { xs: 3, md: 4 } }}>
-              {currencies[stateValues[`coin${coinNum}`]].short_name}
-            </Coin>
-            <Typography
-              variant="h6"
-              sx={{
-                fontWeight: "bold",
-                fontSize: { xs: 14, sm: 18, md: 24 },
-                mt: -1,
-              }}
-            >
-              {currencies[stateValues[`coin${coinNum}`]].name}
-            </Typography>
-          </Box>
-          <CoinPickerDialog
-            currencies={currencies}
-            setCoin={stateSetters[`setCoin${coinNum}`]}
-            open={stateValues[`coin${coinNum}DialogOpen`]}
-            onClose={() => stateSetters[`setCoin${coinNum}DialogOpen`](false)}
-          />
-          <TextField
-            variant="outlined"
-            value={stateValues[`coin${coinNum}Value`]}
-            onChange={(e) =>
-              stateSetters[`setCoin${coinNum}Value`](
-                force_decimal(e.target.value)
-              )
-            }
-            InputProps={{
-              endAdornment: (
-                <InputAdornment position="end">
-                  <Button
-                    variant="text"
-                    color="primary"
-                    onClick={setMax}
-                    disabled={coinNum === 2}
-                    sx={{ minWidth: 45 }}
-                  >
-                    {coinNum === 1 ? "Max" : "   "}
-                  </Button>
-                </InputAdornment>
-              ),
-            }}
-            placeholder="0.00"
-          />
-        </Box>
-        <Box sx={{ display: "flex", gap: 2, mt: { xs: 0, md: 6 } }}>
-          <Typography>
-            <strong>Exchange Rate:</strong>
-            <br />
-            <strong>Current Balance:</strong>
-          </Typography>
-          <Typography>
-            XX.XX {currencies[stateValues[`coin${coinNum}`]].name} per{" "}
-            {currencies[coinNum === 1 ? coin2 : coin1].name} <br />
-            XXXXXXXX{" "}
-            <strong>
-              {currencies[stateValues[`coin${coinNum}`]].name}
-            </strong>{" "}
-            <br />
-            XXXXXXXX <strong>USD</strong>
-          </Typography>
-        </Box>
-      </Box>
-    )
-  }
-
   return (
     <main
       style={{
@@ -291,7 +174,92 @@ export default function Swap({ currencies }) {
               justifyContent: "center",
             }}
           >
-            <CoinSwap coinNum={1} />
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: { xs: "column", md: "row" },
+                flexFlow: "wrap",
+                alignItems: { xs: "flex-start", md: "center" },
+                alignContent: "flex-start",
+                justifyContent: "space-between",
+                gap: 2,
+              }}
+            >
+              <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                <Typography
+                  variant="h5"
+                  sx={{
+                    fontWeight: "bold",
+                    fontSize: { xs: 18, md: 24 },
+                    minWidth: { xs: 50, md: 67 },
+                  }}
+                >
+                  FROM
+                </Typography>
+                <Box
+                  sx={{
+                    cursor: "pointer",
+                    maxWidth: { xs: 64, sm: 84, md: 114 },
+                    textAlign: "center",
+                  }}
+                  onClick={() => setCoin1DialogOpen(true)}
+                >
+                  <Coin sx={{ mx: "12px", mt: { xs: 3, md: 4 } }}>
+                    {currencies[coin1].short_name}
+                  </Coin>
+                  <Typography
+                    variant="h6"
+                    sx={{
+                      fontWeight: "bold",
+                      fontSize: { xs: 14, sm: 18, md: 24 },
+                      mt: -1,
+                    }}
+                  >
+                    {currencies[coin1].name}
+                  </Typography>
+                </Box>
+                <CoinPickerDialog
+                  currencies={currencies}
+                  setCoin={setCoin1}
+                  open={coin1DialogOpen}
+                  onClose={() => setCoin1DialogOpen(false)}
+                  currentCoins={[coin1, coin2]}
+                />
+                <TextField
+                  variant="outlined"
+                  value={coin1Value}
+                  onChange={(e) => setCoin1Value(force_decimal(e.target.value))}
+                  InputProps={{
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        <Button
+                          variant="text"
+                          color="primary"
+                          onClick={setMax}
+                          sx={{ minWidth: 45 }}
+                        >
+                          Max
+                        </Button>
+                      </InputAdornment>
+                    ),
+                  }}
+                  placeholder="0.00"
+                />
+              </Box>
+              <Box sx={{ display: "flex", gap: 2, mt: { xs: 0, md: 6 } }}>
+                <Typography>
+                  <strong>Exchange Rate:</strong>
+                  <br />
+                  <strong>Current Balance:</strong>
+                </Typography>
+                <Typography>
+                  XX.XX {currencies[coin1].name} per {currencies[coin2].name}{" "}
+                  <br />
+                  XXXXXXXX <strong>{currencies[coin1].name}</strong> <br />
+                  XXXXXXXX <strong>USD</strong>
+                </Typography>
+              </Box>
+            </Box>
           </Box>
         </Container>
       </Box>
@@ -301,7 +269,90 @@ export default function Swap({ currencies }) {
           maxWidth="xl"
           sx={{ height: "100%", pt: { xs: 4, sm: 6, md: 10 } }}
         >
-          <CoinSwap coinNum={2} />
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: { xs: "column", md: "row" },
+              flexFlow: "wrap",
+              alignItems: { xs: "flex-start", md: "center" },
+              alignContent: "flex-start",
+              justifyContent: "space-between",
+              gap: 2,
+            }}
+          >
+            <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+              <Typography
+                variant="h5"
+                sx={{
+                  fontWeight: "bold",
+                  fontSize: { xs: 18, md: 24 },
+                  minWidth: { xs: 50, md: 67 },
+                }}
+              >
+                TO
+              </Typography>
+              <Box
+                sx={{
+                  cursor: "pointer",
+                  maxWidth: { xs: 64, sm: 84, md: 114 },
+                  textAlign: "center",
+                }}
+                onClick={() => setCoin2DialogOpen(true)}
+              >
+                <Coin sx={{ mx: "12px", mt: { xs: 3, md: 4 } }}>
+                  {currencies[coin2].short_name}
+                </Coin>
+                <Typography
+                  variant="h6"
+                  sx={{
+                    fontWeight: "bold",
+                    fontSize: { xs: 14, sm: 18, md: 24 },
+                    mt: -1,
+                  }}
+                >
+                  {currencies[coin2].name}
+                </Typography>
+              </Box>
+              <CoinPickerDialog
+                currencies={currencies}
+                setCoin={setCoin2}
+                open={coin2DialogOpen}
+                onClose={() => setCoin2DialogOpen(false)}
+                currentCoins={[coin1, coin2]}
+              />
+              <TextField
+                variant="outlined"
+                value={coin2Value}
+                onChange={(e) => setCoin2Value(force_decimal(e.target.value))}
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <Button
+                        variant="text"
+                        color="primary"
+                        disabled
+                        sx={{ minWidth: 45 }}
+                      ></Button>
+                    </InputAdornment>
+                  ),
+                }}
+                placeholder="0.00"
+              />
+            </Box>
+            <Box sx={{ display: "flex", gap: 2, mt: { xs: 0, md: 6 } }}>
+              <Typography>
+                <strong>Exchange Rate:</strong>
+                <br />
+                <strong>Current Balance:</strong>
+              </Typography>
+              <Typography>
+                XX.XX {currencies[coin2].name} per {currencies[coin1].name}{" "}
+                <br />
+                XXXXXXXX <strong>{currencies[coin2].name}</strong> <br />
+                XXXXXXXX <strong>USD</strong>
+              </Typography>
+            </Box>
+          </Box>
         </Container>
       </div>
     </main>
