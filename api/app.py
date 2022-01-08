@@ -10,3 +10,6 @@ app = create_app(ENVIRONMENT)
 @app.route("/status", methods=["GET"])
 def index():
     return jsonify(status="API is Up!")
+
+# Import routes/endpoints
+import api.routes.currency
