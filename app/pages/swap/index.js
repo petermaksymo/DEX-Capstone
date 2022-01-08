@@ -332,7 +332,7 @@ export default function Swap({ currencies }) {
                         color="primary"
                         disabled
                         sx={{ minWidth: 45 }}
-                      ></Button>
+                      />
                     </InputAdornment>
                   ),
                 }}

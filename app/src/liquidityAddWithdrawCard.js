@@ -29,6 +29,7 @@ export default function LiquidityAddWithdrawCard({ currencies }) {
         maxWidth: { xs: 425, md: "100%" },
         mx: "auto",
       }}
+      elevation={4}
     >
       <Box
         sx={{
