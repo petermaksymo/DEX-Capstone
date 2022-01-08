@@ -17,7 +17,7 @@ const theme = createTheme({
   breakpoints: {
     values: {
       xs: 0,
-      sm: 425,
+      sm: 575,
       md: 843,
       lg: 1024,
       xl: 1280,
@@ -52,6 +52,22 @@ const theme = createTheme({
     },
     button: {
       textTransform: "none",
+    },
+  },
+  components: {
+    MuiOutlinedInput: {
+      styleOverrides: {
+        root: {
+          background: "white",
+        },
+      },
+    },
+    MuiInputBase: {
+      styleOverrides: {
+        input: {
+          padding: "8px 14px !important",
+        },
+      },
     },
   },
 })

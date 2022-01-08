@@ -13,6 +13,7 @@ import Coin from "../../src/coin"
 import Logo from "../../src/logo"
 import CoinPickerDialog from "../../src/coinPickerDialog"
 import { useWidth } from "../../utils/hooks"
+import { force_decimal } from "../../utils/functions"
 import HeaderText from "../../src/headerText"
 
 export default function Swap({ currencies }) {
@@ -24,20 +25,6 @@ export default function Swap({ currencies }) {
   const [coin2Value, setCoin2Value] = useState("")
   const [coin2DialogOpen, setCoin2DialogOpen] = useState(false)
   const [swapRotation, setSwapRotation] = useState(180)
-
-  // Cleans a string into a decimal
-  const force_decimal = (val) => {
-    // replace non-digits and periods
-    val = val.replace(/[^\d.]/g, "")
-    const idx_decimal = val.indexOf(".")
-
-    // only keep the first decimal point
-    if (idx_decimal >= 0) {
-      val = val.replace(/\./g, "")
-      val = val.substring(0, idx_decimal) + "." + val.substring(idx_decimal)
-    }
-    return val
-  }
 
   const setMax = () => {
     setCoin1Value("9000")
@@ -231,7 +218,6 @@ export default function Swap({ currencies }) {
               )
             }
             InputProps={{
-              sx: { background: theme.palette.background.paper },
               endAdornment: (
                 <InputAdornment position="end">
                   <Button

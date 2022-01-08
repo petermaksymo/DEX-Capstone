@@ -10,13 +10,12 @@ import Box from "@mui/material/Box"
 
 import HeaderText from "../../src/headerText"
 import LPCard from "../../src/lpCard"
-import LiquidityAddWithdrawCard from "../../src/liquidityAddWithdrawCard";
+import LiquidityAddWithdrawCard from "../../src/liquidityAddWithdrawCard"
 import { getCoinData } from "../../lib/coins"
 
 export default function Dealership({ currencies, pools }) {
-
   return (
-    <Box sx={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
+    <Box sx={{ display: "flex", flexDirection: "column", height: "100%" }}>
       <Box
         sx={{
           bgcolor: "#E37065",
@@ -31,28 +30,40 @@ export default function Dealership({ currencies, pools }) {
           />
         </Container>
       </Box>
-      <Box sx={{ bgcolor: "#FFF3F2", height: '100%', width: '100%' }}>
+      <Box sx={{ bgcolor: "#FFF3F2", height: "100%", width: "100%" }}>
         <Container
           maxWidth="xl"
           sx={{
             display: "flex",
-            flexFlow: "row wrap",
+            flexDirection: "column",
             gap: 4,
             mt: { xs: 1, sm: 2, md: 4 },
+            mb: 8,
           }}
         >
-          {map(pools, (pool) => (
-            <LPCard
-              coin1={currencies[pool.coin1]}
-              coin2={currencies[pool.coin2]}
-              stats={pool.stats}
-            />
-          ))}
-          <Box sx={{ width: '100%' }}>
-            <LiquidityAddWithdrawCard />
+          <Box
+            sx={{
+              display: "grid",
+              gridTemplateColumns: {
+                xs: "1fr",
+                sm: "1fr 1fr",
+                md: "1fr 1fr 1fr",
+                xl: "1fr 1fr 1fr 1fr",
+              },
+              gap: 4,
+            }}
+          >
+            {map(pools, (pool) => (
+              <LPCard
+                coin1={currencies[pool.coin1]}
+                coin2={currencies[pool.coin2]}
+                stats={pool.stats}
+              />
+            ))}
           </Box>
-
-
+          <Box sx={{ width: "100%" }}>
+            <LiquidityAddWithdrawCard currencies={currencies} />
+          </Box>
         </Container>
       </Box>
     </Box>

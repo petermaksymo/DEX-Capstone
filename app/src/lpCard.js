@@ -12,7 +12,7 @@ import useMediaQuery from "@mui/material/useMediaQuery"
 import Coin from "./coin"
 
 export default function LPCard({ coin1, coin2, stats }) {
-  const onMobile = useMediaQuery("(max-width:580px)")
+  const onMobile = useMediaQuery("(max-width:425px)")
   const [expanded, setExpanded] = useState(!onMobile)
 
   useEffect(() => {
@@ -32,7 +32,6 @@ export default function LPCard({ coin1, coin2, stats }) {
         display: "flex",
         flexDirection: "column",
         width: "100%",
-        maxWidth: { xs: onMobile ? "100%" : 250, md: 300 },
       }}
       elevation={4}
     >
