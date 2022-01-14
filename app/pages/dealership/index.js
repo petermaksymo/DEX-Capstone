@@ -8,7 +8,7 @@ import Box from "@mui/material/Box"
 import HeaderText from "../../src/headerText"
 import LPCard from "../../src/lpCard"
 import LiquidityAddWithdrawCard from "../../src/liquidityAddWithdrawCard"
-import { getCoinData } from "../../lib/coins"
+import { getCoinData } from "../../lib/api/coins"
 
 export default function Dealership({ currencies, pools }) {
   return (
@@ -77,7 +77,7 @@ export default function Dealership({ currencies, pools }) {
 export async function getStaticProps() {
   return {
     props: {
-      currencies: getCoinData(),
+      currencies: await getCoinData(),
       pools: [
         {
           coin1: "coin_a",
