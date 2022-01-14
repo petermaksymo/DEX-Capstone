@@ -12,4 +12,4 @@ def index():
     return jsonify(status="API is Up!")
 
 # Import routes/endpoints
-import api.routes.currency
+import api.routes.coins
