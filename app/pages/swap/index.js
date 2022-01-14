@@ -1,4 +1,5 @@
 import React, { useState } from "react"
+import Head from "next/head"
 
 import { useTheme } from "@mui/material"
 import Container from "@mui/material/Container"
@@ -147,6 +148,13 @@ export default function Swap({ currencies }) {
         color: theme.palette.background.paper,
       }}
     >
+      <Head>
+        <title>Swap Meet - LS Swap</title>
+        <meta
+          name="description"
+          content="LS Swap - Swap Meet Page - exchange between different tokens"
+        />
+      </Head>
       <Box sx={{ background: currencies[coin1].color, flex: 1 }}>
         <Container
           maxWidth="xl"

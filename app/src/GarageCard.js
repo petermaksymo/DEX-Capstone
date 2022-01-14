@@ -5,9 +5,7 @@ import take from "lodash/take"
 import takeRight from "lodash/takeRight"
 
 import Collapse from "@mui/material/Collapse"
-import Container from "@mui/material/Container"
 import Button from "@mui/material/Button"
-import Divider from "@mui/material/Divider"
 import Paper from "@mui/material/Paper"
 import Typography from "@mui/material/Typography"
 import Box from "@mui/material/Box"
@@ -83,14 +81,14 @@ export default function GarageCard({ color, netWorth, data }) {
           {map(displayData.headers, (header) => (
             <Typography
               className="grid-item"
-              sx={{ color: "#800F2F", fontWeight: "bold", py: 1 }}
+              sx={{ color: "#800F2F", fontWeight: "bold", p: 1 }}
             >
               {header}
             </Typography>
           ))}
           {map(take(displayData.values, 3), (d) =>
             map(d, (item) => (
-              <Typography className="grid-item" sx={{ py: 1 }}>
+              <Typography className="grid-item" sx={{ p: 1 }}>
                 {item}
               </Typography>
             ))
@@ -108,7 +106,7 @@ export default function GarageCard({ color, netWorth, data }) {
               takeRight(displayData.values, displayData.values.length - 3),
               (d) =>
                 map(d, (item) => (
-                  <Typography className="grid-item" sx={{ py: 1 }}>
+                  <Typography className="grid-item" sx={{ p: 1 }}>
                     {item}
                   </Typography>
                 ))

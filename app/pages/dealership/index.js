@@ -1,11 +1,8 @@
 import React from "react"
+import Head from "next/head"
 import map from "lodash/map"
 
 import Container from "@mui/material/Container"
-import Button from "@mui/material/Button"
-import Divider from "@mui/material/Divider"
-import Paper from "@mui/material/Paper"
-import Typography from "@mui/material/Typography"
 import Box from "@mui/material/Box"
 
 import HeaderText from "../../src/headerText"
@@ -15,7 +12,14 @@ import { getCoinData } from "../../lib/coins"
 
 export default function Dealership({ currencies, pools }) {
   return (
-    <Box sx={{ display: "flex", flexDirection: "column", height: "100%" }}>
+    <Box sx={{ display: "flex", flexDirection: "column", minHeight: "100%" }}>
+      <Head>
+        <title>Dealership - LS Swap</title>
+        <meta
+          name="description"
+          content="LS Swap - Dealership Page - add and remove liquidity in LS Swap pools"
+        />
+      </Head>
       <Box
         sx={{
           bgcolor: "#E37065",

@@ -1,22 +1,34 @@
 import React from "react"
-import map from "lodash/map"
+import Head from "next/head"
+import moment from "moment"
+import { v4 as uuidv4 } from "uuid"
 
 import Container from "@mui/material/Container"
-import Button from "@mui/material/Button"
-import Divider from "@mui/material/Divider"
-import Paper from "@mui/material/Paper"
 import Typography from "@mui/material/Typography"
 import Box from "@mui/material/Box"
 
 import HeaderText from "../src/headerText"
 import GarageCard from "../src/GarageCard"
+import TransactionCard from "../src/transactionCard"
 import { getCoinData } from "../lib/coins"
 
-export default function Garage({ currencies, wallet_data, stake_data }) {
+export default function Garage({
+  currencies,
+  wallet_data,
+  stake_data,
+  transaction_data,
+}) {
   const subheaderStyle = { color: "#800F2F", fontSize: 24, fontWeight: "bold" }
 
   return (
-    <Box sx={{ display: "flex", flexDirection: "column", height: "100%" }}>
+    <Box sx={{ display: "flex", flexDirection: "column", minHeight: "100%" }}>
+      <Head>
+        <title>Garage - LS Swap</title>
+        <meta
+          name="description"
+          content="LS Swap - Garage Page - View your own personal stats"
+        />
+      </Head>
       <Box
         sx={{
           bgcolor: "#C25B78",
@@ -39,7 +51,7 @@ export default function Garage({ currencies, wallet_data, stake_data }) {
             flexDirection: "column",
             gap: 4,
             mt: { xs: 1, sm: 2, md: 4 },
-            mb: 8,
+            pb: 8,
           }}
         >
           <Typography variant="h3" sx={subheaderStyle}>
@@ -53,6 +65,7 @@ export default function Garage({ currencies, wallet_data, stake_data }) {
           <Typography variant="h3" sx={subheaderStyle}>
             Transactions
           </Typography>
+          <TransactionCard data={transaction_data} />
         </Container>
       </Box>
     </Box>
@@ -145,6 +158,67 @@ export async function getStaticProps() {
           ],
         ],
         mobile_cols: [0, 3, 4],
+      },
+      transaction_data: {
+        headers: [
+          "Date",
+          "Description",
+          "Amount (Token)",
+          "Amount (Token)",
+          "Worth (USD)",
+          "ID",
+        ],
+        values: [
+          [
+            moment().format("ll"),
+            "Pool Transfer - Coin A and Coin B",
+            "- 100 Coin A",
+            "- 10 Coin B",
+            "$XXX.XX",
+            uuidv4(),
+          ],
+          [
+            moment().format("ll"),
+            "Pool Transfer - Coin B and Coin C",
+            "- 10 Coin B",
+            "- 5 Coin C",
+            "$XXX.XX",
+            uuidv4(),
+          ],
+          [
+            moment().format("ll"),
+            "Swap - Coin A and Coin B",
+            "- 100 Coin A",
+            "+ 10 Coin B",
+            "$XXX.XX",
+            uuidv4(),
+          ],
+          [
+            moment().subtract(1, "days").format("ll"),
+            "Pool Transfer - Coin B and Coin C",
+            "- 10 Coin B",
+            "- 5 Coin C",
+            "$XXX.XX",
+            uuidv4(),
+          ],
+          [
+            moment().subtract(1, "days").format("ll"),
+            "Swap - Coin A and Coin B",
+            "- 100 Coin A",
+            "+ 10 Coin B",
+            "$XXX.XX",
+            uuidv4(),
+          ],
+          [
+            moment().subtract(5, "days").format("ll"),
+            "Pool Transfer - Coin B and Coin C",
+            "- 10 Coin B",
+            "- 5 Coin C",
+            "$XXX.XX",
+            uuidv4(),
+          ],
+        ],
+        mobile_cols: [0, 1, 4],
       },
     },
   }
