@@ -80,3 +80,10 @@ dev execute <TC account address> <loaction of compiled code> <address of account
 ```
 
 You can inspect it with `query account_state <address>`
+
+
+## Bringing up the Web App
+
+1. `cd` into the `app` directory
+2. Run `yarn install`, [yarn installation](https://classic.yarnpkg.com/lang/en/docs/install/#debian-stable)
+3. Run `yarn run dev` and the app should be running on `localhost:3000`
