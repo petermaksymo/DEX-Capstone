@@ -1,0 +1,45 @@
+html,
+body,
+main {
+  height: 100%;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+#__next {
+  height: 100%;
+  padding-top: 64px;
+  box-sizing: border-box;
+}
+
+@media only screen and (max-width: 575px) {
+  #__next {
+    padding-top: 56px;
+  }
+}
+
+.swap {
+  overflow: hidden;
+  transition-duration: 0.5s;
+  transition-property: transform;
+}
+
+@-webkit-keyframes rotating {
+  from {
+    -webkit-transform: rotate(0deg);
+  }
+  to {
+    -webkit-transform: rotate(-360deg);
+  }
+}
+
+.rotating {
+  -webkit-animation: rotating 1s linear infinite;
+}
+
+.grid-item {
+  width: 100%;
+  border-bottom: 1px solid #dddddd;
+}
