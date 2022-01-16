@@ -8,6 +8,9 @@ class Config(object):
     JWT_ACCESS_LIFESPAN = {"hours": 24}
     JWT_REFRESH_LIFESPAN = {"days": 30}
 
+    SQLALCHEMY_DATABASE_URI = "sqlite:///database/dev.db"
+    SQLALCHEMY_TRACK_MODIFICATIONS = True
+
 
 class ProductionConfig(Config):
     """Base Configuration"""
