@@ -8,6 +8,7 @@ import api.database.models
 
 ENVIRONMENT = os.getenv("ENVIRONMENT", "development")
 
+
 def create_app(config_name):
     app = Flask(__name__)
 
