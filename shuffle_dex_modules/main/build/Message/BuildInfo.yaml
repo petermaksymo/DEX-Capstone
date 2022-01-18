@@ -1,0 +1,61 @@
+---
+compiled_package_info:
+  package_name: Message
+  address_alias_instantiation:
+    Sender: 5ce9d739c94cbc4088cb28bcb382948f
+    Std: "00000000000000000000000000000001"
+  module_resolution_metadata:
+    ? address: "00000000000000000000000000000001"
+      name: BCS
+    : Std
+    ? address: "00000000000000000000000000000001"
+      name: BitVector
+    : Std
+    ? address: "00000000000000000000000000000001"
+      name: Capability
+    : Std
+    ? address: "00000000000000000000000000000001"
+      name: Errors
+    : Std
+    ? address: "00000000000000000000000000000001"
+      name: Event
+    : Std
+    ? address: "00000000000000000000000000000001"
+      name: FixedPoint32
+    : Std
+    ? address: "00000000000000000000000000000001"
+      name: GUID
+    : Std
+    ? address: "00000000000000000000000000000001"
+      name: Hash
+    : Std
+    ? address: "00000000000000000000000000000001"
+      name: Option
+    : Std
+    ? address: "00000000000000000000000000000001"
+      name: Signer
+    : Std
+    ? address: "00000000000000000000000000000001"
+      name: Vector
+    : Std
+    ? address: 5ce9d739c94cbc4088cb28bcb382948f
+      name: CoinA
+    : Sender
+    ? address: 5ce9d739c94cbc4088cb28bcb382948f
+      name: CoinB
+    : Sender
+    ? address: 5ce9d739c94cbc4088cb28bcb382948f
+      name: Exchange
+    : Sender
+  source_digest: 488BF3A7B82FC5DECA84BD61EA80440214A1C47C85532610DE6D2DEA48958D4E
+  build_flags:
+    dev_mode: true
+    test_mode: false
+    generate_docs: false
+    generate_abis: true
+    install_dir: ~
+    force_recompilation: false
+    additional_named_addresses:
+      Sender: 5ce9d739c94cbc4088cb28bcb382948f
+dependencies:
+  - MoveStdlib

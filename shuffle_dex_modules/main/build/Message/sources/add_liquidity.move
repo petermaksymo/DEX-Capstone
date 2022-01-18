@@ -1,5 +1,5 @@
 script {
-    use 0x2::Exchange;
+    use Sender::Exchange;
 
     fun add_liquidity(exch_acct: signer, acct_a: signer, amt: u64) {
         //Add Liquidity
