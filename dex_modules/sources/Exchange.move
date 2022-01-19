@@ -12,6 +12,7 @@ module Exchange{
 		comm_rate: u64
 	}
 
+
 	//Liquidity Provider Coin Struct
 	struct LPCoin has key, store, drop{
 		value: u64
@@ -109,10 +110,9 @@ module Exchange{
 		assert!(minted_lp_coin_amt == lp_coin_amt, 1);
 
 		move_to<Exchange>(exchange_acct, Exchange { coin_a: coin_a_transferred, 
-							    coin_b: coin_b_transferred,
+						    	    coin_b: coin_b_transferred,
 							    LP_minted: minted_lp_coin_amt,
 							    comm_rate: comm_rate});
-
 	}
 
 	//Check if exchange exists at an address
