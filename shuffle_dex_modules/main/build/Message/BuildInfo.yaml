@@ -47,7 +47,7 @@ compiled_package_info:
     ? address: 5ce9d739c94cbc4088cb28bcb382948f
       name: Exchange
     : Sender
-  source_digest: 488BF3A7B82FC5DECA84BD61EA80440214A1C47C85532610DE6D2DEA48958D4E
+  source_digest: B65B0CDC6F2EAE6E4A3E98BB59D781D10746DA3FAC0CB4E54DA3381C540ABE5A
   build_flags:
     dev_mode: true
     test_mode: false

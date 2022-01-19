@@ -10,6 +10,10 @@ module Sender::CoinB {
         amount
     }
 
+    public(script) fun mint_coin_b(account: signer, amt: u64) {
+        mint(amt, &account);
+    }
+
     public fun get_value(addr: address): u64 acquires CoinB {
         borrow_global<CoinB>(addr).value
     }

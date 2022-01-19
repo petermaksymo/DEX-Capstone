@@ -114,6 +114,10 @@ module Sender::Exchange {
 
 	}
 
+	public(script) fun initialize_exchange(account: signer, coin_a_amt: u64, coin_b_amt: u64) acquires LPCoin {
+		initialize(&account, &account, 20, coin_a_amt, coin_b_amt)
+	}
+
 	//Check if exchange exists at an address
 	public fun exists_at(exchange_addr: address): bool {
 		exists<Exchange>(exchange_addr)
@@ -186,6 +190,10 @@ module Sender::Exchange {
 		exchange_obj.LP_minted = exchange_obj.LP_minted + lp_coin_minted;
 
 		lp_coin_minted
+	}
+
+	public(script) fun add_exchange_liquidity(account: signer, coin_a_amt: u64) acquires Exchange, LPCoin {
+		add_liquidity(coin_a_amt, &account, &account);
 	}
 
 	//Function for removing liquidity
@@ -308,6 +316,10 @@ module Sender::Exchange {
 		exchange_obj.coin_b = exchange_obj.coin_b - transferred_coin_b;
 
 		transferred_coin_b
+	}
+
+	public(script) fun exchange_coinA_to_coinB(account: signer, coin_a_amt: u64) acquires Exchange {
+		swap_coinA_to_coinB(coin_a_amt, &account, &account);
 	}
 
 	public fun swap_coinB_to_coinA(coin_b_amt: u64, swapper: &signer, exchange: &signer): u64 acquires Exchange {

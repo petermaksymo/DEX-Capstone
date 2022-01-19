@@ -44,7 +44,7 @@ export async function printWelcome() {
 export async function mintCoinAFunction(
   amt: bigint,
 ) {
-  const payload = codegen.Stdlib.encodeMintCoinAScript(
+  const payload = codegen.Stdlib.encodeMintCoinAScriptFunction(
     amt,
   );
   return await DiemHelpers.buildAndSubmitTransaction(
@@ -54,6 +54,69 @@ export async function mintCoinAFunction(
     payload,
   );
 }
+
+// ScriptFunction example; client side creation and signing of transactions.
+// https://github.com/diem/diem/blob/main/json-rpc/docs/method_submit.md#method-submit
+export async function mintCoinBFunction(
+  amt: bigint,
+) {
+  const payload = codegen.Stdlib.encodeMintCoinBScriptFunction(
+    amt,
+  );
+  return await DiemHelpers.buildAndSubmitTransaction(
+    defaultUserContext.address,
+    await devapi.sequenceNumber(),
+    await defaultUserContext.readPrivateKey(),
+    payload,
+  );
+}
+
+
+export async function initializeExchange(
+  coin_a_amt: bigint,
+  coin_b_amt: bigint
+) {
+  const payload = codegen.Stdlib.encodeInitializeExchangeScriptFunction(
+    coin_a_amt,
+    coin_b_amt
+  );
+  return await DiemHelpers.buildAndSubmitTransaction(
+    defaultUserContext.address,
+    await devapi.sequenceNumber(),
+    await defaultUserContext.readPrivateKey(),
+    payload,
+  );
+}
+
+export async function addLiquidity(
+  coin_a_amt: bigint
+) {
+  const payload = codegen.Stdlib.encodeAddExchangeLiquidityScriptFunction(
+    coin_a_amt
+  );
+  return await DiemHelpers.buildAndSubmitTransaction(
+    defaultUserContext.address,
+    await devapi.sequenceNumber(),
+    await defaultUserContext.readPrivateKey(),
+    payload,
+  );
+}
+
+export async function exchangeCoinAToCoinB(
+  coin_a_amt: bigint
+) {
+  const payload = codegen.Stdlib.encodeExchangeCoinAToCoinBScriptFunction(
+    coin_a_amt
+  );
+  return await DiemHelpers.buildAndSubmitTransaction(
+    defaultUserContext.address,
+    await devapi.sequenceNumber(),
+    await defaultUserContext.readPrivateKey(),
+    payload,
+  );
+}
+
+
 
 // ScriptFunction example; client side creation and signing of transactions.
 // https://github.com/diem/diem/blob/main/json-rpc/docs/method_submit.md#method-submit
