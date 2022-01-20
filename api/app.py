@@ -33,7 +33,7 @@ def reset():
         coin_data = coins_data[coin]
 
         new_coin = Coin(
-            id=coin,
+            key=coin,
             name=coin_data["name"],
             short_name=coin_data["short_name"],
             color=coin_data["color"],
@@ -47,3 +47,5 @@ def reset():
 
 # Import routes/endpoints
 import api.routes.coins
+import api.routes.account
+import api.routes.mint

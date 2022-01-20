@@ -19,17 +19,17 @@ def coins():
         coin_dict = dict()
         for item in result:
             item = item.to_dict()
-            coin_dict[item["id"]] = item
+            coin_dict[item["key"]] = item
 
         return jsonify(coin_dict)
 
     if request.method == "POST":
-        id, name, short_name, color, price = itemgetter(
-            "id", "name", "short_name", "color", "price"
+        key, name, short_name, color, price = itemgetter(
+            "key", "name", "short_name", "color", "price"
         )(request.form)
 
         new_entry = Coin(
-            id=id, name=name, short_name=short_name, color=color, price=price
+            key=key, name=name, short_name=short_name, color=color, price=price
         )
         db.session.add(new_entry)
         db.session.commit()
