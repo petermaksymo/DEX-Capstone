@@ -2,9 +2,9 @@
 
 ## Install
 
-Install the move cli with optional debug flag:
+Install the move cli with optional debug flag - Note: as of Jan 27 the move cli has been moved to a separate repo:
 ```
-cargo install --debug --git https://github.com/diem/diem#6ab59227 move-cli
+cargo install --debug --git https://github.com/diem/move#6ab59227 move-cli
 ```
 CD into the `dex_modules` directory which contains our Move modules/scripts
 
