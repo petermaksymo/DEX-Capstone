@@ -9,7 +9,7 @@ import TextField from "@mui/material/TextField"
 import Typography from "@mui/material/Typography"
 import Box from "@mui/material/Box"
 
-import { getCoinData } from "../../lib/coins"
+import { getCoinData } from "../../lib/api/coins"
 import Coin from "../../src/coin"
 import Logo from "../../src/logo"
 import CoinPickerDialog from "../../src/coinPickerDialog"
@@ -370,7 +370,7 @@ export default function Swap({ currencies }) {
 export async function getStaticProps() {
   return {
     props: {
-      currencies: getCoinData(),
+      currencies: await getCoinData(),
     },
   }
 }

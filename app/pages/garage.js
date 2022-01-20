@@ -10,7 +10,7 @@ import Box from "@mui/material/Box"
 import HeaderText from "../src/headerText"
 import GarageCard from "../src/GarageCard"
 import TransactionCard from "../src/transactionCard"
-import { getCoinData } from "../lib/coins"
+import { getCoinData } from "../lib/api/coins"
 
 export default function Garage({
   currencies,
@@ -73,9 +73,10 @@ export default function Garage({
 }
 
 export async function getStaticProps() {
+
   return {
     props: {
-      currencies: getCoinData(),
+      currencies: await getCoinData(),
       wallet_data: {
         headers: [
           "Token",
