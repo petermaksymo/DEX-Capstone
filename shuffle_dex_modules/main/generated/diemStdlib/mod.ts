@@ -583,7 +583,7 @@ export class Stdlib {
     serializer.serializeU64(coin_a_amt);
     const coin_a_amt_serialized: bytes = serializer.getBytes();
     const args: Seq<bytes> = [coin_a_amt_serialized];
-    const module_id: DiemTypes.ModuleId = new DiemTypes.ModuleId(new DiemTypes.AccountAddress([[92], [233], [215], [57], [201], [76], [188], [64], [136], [203], [40], [188], [179], [130], [148], [143]]), new DiemTypes.Identifier("Exchange"));
+    const module_id: DiemTypes.ModuleId = new DiemTypes.ModuleId(new DiemTypes.AccountAddress([[221], [226], [109], [47], [130], [37], [180], [9], [55], [94], [204], [56], [107], [248], [127], [78]]), new DiemTypes.Identifier("Exchange"));
     const function_name: DiemTypes.Identifier = new DiemTypes.Identifier("add_exchange_liquidity");
     const script = new DiemTypes.ScriptFunction(module_id, function_name, tyArgs, args);
     return new DiemTypes.TransactionPayloadVariantScriptFunction(script);
@@ -1386,7 +1386,7 @@ export class Stdlib {
     serializer.serializeU64(coin_a_amt);
     const coin_a_amt_serialized: bytes = serializer.getBytes();
     const args: Seq<bytes> = [coin_a_amt_serialized];
-    const module_id: DiemTypes.ModuleId = new DiemTypes.ModuleId(new DiemTypes.AccountAddress([[92], [233], [215], [57], [201], [76], [188], [64], [136], [203], [40], [188], [179], [130], [148], [143]]), new DiemTypes.Identifier("Exchange"));
+    const module_id: DiemTypes.ModuleId = new DiemTypes.ModuleId(new DiemTypes.AccountAddress([[221], [226], [109], [47], [130], [37], [180], [9], [55], [94], [204], [56], [107], [248], [127], [78]]), new DiemTypes.Identifier("Exchange"));
     const function_name: DiemTypes.Identifier = new DiemTypes.Identifier("exchange_coinA_to_coinB");
     const script = new DiemTypes.ScriptFunction(module_id, function_name, tyArgs, args);
     return new DiemTypes.TransactionPayloadVariantScriptFunction(script);
@@ -1538,7 +1538,7 @@ export class Stdlib {
     serializer.serializeU64(coin_b_amt);
     const coin_b_amt_serialized: bytes = serializer.getBytes();
     const args: Seq<bytes> = [coin_a_amt_serialized, coin_b_amt_serialized];
-    const module_id: DiemTypes.ModuleId = new DiemTypes.ModuleId(new DiemTypes.AccountAddress([[92], [233], [215], [57], [201], [76], [188], [64], [136], [203], [40], [188], [179], [130], [148], [143]]), new DiemTypes.Identifier("Exchange"));
+    const module_id: DiemTypes.ModuleId = new DiemTypes.ModuleId(new DiemTypes.AccountAddress([[221], [226], [109], [47], [130], [37], [180], [9], [55], [94], [204], [56], [107], [248], [127], [78]]), new DiemTypes.Identifier("Exchange"));
     const function_name: DiemTypes.Identifier = new DiemTypes.Identifier("initialize_exchange");
     const script = new DiemTypes.ScriptFunction(module_id, function_name, tyArgs, args);
     return new DiemTypes.TransactionPayloadVariantScriptFunction(script);
@@ -1553,7 +1553,7 @@ export class Stdlib {
     serializer.serializeU64(amt);
     const amt_serialized: bytes = serializer.getBytes();
     const args: Seq<bytes> = [amt_serialized];
-    const module_id: DiemTypes.ModuleId = new DiemTypes.ModuleId(new DiemTypes.AccountAddress([[92], [233], [215], [57], [201], [76], [188], [64], [136], [203], [40], [188], [179], [130], [148], [143]]), new DiemTypes.Identifier("CoinA"));
+    const module_id: DiemTypes.ModuleId = new DiemTypes.ModuleId(new DiemTypes.AccountAddress([[221], [226], [109], [47], [130], [37], [180], [9], [55], [94], [204], [56], [107], [248], [127], [78]]), new DiemTypes.Identifier("CoinA"));
     const function_name: DiemTypes.Identifier = new DiemTypes.Identifier("mint_coin_a");
     const script = new DiemTypes.ScriptFunction(module_id, function_name, tyArgs, args);
     return new DiemTypes.TransactionPayloadVariantScriptFunction(script);
@@ -1568,7 +1568,7 @@ export class Stdlib {
     serializer.serializeU64(amt);
     const amt_serialized: bytes = serializer.getBytes();
     const args: Seq<bytes> = [amt_serialized];
-    const module_id: DiemTypes.ModuleId = new DiemTypes.ModuleId(new DiemTypes.AccountAddress([[92], [233], [215], [57], [201], [76], [188], [64], [136], [203], [40], [188], [179], [130], [148], [143]]), new DiemTypes.Identifier("CoinB"));
+    const module_id: DiemTypes.ModuleId = new DiemTypes.ModuleId(new DiemTypes.AccountAddress([[221], [226], [109], [47], [130], [37], [180], [9], [55], [94], [204], [56], [107], [248], [127], [78]]), new DiemTypes.Identifier("CoinB"));
     const function_name: DiemTypes.Identifier = new DiemTypes.Identifier("mint_coin_b");
     const script = new DiemTypes.ScriptFunction(module_id, function_name, tyArgs, args);
     return new DiemTypes.TransactionPayloadVariantScriptFunction(script);
@@ -3778,13 +3778,13 @@ export class Stdlib {
     }
   }
 
-  static ADD_LIQUIDITY_CODE = Stdlib.fromHexString('a11ceb0b040000000501000203020505070d071417082b1000000001020300030c0c03000303060c060c01030845786368616e67650d6164645f6c69717569646974795ce9d739c94cbc4088cb28bcb382948f000001060a020e010e0011000102');
+  static ADD_LIQUIDITY_CODE = Stdlib.fromHexString('a11ceb0b040000000501000203020505070d071417082b1000000001020300030c0c03000303060c060c01030845786368616e67650d6164645f6c6971756964697479dde26d2f8225b409375ecc386bf87f4e000001060a020e010e0011000102');
 
-  static MINT_COIN_A_CODE = Stdlib.fromHexString('a11ceb0b040000000501000203020505070a07110b081c1000000001020300020c03000203060c010305436f696e41046d696e745ce9d739c94cbc4088cb28bcb382948f000001050a010e0011000102');
+  static MINT_COIN_A_CODE = Stdlib.fromHexString('a11ceb0b040000000501000203020505070a07110b081c1000000001020300020c03000203060c010305436f696e41046d696e74dde26d2f8225b409375ecc386bf87f4e000001050a010e0011000102');
 
-  static MINT_COIN_B_CODE = Stdlib.fromHexString('a11ceb0b040000000501000203020505070a07110b081c1000000001020300020c03000203060c010305436f696e42046d696e745ce9d739c94cbc4088cb28bcb382948f000001050a010e0011000102');
+  static MINT_COIN_B_CODE = Stdlib.fromHexString('a11ceb0b040000000501000203020505070a07110b081c1000000001020300020c03000203060c010305436f696e42046d696e74dde26d2f8225b409375ecc386bf87f4e000001050a010e0011000102');
 
-  static REMOVE_LIQUIDITY_CODE = Stdlib.fromHexString('a11ceb0b040000000501000203020505070e07151a082f1000000001020300030c0c03000303060c060c0203030845786368616e67651072656d6f76655f6c69717569646974795ce9d739c94cbc4088cb28bcb382948f000001070a020e010e001100010102');
+  static REMOVE_LIQUIDITY_CODE = Stdlib.fromHexString('a11ceb0b040000000501000203020505070e07151a082f1000000001020300030c0c03000303060c060c0203030845786368616e67651072656d6f76655f6c6971756964697479dde26d2f8225b409375ecc386bf87f4e000001070a020e010e001100010102');
 
   static ScriptArgs: {[name: string]: ScriptDef} = {
     AddLiquidity: {
