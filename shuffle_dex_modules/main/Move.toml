@@ -1,9 +1,11 @@
 [package]
-name = "Message"
-version = "0.0.0"
+name = "shuffle_dex_modules"
+version = "0.0.1"
+authors = ["Noah Patton", "Hanke (Hankle) Liu", "Peter Maksymowsky", "Jia Bao (Alan) Du"]
 
 [addresses]
 Sender = "_"
 
 [dependencies]
 MoveStdlib = { local = "../stdlib", addr_subst = { "Std" = "0x1" }}
+DiemCoreFramework = { git = "https://github.com/diem/diem.git", subdir="diem-move/diem-framework/core", rev = "6ab59227a0b7093144c2393e63ee77458942377c", addr_subst = { "DiemFramework" = "0x1" } }
