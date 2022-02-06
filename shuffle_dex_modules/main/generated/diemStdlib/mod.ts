@@ -208,6 +208,20 @@ constructor (public coin_a_amt: uint64, public coin_b_amt: uint64) {
 
 }
 
+export class ScriptFunctionCallVariantInitializeRotary extends ScriptFunctionCall {
+constructor () {
+  super();
+}
+
+}
+
+export class ScriptFunctionCallVariantInitializeV8 extends ScriptFunctionCall {
+constructor () {
+  super();
+}
+
+}
+
 export class ScriptFunctionCallVariantMintCoinA extends ScriptFunctionCall {
 
 constructor (public amt: uint64) {
@@ -1540,6 +1554,30 @@ export class Stdlib {
     const args: Seq<bytes> = [coin_a_amt_serialized, coin_b_amt_serialized];
     const module_id: DiemTypes.ModuleId = new DiemTypes.ModuleId(new DiemTypes.AccountAddress([[221], [226], [109], [47], [130], [37], [180], [9], [55], [94], [204], [56], [107], [248], [127], [78]]), new DiemTypes.Identifier("Exchange"));
     const function_name: DiemTypes.Identifier = new DiemTypes.Identifier("initialize_exchange");
+    const script = new DiemTypes.ScriptFunction(module_id, function_name, tyArgs, args);
+    return new DiemTypes.TransactionPayloadVariantScriptFunction(script);
+  }
+
+  /**
+
+   */
+  static encodeInitializeRotaryScriptFunction(): DiemTypes.TransactionPayload {
+    const tyArgs: Seq<DiemTypes.TypeTag> = [];
+    const args: Seq<bytes> = [];
+    const module_id: DiemTypes.ModuleId = new DiemTypes.ModuleId(new DiemTypes.AccountAddress([[221], [226], [109], [47], [130], [37], [180], [9], [55], [94], [204], [56], [107], [248], [127], [78]]), new DiemTypes.Identifier("Rotary"));
+    const function_name: DiemTypes.Identifier = new DiemTypes.Identifier("initialize_rotary");
+    const script = new DiemTypes.ScriptFunction(module_id, function_name, tyArgs, args);
+    return new DiemTypes.TransactionPayloadVariantScriptFunction(script);
+  }
+
+  /**
+
+   */
+  static encodeInitializeV8ScriptFunction(): DiemTypes.TransactionPayload {
+    const tyArgs: Seq<DiemTypes.TypeTag> = [];
+    const args: Seq<bytes> = [];
+    const module_id: DiemTypes.ModuleId = new DiemTypes.ModuleId(new DiemTypes.AccountAddress([[221], [226], [109], [47], [130], [37], [180], [9], [55], [94], [204], [56], [107], [248], [127], [78]]), new DiemTypes.Identifier("V8"));
+    const function_name: DiemTypes.Identifier = new DiemTypes.Identifier("initialize_v8");
     const script = new DiemTypes.ScriptFunction(module_id, function_name, tyArgs, args);
     return new DiemTypes.TransactionPayloadVariantScriptFunction(script);
   }
@@ -3257,6 +3295,26 @@ export class Stdlib {
     }
   }
 
+  static decodeInitializeRotaryScriptFunction(_script_fun: DiemTypes.TransactionPayload): ScriptFunctionCallVariantInitializeRotary {
+  if (_script_fun instanceof DiemTypes.TransactionPayloadVariantScriptFunction) {
+      return new ScriptFunctionCallVariantInitializeRotary(
+
+      );
+    } else {
+      throw new Error("Transaction payload not a script function payload")
+    }
+  }
+
+  static decodeInitializeV8ScriptFunction(_script_fun: DiemTypes.TransactionPayload): ScriptFunctionCallVariantInitializeV8 {
+  if (_script_fun instanceof DiemTypes.TransactionPayloadVariantScriptFunction) {
+      return new ScriptFunctionCallVariantInitializeV8(
+
+      );
+    } else {
+      throw new Error("Transaction payload not a script function payload")
+    }
+  }
+
   static decodeMintCoinAScriptFunction(script_fun: DiemTypes.TransactionPayload): ScriptFunctionCallVariantMintCoinA {
   if (script_fun instanceof DiemTypes.TransactionPayloadVariantScriptFunction) {
       var deserializer = new BcsDeserializer(script_fun.value.args[0]);
@@ -4674,6 +4732,26 @@ export class Stdlib {
       typeArgs: [],
       args: [
         {name: "coin_a_amt", type: {type: Types.U64}}, {name: "coin_b_amt", type: {type: Types.U64}}
+      ]
+    },
+                
+
+                InitializeRotary: {
+      stdlibEncodeFunction: Stdlib.encodeInitializeRotaryScriptFunction,
+      description: "",
+      typeArgs: [],
+      args: [
+        
+      ]
+    },
+                
+
+                InitializeV8: {
+      stdlibEncodeFunction: Stdlib.encodeInitializeV8ScriptFunction,
+      description: "",
+      typeArgs: [],
+      args: [
+        
       ]
     },
                 

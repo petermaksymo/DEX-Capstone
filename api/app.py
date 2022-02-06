@@ -49,3 +49,5 @@ def reset():
 import api.routes.coins
 import api.routes.account
 import api.routes.mint
+import api.routes.transactions
+import api.routes.wallet

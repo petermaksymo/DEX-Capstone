@@ -4,6 +4,7 @@ from diem import AuthKey, jsonrpc, diem_types, utils, testnet
 from numpy import uintp
 from cryptography.hazmat.primitives import serialization
 from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PrivateKey
+import requests
 
 TESTNET_URL: str = "http://0.0.0.0:8080"  # "https://testnet.diem.com/v1"
 FAUCET_URL: str = "http://0.0.0.0:8000"  # "https://testnet.diem.com/mint"
@@ -75,3 +76,43 @@ def run_move_script(sender_private_bytes, module, script_name, args):
 
     client.submit(signed_txn)
     client.wait_for_transaction(signed_txn)
+
+    return "success"
+
+
+def get_account_transactions(sender_private_bytes):
+    client = jsonrpc.Client(TESTNET_URL)
+
+    # Overkill to use the private key for this but seems easiest at this point
+    sender_private_key = Ed25519PrivateKey.from_private_bytes(sender_private_bytes)
+    sender_auth_key = AuthKey.from_public_key(sender_private_key.public_key())
+    sender_account = client.get_account(sender_auth_key.account_address())
+
+    transactions = client.get_account_transactions(account_address='DDE26D2F8225B409375ECC386BF87F4E', limit=1000, sequence=sender_account.sequence_number)
+
+    print(transactions)
+
+    for trans in transactions:
+        print("TRANS:\n\n")
+        print(trans)
+        decoded = utils.decode_transaction_script(trans)
+
+
+def get_account_resources(sender_private_bytes):
+    client = jsonrpc.Client(TESTNET_URL)
+
+    # Overkill to use the private key for this but seems easiest at this point
+    sender_private_key = Ed25519PrivateKey.from_private_bytes(sender_private_bytes)
+    sender_auth_key = AuthKey.from_public_key(sender_private_key.public_key())
+    sender_account = client.get_account(sender_auth_key.account_address())
+
+    r = requests.get(f'{TESTNET_URL}/accounts/{sender_account.address}/resources')
+    resources = r.json()
+
+    # Hard-coded for coin b right now
+    tokens = {}
+    for res in resources:
+        if res['type'] == f'0x{EXCHANGE_ADDRESS.lower()}::CoinB::CoinB':
+            tokens['coin_b'] = res['data']['value']
+
+    return tokens

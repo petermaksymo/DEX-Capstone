@@ -5,10 +5,10 @@ import map from "lodash/map"
 import Container from "@mui/material/Container"
 import Box from "@mui/material/Box"
 
-import HeaderText from "../../src/headerText"
-import LPCard from "../../src/lpCard"
-import LiquidityAddWithdrawCard from "../../src/liquidityAddWithdrawCard"
-import { getCoinData } from "../../lib/api/coins"
+import HeaderText from "../src/headerText"
+import LPCard from "../src/lpCard"
+import LiquidityAddWithdrawCard from "../src/liquidityAddWithdrawCard"
+import { getCoinData } from "../lib/api/coins"
 
 export default function Dealership({ currencies, pools }) {
   return (

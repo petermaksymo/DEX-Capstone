@@ -1,4 +1,3 @@
-from operator import itemgetter
 from flask import jsonify, request
 
 from api.app import app
@@ -7,7 +6,7 @@ from api.database.models import Account
 from api.utils.diem_blockchain import create_account
 
 
-@app.route("/account", methods=["GET", "POST", "PATCH"])
+@app.route("/account", methods=["GET", "POST"])
 def account():
     if request.method == "GET":
         username = request.args.get("username")

@@ -29,7 +29,7 @@ export default function GarageCard({ color, netWorth, data }) {
       headers: at(data.headers, data.mobile_cols),
       values: map(data.values, (r) => at(r, data.mobile_cols)),
     }
-  }, [onMobile])
+  }, [onMobile, data])
   const showExpandOption = displayData.values.length > 3
 
   return (
