@@ -12,6 +12,7 @@ import GarageCard from "../src/GarageCard"
 import TransactionCard from "../src/transactionCard"
 import { getCoinData } from "../lib/api/coins"
 import { getWallet } from "../lib/api/wallet"
+import {getTransactions} from "../lib/api/transactions";
 
 export default function Garage({
   currencies,
@@ -20,9 +21,14 @@ export default function Garage({
   transaction_data,
 }) {
   const [walletData, setWalletData] = React.useState(wallet_data)
+  const [transactionData, setTransactionData] = React.useState(transaction_data)
+
   React.useEffect(async () => {
-    const data = await getWallet('peter', 'table')
-    setWalletData(data)
+    const wallet_data = await getWallet('peter', 'table')
+    setWalletData(wallet_data)
+
+    const txn_data = await getTransactions('peter')
+    setTransactionData(txn_data)
   }, [])
 
   const subheaderStyle = { color: "#800F2F", fontSize: 24, fontWeight: "bold" }
@@ -72,7 +78,7 @@ export default function Garage({
           <Typography variant="h3" sx={subheaderStyle}>
             Transactions
           </Typography>
-          <TransactionCard data={transaction_data} />
+          <TransactionCard data={transactionData} />
         </Container>
       </Box>
     </Box>

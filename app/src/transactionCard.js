@@ -37,7 +37,7 @@ export default function TransactionCard({ data }) {
       headers,
       values: map(valueGroups, (g) => g),
     }
-  }, [onMobile])
+  }, [onMobile, data])
   const showExpandOption = displayData.values.length > 2
 
   const mobileTable = (

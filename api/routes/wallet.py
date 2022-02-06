@@ -10,7 +10,7 @@ from api.utils.diem_blockchain import get_account_resources
 def wallet():
     if request.method == "GET":
         username = request.args.get("username")
-        format = request.args.get("format", 'basic')
+        ret_format = request.args.get("format", 'basic')
 
         if username is None:
             return "Must specify a username", 400
@@ -22,7 +22,7 @@ def wallet():
 
         tokens = get_account_resources(account.private_bytes)
 
-        if format != 'table':
+        if ret_format != 'table':
             return jsonify(tokens)
         else:
             wallet_data = {
@@ -38,7 +38,7 @@ def wallet():
                 'values': [
                   [
                     "Coin A",
-                    "XXXXX.XX",
+                    tokens['coin_a'],
                     "XXX.XX",
                     "XXX.XX",
                     "XX.XX",
