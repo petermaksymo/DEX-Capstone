@@ -1,4 +1,5 @@
 from flask import jsonify, request
+from flask_praetorian import auth_required, current_user
 import datetime
 
 from api.app import app
@@ -7,9 +8,10 @@ from api.database.models import Account
 from api.utils.diem_blockchain import get_account_transactions
 
 @app.route("/transactions", methods=["GET"])
+@auth_required
 def transactions():
     if request.method == "GET":
-        username = request.args.get("username")
+        username = current_user().username
 
         if username is None:
             return "Must specify a username", 400

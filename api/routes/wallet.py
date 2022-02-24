@@ -1,4 +1,5 @@
 from flask import jsonify, request
+from flask_praetorian import auth_required, current_user
 
 from api.app import app
 from api.database import db
@@ -7,9 +8,10 @@ from api.utils.diem_blockchain import get_account_resources
 
 
 @app.route("/wallet", methods=["GET"])
+@auth_required
 def wallet():
     if request.method == "GET":
-        username = request.args.get("username")
+        username = current_user().username
         ret_format = request.args.get("format", 'basic')
 
         if username is None:

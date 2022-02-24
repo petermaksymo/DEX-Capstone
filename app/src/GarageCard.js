@@ -78,17 +78,22 @@ export default function GarageCard({ color, netWorth, data }) {
             gridTemplateColumns: `repeat(${displayData.headers.length}, 1fr)`,
           }}
         >
-          {map(displayData.headers, (header) => (
+          {map(displayData.headers, (header, idx) => (
             <Typography
+              key={`garage-header-${idx}`}
               className="grid-item"
               sx={{ color: "#800F2F", fontWeight: "bold", p: 1 }}
             >
               {header}
             </Typography>
           ))}
-          {map(take(displayData.values, 3), (d) =>
-            map(d, (item) => (
-              <Typography className="grid-item" sx={{ p: 1 }}>
+          {map(take(displayData.values, 3), (d, row) =>
+            map(d, (item, idx) => (
+              <Typography
+                key={`garage-data-${row}-${idx}`}
+                className="grid-item"
+                sx={{ p: 1 }}
+              >
                 {item}
               </Typography>
             ))
@@ -104,9 +109,13 @@ export default function GarageCard({ color, netWorth, data }) {
           >
             {map(
               takeRight(displayData.values, displayData.values.length - 3),
-              (d) =>
-                map(d, (item) => (
-                  <Typography className="grid-item" sx={{ p: 1 }}>
+              (d, row) =>
+                map(d, (item, idx) => (
+                  <Typography
+                    key={`garage-expanded-${row}-${idx}`}
+                    className="grid-item"
+                    sx={{ p: 1 }}
+                  >
                     {item}
                   </Typography>
                 ))

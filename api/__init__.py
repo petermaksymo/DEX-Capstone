@@ -1,12 +1,17 @@
 import os
 from flask import Flask
+from flask_praetorian import Praetorian
 from flask_cors import CORS
 
 from api.database import db
 
 import api.database.models
+from api.database.models import Account
 
 ENVIRONMENT = os.getenv("ENVIRONMENT", "development")
+
+
+guard = Praetorian()
 
 
 def create_app(config_name):
@@ -19,7 +24,9 @@ def create_app(config_name):
 
     db.init_app(app)
 
-    CORS(app, origins=["'", "http://localhost:3000"])
+    CORS(app, origins=["*", "http://localhost:3000"])
+
+    guard.init_app(app, Account)
 
     with app.app_context():
         db.create_all()

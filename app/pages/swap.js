@@ -1,6 +1,6 @@
 import React, { useState } from "react"
 import Head from "next/head"
-import get from 'lodash/get'
+import get from "lodash/get"
 
 import { useTheme } from "@mui/material"
 import Container from "@mui/material/Container"
@@ -11,22 +11,22 @@ import Typography from "@mui/material/Typography"
 import Box from "@mui/material/Box"
 
 import { getCoinData } from "../lib/api/coins"
-import { getWallet } from "../lib/api/wallet"
 import Coin from "../src/coin"
 import Logo from "../src/logo"
 import CoinPickerDialog from "../src/coinPickerDialog"
 import { useWidth } from "../utils/hooks"
 import { force_decimal } from "../utils/functions"
 import HeaderText from "../src/headerText"
+import { AuthContext } from "../src/authContext"
 
 export default function Swap({ currencies }) {
   const theme = useTheme()
+  const { isAuthed, authedFetch } = React.useContext(AuthContext)
   const [balances, setBalances] = useState(null)
   React.useEffect(async () => {
-    const data = await getWallet('peter')
+    const data = await authedFetch("/wallet")
     setBalances(data)
   }, [])
-
 
   const [coin1, setCoin1] = useState("coin_a")
   const [coin1Value, setCoin1Value] = useState("")
@@ -270,7 +270,8 @@ export default function Swap({ currencies }) {
                 <Typography>
                   XX.XX {currencies[coin1].name} per {currencies[coin2].name}{" "}
                   <br />
-                  {get(balances, coin1, '0')} <strong>{currencies[coin1].name}</strong> <br />
+                  {get(balances, coin1, "0")}{" "}
+                  <strong>{currencies[coin1].name}</strong> <br />
                   XXXXXXXX <strong>USD</strong>
                 </Typography>
               </Box>
@@ -363,7 +364,8 @@ export default function Swap({ currencies }) {
               <Typography>
                 XX.XX {currencies[coin2].name} per {currencies[coin1].name}{" "}
                 <br />
-                {get(balances, coin2, '0')} <strong>{currencies[coin2].name}</strong> <br />
+                {get(balances, coin2, "0")}{" "}
+                <strong>{currencies[coin2].name}</strong> <br />
                 XXXXXXXX <strong>USD</strong>
               </Typography>
             </Box>

@@ -10,9 +10,8 @@ import Box from "@mui/material/Box"
 import HeaderText from "../src/headerText"
 import GarageCard from "../src/GarageCard"
 import TransactionCard from "../src/transactionCard"
+import { AuthContext } from "../src/authContext"
 import { getCoinData } from "../lib/api/coins"
-import { getWallet } from "../lib/api/wallet"
-import {getTransactions} from "../lib/api/transactions";
 
 export default function Garage({
   currencies,
@@ -20,14 +19,15 @@ export default function Garage({
   stake_data,
   transaction_data,
 }) {
+  const { isAuthed, authedFetch } = React.useContext(AuthContext)
   const [walletData, setWalletData] = React.useState(wallet_data)
   const [transactionData, setTransactionData] = React.useState(transaction_data)
 
   React.useEffect(async () => {
-    const wallet_data = await getWallet('peter', 'table')
+    const wallet_data = await authedFetch("/wallet?format=table")
     setWalletData(wallet_data)
 
-    const txn_data = await getTransactions('peter')
+    const txn_data = await authedFetch("/transactions")
     setTransactionData(txn_data)
   }, [])
 
@@ -86,7 +86,6 @@ export default function Garage({
 }
 
 export async function getStaticProps() {
-
   return {
     props: {
       currencies: await getCoinData(),

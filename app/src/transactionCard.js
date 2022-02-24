@@ -58,9 +58,10 @@ export default function TransactionCard({ data }) {
             gridTemplateColumns: `1fr`,
           }}
         >
-          {map(take(displayData.values, 2), (d) => (
+          {map(take(displayData.values, 2), (d, idx) => (
             <>
               <Typography
+                key={`transaction-header-${idx}`}
                 className="grid-item"
                 sx={{
                   p: 1,
@@ -76,7 +77,11 @@ export default function TransactionCard({ data }) {
                   row,
                   (col, idx) =>
                     idx > 0 && (
-                      <Typography className="grid-item" sx={{ p: 1 }}>
+                      <Typography
+                        key={`transaction-${row}-${idx}`}
+                        className="grid-item"
+                        sx={{ p: 1 }}
+                      >
                         {col}
                       </Typography>
                     )
@@ -113,7 +118,11 @@ export default function TransactionCard({ data }) {
                       row,
                       (col, idx) =>
                         idx > 0 && (
-                          <Typography className="grid-item" sx={{ p: 1 }}>
+                          <Typography
+                            key={`transaction-data-${row}-${idx}`}
+                            className="grid-item"
+                            sx={{ p: 1 }}
+                          >
                             {col}
                           </Typography>
                         )
@@ -135,9 +144,13 @@ export default function TransactionCard({ data }) {
         >
           {map(
             takeRight(displayData.values, displayData.values.length - 3),
-            (d) =>
-              map(d, (item) => (
-                <Typography className="grid-item" sx={{ p: 1 }}>
+            (d, row) =>
+              map(d, (item, idx) => (
+                <Typography
+                  key={`transaction-expanded-${row}-${idx}`}
+                  className="grid-item"
+                  sx={{ p: 1 }}
+                >
                   {item}
                 </Typography>
               ))

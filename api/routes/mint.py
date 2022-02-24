@@ -1,4 +1,5 @@
 from flask import jsonify, request
+from flask_praetorian import auth_required, current_user
 
 from api.app import app
 from api.database import db
@@ -7,10 +8,11 @@ from api.utils.diem_blockchain import run_move_script
 
 
 @app.route("/mint", methods=["POST"])
+@auth_required
 def mint():
     if request.method == "POST":
         coin = request.form.get("coin", 'CoinA')
-        username = request.form.get("username")
+        username = current_user().username
         amount = request.form.get('amount', 100)
 
         if coin not in ['CoinA', 'CoinB']:

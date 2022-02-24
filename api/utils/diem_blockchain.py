@@ -32,7 +32,9 @@ def create_account():
         encryption_algorithm=serialization.NoEncryption(),
     )
 
-    return bytes
+    sender_account = client.get_account(sender_auth_key.account_address())
+
+    return bytes, sender_account.address
 
 
 def run_move_script(sender_private_bytes, module, script_name, arg):
