@@ -1,5 +1,6 @@
 import React from "react"
 import Head from "next/head"
+import { useRouter } from "next/router"
 import moment from "moment"
 import { v4 as uuidv4 } from "uuid"
 
@@ -19,17 +20,21 @@ export default function Garage({
   stake_data,
   transaction_data,
 }) {
-  const { isAuthed, authedFetch } = React.useContext(AuthContext)
+  const router = useRouter()
+  const { isAuthed, isAuthLoading, authedFetch } = React.useContext(AuthContext)
   const [walletData, setWalletData] = React.useState(wallet_data)
   const [transactionData, setTransactionData] = React.useState(transaction_data)
 
   React.useEffect(async () => {
+    console.log({ isAuthed, isAuthLoading })
+    if (!isAuthed && !isAuthLoading) await router.push("/")
+
     const wallet_data = await authedFetch("/wallet?format=table")
     setWalletData(wallet_data)
 
     const txn_data = await authedFetch("/transactions")
     setTransactionData(txn_data)
-  }, [])
+  }, [isAuthed, isAuthLoading])
 
   const subheaderStyle = { color: "#800F2F", fontSize: 24, fontWeight: "bold" }
 

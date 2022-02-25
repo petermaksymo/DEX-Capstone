@@ -31,7 +31,7 @@ const pages = [
 ]
 
 const ResponsiveAppBar = () => {
-  const { login, logout, isAuthed } = useContext(AuthContext)
+  const { login, logout, isAuthed, authedFetch } = useContext(AuthContext)
   const router = useRouter()
   const [signInDialogOpen, setSigninDialogOpen] = React.useState(false)
   const [username, setUsername] = React.useState("")
@@ -54,11 +54,43 @@ const ResponsiveAppBar = () => {
   const handleFormSubmit = (e) => {
     e.preventDefault()
 
+    const createAccount = async () => {
+      const formdata = new FormData()
+      formdata.append("username", username)
+
+      const account_res = await fetch("http://localhost:5000/account", {
+        method: "POST",
+        body: formdata,
+      })
+      const account = await account_res.json()
+
+      await login(username)
+
+      const mint_a_data = new FormData()
+      mint_a_data.append("coin", "CoinA")
+      mint_a_data.append("amount", 1000000)
+      const mint_a = await authedFetch("/mint", {
+        method: "POST",
+        body: mint_a_data,
+      })
+
+      const mint_b_data = new FormData()
+      mint_b_data.append("coin", "CoinB")
+      mint_b_data.append("amount", 1000000)
+      const mint_b = await authedFetch("/mint", {
+        method: "POST",
+        body: mint_b_data,
+      })
+    }
+
     return login(username)
       .then(() => handleSigninDialogClose())
-      .catch((err) =>
-        setLoginError("An error has occurred, please try again later")
-      )
+      .catch((err) => {
+        if (err === "The username and/or password are incorrect") {
+          return createAccount().then(handleSigninDialogClose())
+        }
+      })
+      .then(() => router.push("/garage"))
   }
 
   const handleSigninDialogClose = () => {

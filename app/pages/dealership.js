@@ -1,5 +1,6 @@
 import React from "react"
 import Head from "next/head"
+import { useRouter } from "next/router"
 import map from "lodash/map"
 
 import Container from "@mui/material/Container"
@@ -9,8 +10,16 @@ import HeaderText from "../src/headerText"
 import LPCard from "../src/lpCard"
 import LiquidityAddWithdrawCard from "../src/liquidityAddWithdrawCard"
 import { getCoinData } from "../lib/api/coins"
+import { AuthContext } from "../src/authContext"
 
 export default function Dealership({ currencies, pools }) {
+  const router = useRouter()
+  const { isAuthed, isAuthLoading } = React.useContext(AuthContext)
+
+  React.useEffect(async () => {
+    if (!isAuthed && !isAuthLoading) await router.push("/")
+  }, [isAuthed, isAuthLoading])
+
   return (
     <Box sx={{ display: "flex", flexDirection: "column", minHeight: "100%" }}>
       <Head>

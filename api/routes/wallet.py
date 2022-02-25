@@ -40,8 +40,8 @@ def wallet():
                 'values': [
                   [
                     "Coin A",
-                    tokens['coin_a'],
                     "XXX.XX",
+                    tokens['coin_a'],
                     "XXX.XX",
                     "XX.XX",
                     "$XXX.XX",
@@ -49,8 +49,8 @@ def wallet():
                   ],
                   [
                     "Coin B",
-                    tokens['coin_b'],
                     "XXX.XX",
+                    tokens['coin_b'],
                     "XXX.XX",
                     "XX.XX",
                     "$XXX.XX",

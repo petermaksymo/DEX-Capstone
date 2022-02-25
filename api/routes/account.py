@@ -29,7 +29,6 @@ def account():
     if request.method == "POST":
         username = request.form.get("username")
 
-        print(username)
         private_bytes, address = create_account()
 
         new_entry = Account(
@@ -50,15 +49,10 @@ def login():
     Logs a user in by parsing a POST request containing user credentials and issuing a JWT token.
     """
     username = request.form.get("username")
-
-    print(username)
     user = guard.authenticate(username, username)
     ret = {"access_token": guard.encode_jwt_token(user)}
 
-    print(ret)
-    print("Helloo")
     return jsonify(ret), 200
-
 
 @app.route("/refresh", methods=["POST"])
 def refresh():

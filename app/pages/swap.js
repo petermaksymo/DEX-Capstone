@@ -1,5 +1,6 @@
 import React, { useState } from "react"
 import Head from "next/head"
+import { useRouter } from "next/router"
 import get from "lodash/get"
 
 import { useTheme } from "@mui/material"
@@ -20,13 +21,17 @@ import HeaderText from "../src/headerText"
 import { AuthContext } from "../src/authContext"
 
 export default function Swap({ currencies }) {
+  const router = useRouter()
   const theme = useTheme()
-  const { isAuthed, authedFetch } = React.useContext(AuthContext)
+  const { isAuthed, isAuthLoading, authedFetch } = React.useContext(AuthContext)
   const [balances, setBalances] = useState(null)
+
   React.useEffect(async () => {
+    if (!isAuthed && !isAuthLoading) await router.push("/")
+
     const data = await authedFetch("/wallet")
     setBalances(data)
-  }, [])
+  }, [isAuthed, isAuthLoading])
 
   const [coin1, setCoin1] = useState("coin_a")
   const [coin1Value, setCoin1Value] = useState("")

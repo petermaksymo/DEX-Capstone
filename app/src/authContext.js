@@ -38,6 +38,8 @@ const AuthProvider = ({ children }) => {
   const checkTokenExpired = () => {
     const token = localStorage.getItem("LS_SWAP_JWT")
 
+    if (!token) return false
+
     const decodedToken = parseJwt(token)
     return decodedToken.exp < new Date().getTime() / 1000
   }
