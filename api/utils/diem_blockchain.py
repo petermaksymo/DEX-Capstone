@@ -83,36 +83,38 @@ def run_move_script(sender_private_bytes, module, script_name, arg):
     return "success"
 
 
-def get_account_transactions(sender_private_bytes):
-    client = jsonrpc.Client(TESTNET_URL)
+def get_account_resources(address):
+    r = requests.get(f'{TESTNET_URL}/accounts/{address}/resources')
+    resources = r.json()
 
-    # Overkill to use the private key for this but seems easiest at this point
-    sender_private_key = Ed25519PrivateKey.from_private_bytes(sender_private_bytes)
-    sender_auth_key = AuthKey.from_public_key(sender_private_key.public_key())
-    sender_account = client.get_account(sender_auth_key.account_address())
+    return resources
 
-    res = requests.get(f'{TESTNET_URL}/accounts/{sender_account.address}/transactions')
+
+def get_account_transactions(address):
+    res = requests.get(f'{TESTNET_URL}/accounts/{address}/transactions')
     txns = res.json()
 
     return [t for t in txns if t['success'] is True]
 
 
-def get_user_stake(sender_private_bytes):
-    client_addr = jsonrpc.Client(TESTNET_URL)
+def get_price_quote(input_amount, input_reserve, output_reserve, comm_rate):
+    numerator = input_amount * (10000 - comm_rate) * output_reserve
+    denominator = (input_reserve * 10000) + ( input_amount * (10000 - comm_rate) )
+    return float(numerator) / float(denominator)
 
-    # Get user account resources
-    sender_private_key = Ed25519PrivateKey.from_private_bytes(sender_private_bytes)
-    sender_auth_key = AuthKey.from_public_key(sender_private_key.public_key())
-    sender_account = client_addr.get_account(sender_auth_key.account_address())
-    r = requests.get(f'{TESTNET_URL}/accounts/{sender_account.address}/resources')
 
-    client = r.json()
+def get_exchange_rate(input_reserve, output_reserve, comm_rate):
+    return get_price_quote(1, input_reserve, output_reserve, comm_rate)
+
+
+def get_user_stake(address):
+    resources = get_account_resources(address)
     exchange = get_exchange_pools()
 
     # Cleaning up user return data/getting all their pool contributions
     user = {}
     pair = None
-    for each in client:
+    for each in resources:
         isLP = re.search(f'0x{EXCHANGE_ADDRESS.lower()}::Exchange..::LPCoin', each['type'])
         if isLP:
             pair = re.findall(f'Exchange..', each['type'])
@@ -124,47 +126,41 @@ def get_user_stake(sender_private_bytes):
     stakes = {}
     if pair is not None:
         for pool in user:
-            userstake = user[pool] / exchange[pool]['LP_minted'] * 100
+            userstake = int(user[pool]) / int(exchange[pool]['LP_minted']) * 100
             stakes[pool] = userstake
 
     return stakes
 
 
 def get_exchange_pools():
-    client = jsonrpc.Client(TESTNET_URL)
+    resources = get_account_resources(EXCHANGE_ADDRESS)
 
-    r = requests.get(f'{TESTNET_URL}/accounts/{EXCHANGE_ADDRESS}/resources')
-    resources = r.json()
-
-    token = {}
+    pools = {}
     for res in resources:
+        if res['type'] == f'0x{EXCHANGE_ADDRESS.lower()}::Exchange::Exchange':
+            pools['pool_ab'] = res['data']
+
+
         if res['type'] == f'0x{EXCHANGE_ADDRESS.lower()}::ExchangeAB::Exchange':
-            token['pool_ab'] = res['data']
+            pools['pool_ab'] = res['data']
         elif res['type'] == f'0x{EXCHANGE_ADDRESS.lower()}::ExchangeAC::Exchange':
-            token['pool_ac'] = res['data']
+            pools['pool_ac'] = res['data']
         elif res['type'] == f'0x{EXCHANGE_ADDRESS.lower()}::ExchangeAD::Exchange':
-            token['pool_ad'] = res['data']
+            pools['pool_ad'] = res['data']
         elif res['type'] == f'0x{EXCHANGE_ADDRESS.lower()}::ExchangeBC::Exchange':
-            token['pool_bc'] = res['data']
+            pools['pool_bc'] = res['data']
         elif res['type'] == f'0x{EXCHANGE_ADDRESS.lower()}::ExchangeBD::Exchange':
-            token['pool_bd'] = res['data']
+            pools['pool_bd'] = res['data']
         elif res['type'] == f'0x{EXCHANGE_ADDRESS.lower()}::ExchangeCD::Exchange':
-            token['pool_cd'] = res['data']
+            pools['pool_cd'] = res['data']
 
-    return token
+    print("EXCHANGE RATE A/B:", get_exchange_rate(int(pools['pool_ab']['coin_a']), int(pools['pool_ab']['coin_b']), int(pools['pool_ab']['comm_rate'])))
+    print("EXCHANGE RATE B/A:", get_exchange_rate(int(pools['pool_ab']['coin_b']), int(pools['pool_ab']['coin_a']), int(pools['pool_ab']['comm_rate'])))
+
+    return pools
 
 
-def get_account_resources(sender_private_bytes):
-    client = jsonrpc.Client(TESTNET_URL)
-
-    # Overkill to use the private key for this but seems easiest at this point
-    sender_private_key = Ed25519PrivateKey.from_private_bytes(sender_private_bytes)
-    sender_auth_key = AuthKey.from_public_key(sender_private_key.public_key())
-    sender_account = client.get_account(sender_auth_key.account_address())
-
-    r = requests.get(f'{TESTNET_URL}/accounts/{sender_account.address}/resources')
-    resources = r.json()
-
+def format_resources_to_tokens(resources):
     # Hard-coded for coin b/a right now
     tokens = {}
     for res in resources:

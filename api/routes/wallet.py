@@ -2,27 +2,21 @@ from flask import jsonify, request
 from flask_praetorian import auth_required, current_user
 
 from api.app import app
-from api.database import db
-from api.database.models import Account
-from api.utils.diem_blockchain import get_account_resources
+from api.utils.diem_blockchain import get_account_resources, format_resources_to_tokens
+from api.utils.diem_blockchain import get_exchange_pools, get_user_stake
 
 
 @app.route("/wallet", methods=["GET"])
 @auth_required
 def wallet():
     if request.method == "GET":
-        username = current_user().username
         ret_format = request.args.get("format", 'basic')
 
-        if username is None:
-            return "Must specify a username", 400
+        # resources = get_account_resources(current_user().address)
+        # tokens = format_resources_to_tokens(resources)
 
-        # Get associated account
-        query = db.session.query(Account)
-        query = query.filter_by(username=username)
-        account = query.first()
-
-        tokens = get_account_resources(account.private_bytes)
+        tokens = get_user_stake('DDE26D2F8225B409375ECC386BF87F4E')
+        print(tokens)
 
         if ret_format != 'table':
             return jsonify(tokens)

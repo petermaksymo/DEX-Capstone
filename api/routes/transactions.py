@@ -3,25 +3,13 @@ from flask_praetorian import auth_required, current_user
 import datetime
 
 from api.app import app
-from api.database import db
-from api.database.models import Account
 from api.utils.diem_blockchain import get_account_transactions
 
 @app.route("/transactions", methods=["GET"])
 @auth_required
 def transactions():
     if request.method == "GET":
-        username = current_user().username
-
-        if username is None:
-            return "Must specify a username", 400
-
-        # Get associated account
-        query = db.session.query(Account)
-        query = query.filter_by(username=username)
-        account = query.first()
-
-        raw_txns = get_account_transactions(account.private_bytes)
+        raw_txns = get_account_transactions(current_user().address)
 
         script_to_event = {
             'mint_coin_a': "Mint Coin A",
