@@ -5,6 +5,7 @@ from numpy import uintp
 from cryptography.hazmat.primitives import serialization
 from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PrivateKey
 import requests
+import re
 
 TESTNET_URL: str = "http://0.0.0.0:8080"  # "https://testnet.diem.com/v1"
 FAUCET_URL: str = "http://0.0.0.0:8000"  # "https://testnet.diem.com/mint"
@@ -95,6 +96,62 @@ def get_account_transactions(sender_private_bytes):
 
     return [t for t in txns if t['success'] is True]
 
+
+def get_user_stake(sender_private_bytes):
+    client_addr = jsonrpc.Client(TESTNET_URL)
+
+    # Get user account resources
+    sender_private_key = Ed25519PrivateKey.from_private_bytes(sender_private_bytes)
+    sender_auth_key = AuthKey.from_public_key(sender_private_key.public_key())
+    sender_account = client_addr.get_account(sender_auth_key.account_address())
+    r = requests.get(f'{TESTNET_URL}/accounts/{sender_account.address}/resources')
+
+    client = r.json()
+    exchange = get_exchange_pools()
+
+    # Cleaning up user return data/getting all their pool contributions
+    user = {}
+    pair = None
+    for each in client:
+        isLP = re.search(f'0x{EXCHANGE_ADDRESS.lower()}::Exchange..::LPCoin', each['type'])
+        if isLP:
+            pair = re.findall(f'Exchange..', each['type'])
+            pair = pair[0][-2:].lower()
+            temp = 'pool_' + pair
+            user[temp] = each['data']['value']
+
+    # Calculating each of the user's stakes
+    stakes = {}
+    if pair is not None:
+        for pool in user:
+            userstake = user[pool] / exchange[pool]['LP_minted'] * 100
+            stakes[pool] = userstake
+
+    return stakes
+
+
+def get_exchange_pools():
+    client = jsonrpc.Client(TESTNET_URL)
+
+    r = requests.get(f'{TESTNET_URL}/accounts/{EXCHANGE_ADDRESS}/resources')
+    resources = r.json()
+
+    token = {}
+    for res in resources:
+        if res['type'] == f'0x{EXCHANGE_ADDRESS.lower()}::ExchangeAB::Exchange':
+            token['pool_ab'] = res['data']
+        elif res['type'] == f'0x{EXCHANGE_ADDRESS.lower()}::ExchangeAC::Exchange':
+            token['pool_ac'] = res['data']
+        elif res['type'] == f'0x{EXCHANGE_ADDRESS.lower()}::ExchangeAD::Exchange':
+            token['pool_ad'] = res['data']
+        elif res['type'] == f'0x{EXCHANGE_ADDRESS.lower()}::ExchangeBC::Exchange':
+            token['pool_bc'] = res['data']
+        elif res['type'] == f'0x{EXCHANGE_ADDRESS.lower()}::ExchangeBD::Exchange':
+            token['pool_bd'] = res['data']
+        elif res['type'] == f'0x{EXCHANGE_ADDRESS.lower()}::ExchangeCD::Exchange':
+            token['pool_cd'] = res['data']
+
+    return token
 
 
 def get_account_resources(sender_private_bytes):
