@@ -23,14 +23,17 @@ export default function Garage({
   const router = useRouter()
   const { isAuthed, isAuthLoading, authedFetch } = React.useContext(AuthContext)
   const [walletData, setWalletData] = React.useState(wallet_data)
+  const [stakeData, setStakeData] = React.useState(stake_data)
   const [transactionData, setTransactionData] = React.useState(transaction_data)
 
   React.useEffect(async () => {
-    console.log({ isAuthed, isAuthLoading })
     if (!isAuthed && !isAuthLoading) await router.push("/")
 
     const wallet_data = await authedFetch("/wallet?format=table")
     setWalletData(wallet_data)
+
+    const stake_data = await authedFetch("/pool?format=table")
+    setStakeData(stake_data)
 
     const txn_data = await authedFetch("/transactions")
     setTransactionData(txn_data)
@@ -79,7 +82,7 @@ export default function Garage({
           <Typography variant="h3" sx={subheaderStyle}>
             Stakes
           </Typography>
-          <GarageCard color="#273276" netWorth="XXXXX.XX" data={stake_data} />
+          <GarageCard color="#273276" netWorth="XXXXX.XX" data={stakeData} />
           <Typography variant="h3" sx={subheaderStyle}>
             Transactions
           </Typography>

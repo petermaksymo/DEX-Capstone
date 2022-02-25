@@ -1,8 +1,8 @@
 script {
-    use Sender::Exchange;
+    use Sender::ExchangeAB;
 
     fun remove_liquidity(exch_acct: signer, acct_a: signer, amt: u64) {
         //Remove Liquidity
-        Exchange::remove_liquidity(amt, &acct_a, &exch_acct);
+        ExchangeAB::remove_liquidity(amt, &acct_a, &exch_acct);
     }
 }

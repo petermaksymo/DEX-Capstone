@@ -173,7 +173,7 @@ compiled_package_info:
       name: CoinB
     : Sender
     ? address: dde26d2f8225b409375ecc386bf87f4e
-      name: Exchange
+      name: ExchangeAB
     : Sender
     ? address: dde26d2f8225b409375ecc386bf87f4e
       name: Rotary
@@ -181,7 +181,7 @@ compiled_package_info:
     ? address: dde26d2f8225b409375ecc386bf87f4e
       name: V8
     : Sender
-  source_digest: CC37DDD0B69168BEEC252DE51F6AACE0185109742F6ECFCFBA822B62B5768479
+  source_digest: 6759BD17E2D4C079EB26F59F996468F1537B65854F9BAF06E42F8376A1EBFFE0
   build_flags:
     dev_mode: true
     test_mode: false

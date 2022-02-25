@@ -1,4 +1,5 @@
-module Sender::Exchange {
+module Sender::ExchangeAB {
+	// Exchange module between coinA and coinB
 	use Std::Signer;
 	use Sender::CoinA;
 	use Sender::CoinB;

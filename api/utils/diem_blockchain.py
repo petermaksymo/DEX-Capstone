@@ -94,7 +94,7 @@ def get_account_transactions(address):
     res = requests.get(f'{TESTNET_URL}/accounts/{address}/transactions')
     txns = res.json()
 
-    return [t for t in txns if t['success'] is True]
+    return [t for t in txns if t['success'] is True and t["payload"].get("type") == "script_function_payload"]
 
 
 def get_price_quote(input_amount, input_reserve, output_reserve, comm_rate):
@@ -105,6 +105,55 @@ def get_price_quote(input_amount, input_reserve, output_reserve, comm_rate):
 
 def get_exchange_rate(input_reserve, output_reserve, comm_rate):
     return get_price_quote(1, input_reserve, output_reserve, comm_rate)
+
+
+def get_usercoin_inpool(address):
+    user = get_user_stake(address)
+    exchange = get_exchange_pools()
+
+    ret = {}
+
+    for pool in user:
+        coin1_id = 'coin_' + pool[-2]
+        coin2_id = 'coin_' + pool[-1]
+
+        totalcoin1 = float(user[pool]) * float(exchange[pool][coin1_id]) / 100
+        totalcoin2 = float(user[pool]) * float(exchange[pool][coin2_id]) / 100
+
+        ret[pool] = {coin1_id: int(totalcoin1), coin2_id: int(totalcoin2)}
+
+    # ret['pool_ab'] --> {coin_a: XXXXXX, coin_b:XXXXXX}
+
+    return ret
+
+
+def get_totalusercoin_inpool(address):
+    user = get_user_stake(address)
+    exchange = get_exchange_pools()
+
+    # exchange['pool_ab'][coin_a/coin_b]
+    # stake['pool_ab']
+
+    ret = {}
+    # returns key string as each
+    for pool in user:
+        coin1_id = 'coin_' + pool[-2]
+        coin2_id = 'coin_' + pool[-1]
+
+        totalcoin1 = float(user[pool]) * float(exchange[pool][coin1_id]) / 100
+        totalcoin2 = float(user[pool]) * float(exchange[pool][coin2_id]) / 100
+
+        if coin1_id not in ret:
+            ret[coin1_id] = totalcoin1
+        else:
+            ret[coin1_id] = ret[coin1_id] + totalcoin1
+
+        if coin2_id not in ret:
+            ret[coin2_id] = totalcoin2
+        else:
+            ret[coin2_id] = ret[coin2_id] + totalcoin2
+
+    return ret
 
 
 def get_user_stake(address):
@@ -126,7 +175,7 @@ def get_user_stake(address):
     stakes = {}
     if pair is not None:
         for pool in user:
-            userstake = int(user[pool]) / int(exchange[pool]['LP_minted']) * 100
+            userstake = float(user[pool]) / float(exchange[pool]['LP_minted']) * 100
             stakes[pool] = userstake
 
     return stakes
@@ -137,10 +186,6 @@ def get_exchange_pools():
 
     pools = {}
     for res in resources:
-        if res['type'] == f'0x{EXCHANGE_ADDRESS.lower()}::Exchange::Exchange':
-            pools['pool_ab'] = res['data']
-
-
         if res['type'] == f'0x{EXCHANGE_ADDRESS.lower()}::ExchangeAB::Exchange':
             pools['pool_ab'] = res['data']
         elif res['type'] == f'0x{EXCHANGE_ADDRESS.lower()}::ExchangeAC::Exchange':

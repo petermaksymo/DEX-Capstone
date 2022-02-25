@@ -28,12 +28,12 @@ def transactions():
                 ],
                 'values': [
                     [
-                        datetime.datetime.fromtimestamp(int(t['expiration_timestamp_secs'])).strftime('%b %d, %Y'),
-                        script_to_event[t['payload']['function'].split('::')[2]],
-                        t['payload']['arguments'][0],
-                        "-",
+                        datetime.datetime.fromtimestamp(int(t['expiration_timestamp_secs'])).strftime('%b %d, %Y'), #doesn't work, will need to figure out another way?
+                        script_to_event.get(t.get('payload', {}).get('function', '::a::').split('::')[2], 'Undefined Event'),
+                        t.get('payload').get('arguments')[0],
+                        t.get('payload').get('arguments')[1] if len(t.get('payload').get('arguments')) > 1 else '-',
                         "$XXX.XX",
-                        t['hash'],
+                        t.get('hash'),
                     ] for t in raw_txns
                 ],
                 'mobile_cols': [0, 1, 4],
