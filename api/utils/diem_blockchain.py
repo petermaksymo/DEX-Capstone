@@ -107,6 +107,15 @@ def get_exchange_rate(input_reserve, output_reserve, comm_rate):
     return get_price_quote(1, input_reserve, output_reserve, comm_rate)
 
 
+# Gets the exchange rate w.r.t. USD (aka Coin D)
+def get_usd_rate(coin_name):
+    pools = get_exchange_pools()
+    # pool = pools[f'pool_{coin_name[-1].lower()}d']
+    pool = pools['pool_ab']
+
+    return get_exchange_rate(int(pool[coin_name]), int(pool['coin_b']), int(pool['comm_rate']))
+
+
 def get_usercoin_inpool(address):
     user = get_user_stake(address)
     exchange = get_exchange_pools()

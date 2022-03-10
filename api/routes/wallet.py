@@ -2,7 +2,7 @@ from flask import jsonify, request
 from flask_praetorian import auth_required, current_user
 
 from api.app import app
-from api.utils.diem_blockchain import get_account_resources, format_resources_to_tokens, get_totalusercoin_inpool
+from api.utils.diem_blockchain import get_account_resources, format_resources_to_tokens, get_totalusercoin_inpool, get_usd_rate
 
 
 @app.route("/wallet", methods=["GET"])
@@ -27,8 +27,7 @@ def wallet():
                 in_pool = total_in_pool.get(coin, "0")
                 amount = str(int(available) + int(in_pool))
                 perc_in_pool = f"{(float(in_pool) / float(available) * 100):.2f}%"
-                worth = "$XXX.XX"
-                perc_of_worth = "XX.XX%"
+                worth = f"${(get_usd_rate(coin) * int(amount)):.2f}"
 
                 data = [
                     name,
@@ -37,11 +36,16 @@ def wallet():
                     in_pool,
                     perc_in_pool,
                     worth,
-                    perc_of_worth
                 ]
                 values.append(data)
 
+            # Go back and calculate total worth and percent of worth
+            total_worth = sum([float(v[5][1:]) for v in values])
+            for val in values:
+                val.append(f"{(float(val[5][1:])/total_worth*100):.2f}%")
+
             wallet_data = {
+                'total': total_worth,
                 'headers': [
                   "Token",
                   "Amount",

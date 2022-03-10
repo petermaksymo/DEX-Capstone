@@ -14,7 +14,7 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore"
 
 import { useWidth } from "../utils/hooks"
 
-export default function GarageCard({ color, netWorth, data }) {
+export default function GarageCard({ color, data }) {
   const onMobile = ["xs", "sm"].includes(useWidth())
   const [expanded, setExpanded] = useState(!onMobile)
 
@@ -67,7 +67,7 @@ export default function GarageCard({ color, netWorth, data }) {
             width: "100%",
           }}
         >
-          ${netWorth}
+          ${data.total}
         </Typography>
       </Box>
       <Box sx={{ display: "flex", flexDirection: "column", width: "100%" }}>

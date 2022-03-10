@@ -16,6 +16,21 @@ def transactions():
             'mint_coin_b': "Mint Coin B",
         }
 
+        values = []
+        for t in raw_txns:
+            date = datetime.datetime.fromtimestamp(int(t['expiration_timestamp_secs'])).strftime('%b %d, %Y')
+            description = script_to_event.get(t.get('payload', {}).get('function', '::a::').split('::')[2], 'Undefined Event')
+            coin_1 = t.get('payload').get('arguments')[0]
+            coin_2 = t.get('payload').get('arguments')[1] if len(t.get('payload').get('arguments')) > 1 else '-'
+
+            values.append([
+                date,
+                description,
+                coin_1,
+                coin_2,
+                t.get('hash'),
+            ])
+
         return jsonify(
             {
                 'headers': [
@@ -23,20 +38,10 @@ def transactions():
                     "Description",
                     "Amount (Token)",
                     "Amount (Token)",
-                    "Worth (USD)",
                     "Hash",
                 ],
-                'values': [
-                    [
-                        datetime.datetime.fromtimestamp(int(t['expiration_timestamp_secs'])).strftime('%b %d, %Y'), #doesn't work, will need to figure out another way?
-                        script_to_event.get(t.get('payload', {}).get('function', '::a::').split('::')[2], 'Undefined Event'),
-                        t.get('payload').get('arguments')[0],
-                        t.get('payload').get('arguments')[1] if len(t.get('payload').get('arguments')) > 1 else '-',
-                        "$XXX.XX",
-                        t.get('hash'),
-                    ] for t in raw_txns
-                ],
-                'mobile_cols': [0, 1, 4],
+                'values': values,
+                'mobile_cols': [0, 1, 2, 3],
           }
         )
 

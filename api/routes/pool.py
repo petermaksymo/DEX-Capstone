@@ -2,7 +2,7 @@ from flask import jsonify, request
 from flask_praetorian import auth_required, current_user
 
 from api.app import app
-from api.utils.diem_blockchain import get_exchange_pools, get_user_stake, get_usercoin_inpool
+from api.utils.diem_blockchain import get_exchange_pools, get_user_stake, get_usercoin_inpool, get_usd_rate
 
 
 @app.route("/pool", methods=["GET"])
@@ -25,11 +25,17 @@ def pool():
                 coin1_id = "coin_" + pool[-2]
                 coin2_id = "coin_" + pool[-1]
 
+                coin1_in_pool = in_pool.get(pool, {}).get(coin1_id, 0)
+                coin2_in_pool = in_pool.get(pool, {}).get(coin2_id, 0)
+
+                usd_coin1 = get_usd_rate('coin_a') * coin1_in_pool
+                usd_coin2 = get_usd_rate('coin_a') * coin2_in_pool
+
                 name = f"{coin1_name} - {coin2_name}"
-                amount_1 = f"{in_pool.get(pool, {}).get(coin1_id, '0')} {coin1_name}"
-                amount_2 = f"{in_pool.get(pool, {}).get(coin2_id, '0')} {coin2_name}"
+                amount_1 = f"{coin1_in_pool} {coin1_name}"
+                amount_2 = f"{coin2_in_pool} {coin2_name}"
                 perc_pool = f"{stakes.get(pool, -1):.2f}%"
-                worth = "$XXX.XX"
+                worth = f"${(usd_coin1 + usd_coin2):.2f}"
 
                 data = [
                     name,
@@ -42,6 +48,7 @@ def pool():
                     values.append(data)
 
             stake_data = {
+                'total': sum([v[4] for v in values]),
                 'headers': [
                     "Pool",
                     "Amount (Token)",
