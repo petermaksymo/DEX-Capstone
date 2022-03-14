@@ -87,11 +87,11 @@ export default function LPCard({ coin1, coin2, stats }) {
         >
           <Box sx={{ pb: 2, px: 2, color: "#800F2F" }}>
             <Detail
-              title={`${coin1.name} Owned`}
+              title={`${coin1.name} Supplied`}
               value={`${stats.coin1Owned} ${coin1.name}`}
             />
             <Detail
-              title={`${coin2.name} Owned`}
+              title={`${coin2.name} Supplied`}
               value={`${stats.coin2Owned} ${coin2.name}`}
             />
             <Detail

@@ -13,7 +13,7 @@ def coins():
 
         query = db.session.query(Coin)
         if coin is not None:
-            query = query.filter_by(id=coin)
+            query = query.filter_by(key=coin)
         result = query.all()
 
         coin_dict = dict()
@@ -36,10 +36,10 @@ def coins():
         return jsonify(new_entry.to_dict())
 
     if request.method == "PATCH":
-        coin_id = request.args.get("id")
+        coin_key = request.args.get("key")
         new_price = request.form.get("price")
 
-        entry = Coin.query.filter_by(id=coin_id).first()
+        entry = Coin.query.filter_by(key=coin_key).first()
         entry.price = new_price
         db.session.commit()
 

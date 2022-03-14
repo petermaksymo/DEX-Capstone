@@ -40,7 +40,7 @@ class GUID(TypeDecorator):
             return value
         else:
             if not isinstance(value, uuid.UUID):
-                value = uuid.UUID(value)
+                value = str(uuid.UUID(value))
             return value
 
 

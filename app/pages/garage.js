@@ -1,5 +1,6 @@
 import React from "react"
 import Head from "next/head"
+import { useRouter } from "next/router"
 import moment from "moment"
 import { v4 as uuidv4 } from "uuid"
 
@@ -10,6 +11,7 @@ import Box from "@mui/material/Box"
 import HeaderText from "../src/headerText"
 import GarageCard from "../src/GarageCard"
 import TransactionCard from "../src/transactionCard"
+import { AuthContext } from "../src/authContext"
 import { getCoinData } from "../lib/api/coins"
 
 export default function Garage({
@@ -18,6 +20,25 @@ export default function Garage({
   stake_data,
   transaction_data,
 }) {
+  const router = useRouter()
+  const { isAuthed, isAuthLoading, authedFetch } = React.useContext(AuthContext)
+  const [walletData, setWalletData] = React.useState(wallet_data)
+  const [stakeData, setStakeData] = React.useState(stake_data)
+  const [transactionData, setTransactionData] = React.useState(transaction_data)
+
+  React.useEffect(async () => {
+    if (!isAuthed && !isAuthLoading) await router.push("/")
+
+    const wallet_data = await authedFetch("/wallet?format=table")
+    setWalletData(wallet_data)
+
+    const stake_data = await authedFetch("/pool?format=table")
+    setStakeData(stake_data)
+
+    const txn_data = await authedFetch("/transactions")
+    setTransactionData(txn_data)
+  }, [isAuthed, isAuthLoading])
+
   const subheaderStyle = { color: "#800F2F", fontSize: 24, fontWeight: "bold" }
 
   return (
@@ -57,15 +78,15 @@ export default function Garage({
           <Typography variant="h3" sx={subheaderStyle}>
             Wallet
           </Typography>
-          <GarageCard color="#C25B78" netWorth="XXXXX.XX" data={wallet_data} />
+          <GarageCard color="#C25B78" netWorth="XXXXX.XX" data={walletData} />
           <Typography variant="h3" sx={subheaderStyle}>
             Stakes
           </Typography>
-          <GarageCard color="#273276" netWorth="XXXXX.XX" data={stake_data} />
+          <GarageCard color="#273276" netWorth="XXXXX.XX" data={stakeData} />
           <Typography variant="h3" sx={subheaderStyle}>
             Transactions
           </Typography>
-          <TransactionCard data={transaction_data} />
+          <TransactionCard data={transactionData} />
         </Container>
       </Box>
     </Box>
@@ -73,7 +94,6 @@ export default function Garage({
 }
 
 export async function getStaticProps() {
-
   return {
     props: {
       currencies: await getCoinData(),

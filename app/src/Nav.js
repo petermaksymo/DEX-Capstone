@@ -1,9 +1,14 @@
-import * as React from "react"
+import React, { useEffect, useContext } from "react"
 import Link from "next/link"
 import { useRouter } from "next/router"
 
 import AppBar from "@mui/material/AppBar"
 import Box from "@mui/material/Box"
+import Dialog from "@mui/material/Dialog"
+import DialogTitle from "@mui/material/DialogTitle"
+import DialogContent from "@mui/material/DialogContent"
+import DialogActions from "@mui/material/DialogActions"
+import TextField from "@mui/material/TextField"
 import Toolbar from "@mui/material/Toolbar"
 import IconButton from "@mui/material/IconButton"
 import Typography from "@mui/material/Typography"
@@ -13,9 +18,9 @@ import Container from "@mui/material/Container"
 import Button from "@mui/material/Button"
 import MenuItem from "@mui/material/MenuItem"
 
+import { AuthContext } from "./authContext"
 import Logo from "../src/logo"
 import StyledLink from "../src/Link"
-import { useEffect } from "react"
 
 const pages = [
   { title: "My Garage", link: "garage" },
@@ -26,7 +31,11 @@ const pages = [
 ]
 
 const ResponsiveAppBar = () => {
+  const { login, logout, isAuthed, authedFetch } = useContext(AuthContext)
   const router = useRouter()
+  const [signInDialogOpen, setSigninDialogOpen] = React.useState(false)
+  const [username, setUsername] = React.useState("")
+  const [loginError, setLoginError] = React.useState(null)
   const [anchorElNav, setAnchorElNav] = React.useState(null)
   const [currentRoute, setCurrentRoute] = React.useState(
     router.pathname.substring(1)
@@ -40,6 +49,54 @@ const ResponsiveAppBar = () => {
 
   const handleCloseNavMenu = () => {
     setAnchorElNav(null)
+  }
+
+  const handleFormSubmit = (e) => {
+    e.preventDefault()
+
+    const createAccount = async () => {
+      const formdata = new FormData()
+      formdata.append("username", username)
+
+      const account_res = await fetch("http://localhost:5000/account", {
+        method: "POST",
+        body: formdata,
+      })
+      const account = await account_res.json()
+
+      await login(username)
+
+      const mint_a_data = new FormData()
+      mint_a_data.append("coin", "CoinA")
+      mint_a_data.append("amount", 1000000)
+      const mint_a = await authedFetch("/mint", {
+        method: "POST",
+        body: mint_a_data,
+      })
+
+      const mint_b_data = new FormData()
+      mint_b_data.append("coin", "CoinB")
+      mint_b_data.append("amount", 1000000)
+      const mint_b = await authedFetch("/mint", {
+        method: "POST",
+        body: mint_b_data,
+      })
+    }
+
+    return login(username)
+      .then(() => handleSigninDialogClose())
+      .catch((err) => {
+        if (err === "The username and/or password are incorrect") {
+          return createAccount().then(handleSigninDialogClose())
+        }
+      })
+      .then(() => router.push("/garage"))
+  }
+
+  const handleSigninDialogClose = () => {
+    setUsername("")
+    setSigninDialogOpen(false)
+    setLoginError(null)
   }
 
   return (
@@ -152,11 +209,57 @@ const ResponsiveAppBar = () => {
           </Box>
 
           <Box sx={{ flexGrow: 0, display: "flex", gap: 2 }}>
-            <Link href="/garage" passHref>
-              <Button variant="contained" color="primary">
-                Sign in
+            {isAuthed ? (
+              <Button variant="contained" color="primary" onClick={logout}>
+                Sign out
               </Button>
-            </Link>
+            ) : (
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={() => setSigninDialogOpen(true)}
+              >
+                Sign in/up
+              </Button>
+            )}
+            <Dialog
+              open={signInDialogOpen}
+              onClose={handleSigninDialogClose}
+              maxWidth="sm"
+              fullWidth
+            >
+              <form onSubmit={handleFormSubmit}>
+                <DialogTitle>Sign into or create a new account</DialogTitle>
+                <DialogContent
+                  sx={{ display: "flex", flexDirection: "column" }}
+                >
+                  For the demo, please enter a username:
+                  <TextField
+                    autoFocus
+                    required
+                    error={loginError}
+                    sx={{ mt: 1 }}
+                    fullWidth
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                    placeholder="username"
+                    helperText={
+                      loginError
+                        ? loginError
+                        : "You will be logged in if the username exists or else a new account will be created for you."
+                    }
+                  />
+                </DialogContent>
+                <DialogActions>
+                  <Button color="primary" type="submit">
+                    Sign in
+                  </Button>
+                  <Button color="secondary" onClick={handleSigninDialogClose}>
+                    Cancel
+                  </Button>
+                </DialogActions>
+              </form>
+            </Dialog>
           </Box>
         </Toolbar>
       </Container>

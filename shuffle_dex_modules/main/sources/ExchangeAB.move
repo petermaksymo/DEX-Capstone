@@ -1,14 +1,8 @@
-module Sender::Exchange {
+module Sender::ExchangeAB {
+	// Exchange module between coinA and coinB
 	use Std::Signer;
 	use Sender::CoinA;
 	use Sender::CoinB;
-
-	use Sender::V8;
-	use Sender::Rotary;
-	use Sender::LP_V8_Rotary;
-
-	use DiemFramework::Diem;
-	use DiemFramework::DiemAccount;
 
 	//Exchange Struct
 	struct Exchange has key, store {
@@ -114,18 +108,6 @@ module Sender::Exchange {
 
 		assert!(minted_lp_coin_amt == lp_coin_amt, 1);
 
-		//Register Exchange account
-		let exchange_addr = Signer::address_of(exchange_acct);
-		let auth_key_prefix = x"AAAAAAAA";
-		DiemAccount::create_child_vasp_account<Diem::Diem<LP_V8_Rotary::LP_V8_Rotary>>(exchange_initializer,
-											exchange_addr,
-											auth_key_prefix,
-											false);
-
-		//A bit scuffed. The only way I can find to add currencies that aren't blocked by (friend)
-		DiemAccount::add_currency_for_test<Diem::Diem<V8::V8>>(exchange_acct);	
-		DiemAccount::add_currency_for_test<Diem::Diem<Rotary::Rotary>>(exchange_acct);	
-	
 		move_to<Exchange>(exchange_acct, Exchange { coin_a: coin_a_transferred, 
 							    coin_b: coin_b_transferred,
 							    LP_minted: minted_lp_coin_amt,
