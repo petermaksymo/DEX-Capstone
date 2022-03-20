@@ -21,6 +21,10 @@ def mint():
             'CoinB': 'mint_coin_b'
         }
 
-        res = run_move_script(current_user().private_bytes, coin, script_names[coin], amount)
+        args = [
+            {"type": "uint_64", "value": amount}
+        ]
+
+        res = run_move_script(current_user().private_bytes, coin, script_names[coin], args)
 
         return jsonify(res)

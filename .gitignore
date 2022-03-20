@@ -4,5 +4,8 @@
 /dex_modules/tests/build/
 /dex_modules/tests/storage/
 
+# DB data
+/api/database/dev.db
+
 # IDE files
 .idea/
