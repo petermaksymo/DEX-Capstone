@@ -38,12 +38,25 @@ def create_account():
     return bytes, sender_account.address
 
 
-def run_move_script(sender_private_bytes, module, script_name, arg):
+def run_move_script(sender_private_bytes, module, script_name, args):
+    """
+    Encodes and runs a Move script on the blockchain
+    :param sender_private_bytes: Sender's private bytes, found in account db table
+    :param module: Move module name (eg. CoinA)
+    :param script_name: Script name within the module (eg. mint_coin_a)
+    :param args: List of dicts of unencoded arguments needed for the script. See arg_encoders
+    :return: "success" on success or it will error out
+    """
     client = jsonrpc.Client(TESTNET_URL)
 
     sender_private_key = Ed25519PrivateKey.from_private_bytes(sender_private_bytes)
     sender_auth_key = AuthKey.from_public_key(sender_private_key.public_key())
     sender_account = client.get_account(sender_auth_key.account_address())
+
+    arg_encoders = {
+        "uint_64": lambda arg: diem.stdlib.encode_u64_argument(uintp(arg)),
+        "address": diem.stdlib.encode_address_argument
+    }
 
     script = diem.stdlib.TransactionPayload__ScriptFunction(
         value=diem.stdlib.ScriptFunction(
@@ -53,7 +66,7 @@ def run_move_script(sender_private_bytes, module, script_name, arg):
             ),
             function=diem.stdlib.Identifier(script_name),
             ty_args=[],
-            args=[diem.stdlib.encode_u64_argument(uintp(arg))],
+            args=[arg_encoders[arg["type"]](arg["value"]) for arg in args],
         )
     )
 
