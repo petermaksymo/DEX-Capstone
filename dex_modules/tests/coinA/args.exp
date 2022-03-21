@@ -1,11 +1,8 @@
 Command `sandbox publish --test -p ../../`:
 Command `sandbox run --test -p ../../ test_coin_a.move --signers 0x3 0x4`:
 [debug] 100
-[debug] 25
-[debug] 75
-[debug] 25
 [debug] 10
-[debug] 85
-[debug] 15
-[debug] 85
-[debug] 15
+[debug] 90
+[debug] 35
+[debug] 90
+[debug] 35

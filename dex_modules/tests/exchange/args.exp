@@ -9,7 +9,7 @@ Command `sandbox run --test -p ../../ scripts/initialize/initialize_error_not_en
 Execution aborted with code 2 in module 00000000000000000000000000000002::Exchange.
 Command `sandbox run --test -p ../../ scripts/initialize/initialize_success.move -v --signers 0x3 0x4`:
 Changed resource(s) under 2 address(es):
-  Changed 3 resource(s) under address 00000000000000000000000000000003:
+  Changed 4 resource(s) under address 00000000000000000000000000000003:
     Added type 0x2::CoinA::CoinA: [244, 1, 0, 0, 0, 0, 0, 0] (wrote 38 bytes)
       drop store key 0x2::CoinA::CoinA {
           value: 500
@@ -25,12 +25,16 @@ Changed resource(s) under 2 address(es):
           LP_minted: 500
           comm_rate: 30
       }
+    Added type 0x2::Exchange::LPCoin: [0, 0, 0, 0, 0, 0, 0, 0] (wrote 42 bytes)
+      drop store key 0x2::Exchange::LPCoin {
+          value: 0
+      }
   Changed 1 resource(s) under address 00000000000000000000000000000004:
     Added type 0x2::Exchange::LPCoin: [244, 1, 0, 0, 0, 0, 0, 0] (wrote 42 bytes)
       drop store key 0x2::Exchange::LPCoin {
           value: 500
       }
-Wrote 186 bytes of resource ID's and data
+Wrote 228 bytes of resource ID's and data
 Command `sandbox run --test -p ../../ scripts/exists_at/exists_at.move --signers 0x3`:
 [debug] true
 Command `sandbox run --test -p ../../ scripts/get_CoinA_in_pool/get_CoinA_in_pool.move --signers 0x3`:
@@ -71,7 +75,7 @@ Changed resource(s) under 2 address(es):
 Wrote 186 bytes of resource ID's and data
 Command `sandbox run --test -p ../../ scripts/remove_liquidity/remove_liquidity_success.move -v --signers 0x3 0x4`:
 Changed resource(s) under 2 address(es):
-  Changed 3 resource(s) under address 00000000000000000000000000000003:
+  Changed 4 resource(s) under address 00000000000000000000000000000003:
     Changed type 0x2::CoinA::CoinA: [244, 1, 0, 0, 0, 0, 0, 0] (wrote 38 bytes)
          drop store key 0x2::CoinA::CoinA {
 -            value: 1000
@@ -92,13 +96,17 @@ Changed resource(s) under 2 address(es):
 +            LP_minted: 500
              comm_rate: 30
          }
+    Deleted type 0x2::Exchange::LPCoin (wrote 34 bytes)
+      drop store key 0x2::Exchange::LPCoin {
+          value: 0
+      }
   Changed 1 resource(s) under address 00000000000000000000000000000004:
     Changed type 0x2::Exchange::LPCoin: [244, 1, 0, 0, 0, 0, 0, 0] (wrote 42 bytes)
          drop store key 0x2::Exchange::LPCoin {
 -            value: 1000
 +            value: 500
          }
-Wrote 186 bytes of resource ID's and data
+Wrote 220 bytes of resource ID's and data
 Command `sandbox run --test -p ../../ scripts/swap_coinA_to_coinB/swap_coinA_to_coinB_success.move -v --signers 0x3 0x4`:
 Changed resource(s) under 1 address(es):
   Changed 3 resource(s) under address 00000000000000000000000000000003:

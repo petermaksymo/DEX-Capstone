@@ -2,11 +2,12 @@ script {
     use 0x2::CoinA;
     use 0x2::CoinB;
     use 0x2::Exchange;
+    use Std::Signer;
 
     fun main(exch_acct: signer, acct_a: signer) {
         CoinA::mint(1000, &acct_a);
         CoinB::mint(500, &acct_a);
 
-        Exchange::initialize(&acct_a, &exch_acct, 30, 1000, 1000);
+        Exchange::initialize(&exch_acct, Signer::address_of(&acct_a), 30, 1000, 1000);
     }
 }
