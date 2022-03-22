@@ -1,6 +1,4 @@
 module Sender::CoinB {
-    use Std::Signer;
-
     struct CoinB has key, store, drop {
         value: u64
     }
@@ -18,9 +16,9 @@ module Sender::CoinB {
         borrow_global<CoinB>(addr).value
     }
 
-    public fun burn(account: &signer): u64 acquires CoinB {
-        assert!(exist_at(Signer::address_of(account)), 1);
-        let CoinB { value: value } = move_from<CoinB>(Signer::address_of(account));
+    public fun burn(account: address): u64 acquires CoinB {
+        assert!(exist_at(account), 1);
+        let CoinB { value: value } = move_from<CoinB>(account);
         value
     }
 
@@ -28,16 +26,12 @@ module Sender::CoinB {
         exists<CoinB>(addr)
     }
 
-    public fun transfer_between(from_acct: &signer, to_acct: &signer, transferred_amt: u64): u64 acquires CoinB {
-        let from_addr = Signer::address_of(from_acct);
-        let to_addr = Signer::address_of(to_acct);
-
+    public fun transfer_between(from_addr: address, to_addr: address, transferred_amt: u64): u64 acquires CoinB {
         assert!(exist_at(from_addr), 1);
         assert!(get_value(from_addr) >= transferred_amt, 2);
 
-        if(!exist_at(to_addr)) {
-            mint(0, to_acct);
-        };
+	//Can't mint here so to_addr must have CoinB
+	assert!(exist_at(to_addr), 1);
 
         let from_coin = borrow_global_mut<CoinB>(from_addr);
         from_coin.value = from_coin.value - transferred_amt;

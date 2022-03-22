@@ -60,7 +60,7 @@ constructor (public currency: DiemTypes.TypeTag) {
 
 export class ScriptFunctionCallVariantAddExchangeLiquidity extends ScriptFunctionCall {
 
-constructor (public coin_a_amt: uint64) {
+constructor (public exchange: DiemTypes.AccountAddress, public provider: DiemTypes.AccountAddress, public coin_a_amt: uint64) {
   super();
 }
 
@@ -170,7 +170,15 @@ constructor () {
 
 export class ScriptFunctionCallVariantExchangeCoinAToCoinB extends ScriptFunctionCall {
 
-constructor (public coin_a_amt: uint64) {
+constructor (public swapper: DiemTypes.AccountAddress, public exchange: DiemTypes.AccountAddress, public coin_a_amt: uint64) {
+  super();
+}
+
+}
+
+export class ScriptFunctionCallVariantExchangeCoinBToCoinA extends ScriptFunctionCall {
+
+constructor (public swapper: DiemTypes.AccountAddress, public exchange: DiemTypes.AccountAddress, public coin_b_amt: uint64) {
   super();
 }
 
@@ -202,7 +210,14 @@ constructor (public sliding_nonce: uint64) {
 
 export class ScriptFunctionCallVariantInitializeExchange extends ScriptFunctionCall {
 
-constructor (public coin_a_amt: uint64, public coin_b_amt: uint64) {
+constructor (public initializer: DiemTypes.AccountAddress, public comm_rate: uint64, public coin_a_amt: uint64, public coin_b_amt: uint64) {
+  super();
+}
+
+}
+
+export class ScriptFunctionCallVariantInitializeLpV8Rotary extends ScriptFunctionCall {
+constructor () {
   super();
 }
 
@@ -281,6 +296,14 @@ constructor (public public_key: bytes) {
 export class ScriptFunctionCallVariantRegisterValidatorConfig extends ScriptFunctionCall {
 
 constructor (public validator_account: DiemTypes.AccountAddress, public consensus_pubkey: bytes, public validator_network_addresses: bytes, public fullnode_network_addresses: bytes) {
+  super();
+}
+
+}
+
+export class ScriptFunctionCallVariantRemoveExchangeLiquidity extends ScriptFunctionCall {
+
+constructor (public exchange: DiemTypes.AccountAddress, public provider: DiemTypes.AccountAddress, public lp_coin_amt: uint64) {
   super();
 }
 
@@ -591,13 +614,19 @@ export class Stdlib {
   /**
 
    */
-  static encodeAddExchangeLiquidityScriptFunction(coin_a_amt: bigint): DiemTypes.TransactionPayload {
+  static encodeAddExchangeLiquidityScriptFunction(exchange: DiemTypes.AccountAddress, provider: DiemTypes.AccountAddress, coin_a_amt: bigint): DiemTypes.TransactionPayload {
     const tyArgs: Seq<DiemTypes.TypeTag> = [];
+    var serializer = new BcsSerializer();
+    exchange.serialize(serializer);
+    const exchange_serialized: bytes = serializer.getBytes();
+    var serializer = new BcsSerializer();
+    provider.serialize(serializer);
+    const provider_serialized: bytes = serializer.getBytes();
     var serializer = new BcsSerializer();
     serializer.serializeU64(coin_a_amt);
     const coin_a_amt_serialized: bytes = serializer.getBytes();
-    const args: Seq<bytes> = [coin_a_amt_serialized];
-    const module_id: DiemTypes.ModuleId = new DiemTypes.ModuleId(new DiemTypes.AccountAddress([[221], [226], [109], [47], [130], [37], [180], [9], [55], [94], [204], [56], [107], [248], [127], [78]]), new DiemTypes.Identifier("ExchangeAB"));
+    const args: Seq<bytes> = [exchange_serialized, provider_serialized, coin_a_amt_serialized];
+    const module_id: DiemTypes.ModuleId = new DiemTypes.ModuleId(new DiemTypes.AccountAddress([[245], [7], [78], [43], [233], [227], [134], [22], [3], [60], [42], [85], [64], [2], [7], [16]]), new DiemTypes.Identifier("ExchangeAB"));
     const function_name: DiemTypes.Identifier = new DiemTypes.Identifier("add_exchange_liquidity");
     const script = new DiemTypes.ScriptFunction(module_id, function_name, tyArgs, args);
     return new DiemTypes.TransactionPayloadVariantScriptFunction(script);
@@ -1394,14 +1423,41 @@ export class Stdlib {
   /**
 
    */
-  static encodeExchangeCoinAToCoinBScriptFunction(coin_a_amt: bigint): DiemTypes.TransactionPayload {
+  static encodeExchangeCoinAToCoinBScriptFunction(swapper: DiemTypes.AccountAddress, exchange: DiemTypes.AccountAddress, coin_a_amt: bigint): DiemTypes.TransactionPayload {
     const tyArgs: Seq<DiemTypes.TypeTag> = [];
+    var serializer = new BcsSerializer();
+    swapper.serialize(serializer);
+    const swapper_serialized: bytes = serializer.getBytes();
+    var serializer = new BcsSerializer();
+    exchange.serialize(serializer);
+    const exchange_serialized: bytes = serializer.getBytes();
     var serializer = new BcsSerializer();
     serializer.serializeU64(coin_a_amt);
     const coin_a_amt_serialized: bytes = serializer.getBytes();
-    const args: Seq<bytes> = [coin_a_amt_serialized];
-    const module_id: DiemTypes.ModuleId = new DiemTypes.ModuleId(new DiemTypes.AccountAddress([[221], [226], [109], [47], [130], [37], [180], [9], [55], [94], [204], [56], [107], [248], [127], [78]]), new DiemTypes.Identifier("ExchangeAB"));
+    const args: Seq<bytes> = [swapper_serialized, exchange_serialized, coin_a_amt_serialized];
+    const module_id: DiemTypes.ModuleId = new DiemTypes.ModuleId(new DiemTypes.AccountAddress([[245], [7], [78], [43], [233], [227], [134], [22], [3], [60], [42], [85], [64], [2], [7], [16]]), new DiemTypes.Identifier("ExchangeAB"));
     const function_name: DiemTypes.Identifier = new DiemTypes.Identifier("exchange_coinA_to_coinB");
+    const script = new DiemTypes.ScriptFunction(module_id, function_name, tyArgs, args);
+    return new DiemTypes.TransactionPayloadVariantScriptFunction(script);
+  }
+
+  /**
+
+   */
+  static encodeExchangeCoinBToCoinAScriptFunction(swapper: DiemTypes.AccountAddress, exchange: DiemTypes.AccountAddress, coin_b_amt: bigint): DiemTypes.TransactionPayload {
+    const tyArgs: Seq<DiemTypes.TypeTag> = [];
+    var serializer = new BcsSerializer();
+    swapper.serialize(serializer);
+    const swapper_serialized: bytes = serializer.getBytes();
+    var serializer = new BcsSerializer();
+    exchange.serialize(serializer);
+    const exchange_serialized: bytes = serializer.getBytes();
+    var serializer = new BcsSerializer();
+    serializer.serializeU64(coin_b_amt);
+    const coin_b_amt_serialized: bytes = serializer.getBytes();
+    const args: Seq<bytes> = [swapper_serialized, exchange_serialized, coin_b_amt_serialized];
+    const module_id: DiemTypes.ModuleId = new DiemTypes.ModuleId(new DiemTypes.AccountAddress([[245], [7], [78], [43], [233], [227], [134], [22], [3], [60], [42], [85], [64], [2], [7], [16]]), new DiemTypes.Identifier("ExchangeAB"));
+    const function_name: DiemTypes.Identifier = new DiemTypes.Identifier("exchange_coinB_to_coinA");
     const script = new DiemTypes.ScriptFunction(module_id, function_name, tyArgs, args);
     return new DiemTypes.TransactionPayloadVariantScriptFunction(script);
   }
@@ -1543,17 +1599,35 @@ export class Stdlib {
   /**
 
    */
-  static encodeInitializeExchangeScriptFunction(coin_a_amt: bigint, coin_b_amt: bigint): DiemTypes.TransactionPayload {
+  static encodeInitializeExchangeScriptFunction(initializer: DiemTypes.AccountAddress, comm_rate: bigint, coin_a_amt: bigint, coin_b_amt: bigint): DiemTypes.TransactionPayload {
     const tyArgs: Seq<DiemTypes.TypeTag> = [];
+    var serializer = new BcsSerializer();
+    initializer.serialize(serializer);
+    const initializer_serialized: bytes = serializer.getBytes();
+    var serializer = new BcsSerializer();
+    serializer.serializeU64(comm_rate);
+    const comm_rate_serialized: bytes = serializer.getBytes();
     var serializer = new BcsSerializer();
     serializer.serializeU64(coin_a_amt);
     const coin_a_amt_serialized: bytes = serializer.getBytes();
     var serializer = new BcsSerializer();
     serializer.serializeU64(coin_b_amt);
     const coin_b_amt_serialized: bytes = serializer.getBytes();
-    const args: Seq<bytes> = [coin_a_amt_serialized, coin_b_amt_serialized];
-    const module_id: DiemTypes.ModuleId = new DiemTypes.ModuleId(new DiemTypes.AccountAddress([[221], [226], [109], [47], [130], [37], [180], [9], [55], [94], [204], [56], [107], [248], [127], [78]]), new DiemTypes.Identifier("ExchangeAB"));
+    const args: Seq<bytes> = [initializer_serialized, comm_rate_serialized, coin_a_amt_serialized, coin_b_amt_serialized];
+    const module_id: DiemTypes.ModuleId = new DiemTypes.ModuleId(new DiemTypes.AccountAddress([[245], [7], [78], [43], [233], [227], [134], [22], [3], [60], [42], [85], [64], [2], [7], [16]]), new DiemTypes.Identifier("ExchangeAB"));
     const function_name: DiemTypes.Identifier = new DiemTypes.Identifier("initialize_exchange");
+    const script = new DiemTypes.ScriptFunction(module_id, function_name, tyArgs, args);
+    return new DiemTypes.TransactionPayloadVariantScriptFunction(script);
+  }
+
+  /**
+
+   */
+  static encodeInitializeLpV8RotaryScriptFunction(): DiemTypes.TransactionPayload {
+    const tyArgs: Seq<DiemTypes.TypeTag> = [];
+    const args: Seq<bytes> = [];
+    const module_id: DiemTypes.ModuleId = new DiemTypes.ModuleId(new DiemTypes.AccountAddress([[245], [7], [78], [43], [233], [227], [134], [22], [3], [60], [42], [85], [64], [2], [7], [16]]), new DiemTypes.Identifier("LP_V8_Rotary"));
+    const function_name: DiemTypes.Identifier = new DiemTypes.Identifier("initialize_lp_v8_rotary");
     const script = new DiemTypes.ScriptFunction(module_id, function_name, tyArgs, args);
     return new DiemTypes.TransactionPayloadVariantScriptFunction(script);
   }
@@ -1564,7 +1638,7 @@ export class Stdlib {
   static encodeInitializeRotaryScriptFunction(): DiemTypes.TransactionPayload {
     const tyArgs: Seq<DiemTypes.TypeTag> = [];
     const args: Seq<bytes> = [];
-    const module_id: DiemTypes.ModuleId = new DiemTypes.ModuleId(new DiemTypes.AccountAddress([[221], [226], [109], [47], [130], [37], [180], [9], [55], [94], [204], [56], [107], [248], [127], [78]]), new DiemTypes.Identifier("Rotary"));
+    const module_id: DiemTypes.ModuleId = new DiemTypes.ModuleId(new DiemTypes.AccountAddress([[245], [7], [78], [43], [233], [227], [134], [22], [3], [60], [42], [85], [64], [2], [7], [16]]), new DiemTypes.Identifier("Rotary"));
     const function_name: DiemTypes.Identifier = new DiemTypes.Identifier("initialize_rotary");
     const script = new DiemTypes.ScriptFunction(module_id, function_name, tyArgs, args);
     return new DiemTypes.TransactionPayloadVariantScriptFunction(script);
@@ -1576,7 +1650,7 @@ export class Stdlib {
   static encodeInitializeV8ScriptFunction(): DiemTypes.TransactionPayload {
     const tyArgs: Seq<DiemTypes.TypeTag> = [];
     const args: Seq<bytes> = [];
-    const module_id: DiemTypes.ModuleId = new DiemTypes.ModuleId(new DiemTypes.AccountAddress([[221], [226], [109], [47], [130], [37], [180], [9], [55], [94], [204], [56], [107], [248], [127], [78]]), new DiemTypes.Identifier("V8"));
+    const module_id: DiemTypes.ModuleId = new DiemTypes.ModuleId(new DiemTypes.AccountAddress([[245], [7], [78], [43], [233], [227], [134], [22], [3], [60], [42], [85], [64], [2], [7], [16]]), new DiemTypes.Identifier("V8"));
     const function_name: DiemTypes.Identifier = new DiemTypes.Identifier("initialize_v8");
     const script = new DiemTypes.ScriptFunction(module_id, function_name, tyArgs, args);
     return new DiemTypes.TransactionPayloadVariantScriptFunction(script);
@@ -1591,7 +1665,7 @@ export class Stdlib {
     serializer.serializeU64(amt);
     const amt_serialized: bytes = serializer.getBytes();
     const args: Seq<bytes> = [amt_serialized];
-    const module_id: DiemTypes.ModuleId = new DiemTypes.ModuleId(new DiemTypes.AccountAddress([[221], [226], [109], [47], [130], [37], [180], [9], [55], [94], [204], [56], [107], [248], [127], [78]]), new DiemTypes.Identifier("CoinA"));
+    const module_id: DiemTypes.ModuleId = new DiemTypes.ModuleId(new DiemTypes.AccountAddress([[245], [7], [78], [43], [233], [227], [134], [22], [3], [60], [42], [85], [64], [2], [7], [16]]), new DiemTypes.Identifier("CoinA"));
     const function_name: DiemTypes.Identifier = new DiemTypes.Identifier("mint_coin_a");
     const script = new DiemTypes.ScriptFunction(module_id, function_name, tyArgs, args);
     return new DiemTypes.TransactionPayloadVariantScriptFunction(script);
@@ -1606,7 +1680,7 @@ export class Stdlib {
     serializer.serializeU64(amt);
     const amt_serialized: bytes = serializer.getBytes();
     const args: Seq<bytes> = [amt_serialized];
-    const module_id: DiemTypes.ModuleId = new DiemTypes.ModuleId(new DiemTypes.AccountAddress([[221], [226], [109], [47], [130], [37], [180], [9], [55], [94], [204], [56], [107], [248], [127], [78]]), new DiemTypes.Identifier("CoinB"));
+    const module_id: DiemTypes.ModuleId = new DiemTypes.ModuleId(new DiemTypes.AccountAddress([[245], [7], [78], [43], [233], [227], [134], [22], [3], [60], [42], [85], [64], [2], [7], [16]]), new DiemTypes.Identifier("CoinB"));
     const function_name: DiemTypes.Identifier = new DiemTypes.Identifier("mint_coin_b");
     const script = new DiemTypes.ScriptFunction(module_id, function_name, tyArgs, args);
     return new DiemTypes.TransactionPayloadVariantScriptFunction(script);
@@ -1942,6 +2016,27 @@ export class Stdlib {
     const args: Seq<bytes> = [validator_account_serialized, consensus_pubkey_serialized, validator_network_addresses_serialized, fullnode_network_addresses_serialized];
     const module_id: DiemTypes.ModuleId = new DiemTypes.ModuleId(new DiemTypes.AccountAddress([[0], [0], [0], [0], [0], [0], [0], [0], [0], [0], [0], [0], [0], [0], [0], [1]]), new DiemTypes.Identifier("ValidatorAdministrationScripts"));
     const function_name: DiemTypes.Identifier = new DiemTypes.Identifier("register_validator_config");
+    const script = new DiemTypes.ScriptFunction(module_id, function_name, tyArgs, args);
+    return new DiemTypes.TransactionPayloadVariantScriptFunction(script);
+  }
+
+  /**
+
+   */
+  static encodeRemoveExchangeLiquidityScriptFunction(exchange: DiemTypes.AccountAddress, provider: DiemTypes.AccountAddress, lp_coin_amt: bigint): DiemTypes.TransactionPayload {
+    const tyArgs: Seq<DiemTypes.TypeTag> = [];
+    var serializer = new BcsSerializer();
+    exchange.serialize(serializer);
+    const exchange_serialized: bytes = serializer.getBytes();
+    var serializer = new BcsSerializer();
+    provider.serialize(serializer);
+    const provider_serialized: bytes = serializer.getBytes();
+    var serializer = new BcsSerializer();
+    serializer.serializeU64(lp_coin_amt);
+    const lp_coin_amt_serialized: bytes = serializer.getBytes();
+    const args: Seq<bytes> = [exchange_serialized, provider_serialized, lp_coin_amt_serialized];
+    const module_id: DiemTypes.ModuleId = new DiemTypes.ModuleId(new DiemTypes.AccountAddress([[245], [7], [78], [43], [233], [227], [134], [22], [3], [60], [42], [85], [64], [2], [7], [16]]), new DiemTypes.Identifier("ExchangeAB"));
+    const function_name: DiemTypes.Identifier = new DiemTypes.Identifier("remove_exchange_liquidity");
     const script = new DiemTypes.ScriptFunction(module_id, function_name, tyArgs, args);
     return new DiemTypes.TransactionPayloadVariantScriptFunction(script);
   }
@@ -2955,9 +3050,17 @@ export class Stdlib {
   static decodeAddExchangeLiquidityScriptFunction(script_fun: DiemTypes.TransactionPayload): ScriptFunctionCallVariantAddExchangeLiquidity {
   if (script_fun instanceof DiemTypes.TransactionPayloadVariantScriptFunction) {
       var deserializer = new BcsDeserializer(script_fun.value.args[0]);
+      const exchange: DiemTypes.AccountAddress = DiemTypes.AccountAddress.deserialize(deserializer);
+
+      var deserializer = new BcsDeserializer(script_fun.value.args[1]);
+      const provider: DiemTypes.AccountAddress = DiemTypes.AccountAddress.deserialize(deserializer);
+
+      var deserializer = new BcsDeserializer(script_fun.value.args[2]);
       const coin_a_amt: bigint = deserializer.deserializeU64();
 
       return new ScriptFunctionCallVariantAddExchangeLiquidity(
+        exchange,
+        provider,
         coin_a_amt
       );
     } else {
@@ -3225,10 +3328,39 @@ export class Stdlib {
   static decodeExchangeCoinAToCoinBScriptFunction(script_fun: DiemTypes.TransactionPayload): ScriptFunctionCallVariantExchangeCoinAToCoinB {
   if (script_fun instanceof DiemTypes.TransactionPayloadVariantScriptFunction) {
       var deserializer = new BcsDeserializer(script_fun.value.args[0]);
+      const swapper: DiemTypes.AccountAddress = DiemTypes.AccountAddress.deserialize(deserializer);
+
+      var deserializer = new BcsDeserializer(script_fun.value.args[1]);
+      const exchange: DiemTypes.AccountAddress = DiemTypes.AccountAddress.deserialize(deserializer);
+
+      var deserializer = new BcsDeserializer(script_fun.value.args[2]);
       const coin_a_amt: bigint = deserializer.deserializeU64();
 
       return new ScriptFunctionCallVariantExchangeCoinAToCoinB(
+        swapper,
+        exchange,
         coin_a_amt
+      );
+    } else {
+      throw new Error("Transaction payload not a script function payload")
+    }
+  }
+
+  static decodeExchangeCoinBToCoinAScriptFunction(script_fun: DiemTypes.TransactionPayload): ScriptFunctionCallVariantExchangeCoinBToCoinA {
+  if (script_fun instanceof DiemTypes.TransactionPayloadVariantScriptFunction) {
+      var deserializer = new BcsDeserializer(script_fun.value.args[0]);
+      const swapper: DiemTypes.AccountAddress = DiemTypes.AccountAddress.deserialize(deserializer);
+
+      var deserializer = new BcsDeserializer(script_fun.value.args[1]);
+      const exchange: DiemTypes.AccountAddress = DiemTypes.AccountAddress.deserialize(deserializer);
+
+      var deserializer = new BcsDeserializer(script_fun.value.args[2]);
+      const coin_b_amt: bigint = deserializer.deserializeU64();
+
+      return new ScriptFunctionCallVariantExchangeCoinBToCoinA(
+        swapper,
+        exchange,
+        coin_b_amt
       );
     } else {
       throw new Error("Transaction payload not a script function payload")
@@ -3281,14 +3413,32 @@ export class Stdlib {
   static decodeInitializeExchangeScriptFunction(script_fun: DiemTypes.TransactionPayload): ScriptFunctionCallVariantInitializeExchange {
   if (script_fun instanceof DiemTypes.TransactionPayloadVariantScriptFunction) {
       var deserializer = new BcsDeserializer(script_fun.value.args[0]);
-      const coin_a_amt: bigint = deserializer.deserializeU64();
+      const initializer: DiemTypes.AccountAddress = DiemTypes.AccountAddress.deserialize(deserializer);
 
       var deserializer = new BcsDeserializer(script_fun.value.args[1]);
+      const comm_rate: bigint = deserializer.deserializeU64();
+
+      var deserializer = new BcsDeserializer(script_fun.value.args[2]);
+      const coin_a_amt: bigint = deserializer.deserializeU64();
+
+      var deserializer = new BcsDeserializer(script_fun.value.args[3]);
       const coin_b_amt: bigint = deserializer.deserializeU64();
 
       return new ScriptFunctionCallVariantInitializeExchange(
+        initializer,
+        comm_rate,
         coin_a_amt,
         coin_b_amt
+      );
+    } else {
+      throw new Error("Transaction payload not a script function payload")
+    }
+  }
+
+  static decodeInitializeLpV8RotaryScriptFunction(_script_fun: DiemTypes.TransactionPayload): ScriptFunctionCallVariantInitializeLpV8Rotary {
+  if (_script_fun instanceof DiemTypes.TransactionPayloadVariantScriptFunction) {
+      return new ScriptFunctionCallVariantInitializeLpV8Rotary(
+
       );
     } else {
       throw new Error("Transaction payload not a script function payload")
@@ -3444,6 +3594,27 @@ export class Stdlib {
         consensus_pubkey,
         validator_network_addresses,
         fullnode_network_addresses
+      );
+    } else {
+      throw new Error("Transaction payload not a script function payload")
+    }
+  }
+
+  static decodeRemoveExchangeLiquidityScriptFunction(script_fun: DiemTypes.TransactionPayload): ScriptFunctionCallVariantRemoveExchangeLiquidity {
+  if (script_fun instanceof DiemTypes.TransactionPayloadVariantScriptFunction) {
+      var deserializer = new BcsDeserializer(script_fun.value.args[0]);
+      const exchange: DiemTypes.AccountAddress = DiemTypes.AccountAddress.deserialize(deserializer);
+
+      var deserializer = new BcsDeserializer(script_fun.value.args[1]);
+      const provider: DiemTypes.AccountAddress = DiemTypes.AccountAddress.deserialize(deserializer);
+
+      var deserializer = new BcsDeserializer(script_fun.value.args[2]);
+      const lp_coin_amt: bigint = deserializer.deserializeU64();
+
+      return new ScriptFunctionCallVariantRemoveExchangeLiquidity(
+        exchange,
+        provider,
+        lp_coin_amt
       );
     } else {
       throw new Error("Transaction payload not a script function payload")
@@ -3836,13 +4007,13 @@ export class Stdlib {
     }
   }
 
-  static ADD_LIQUIDITY_CODE = Stdlib.fromHexString('a11ceb0b040000000501000203020505070d071419082d1000000001020300030c0c03000303060c060c01030a45786368616e676541420d6164645f6c6971756964697479dde26d2f8225b409375ecc386bf87f4e000001060a020e010e0011000102');
+  static ADD_LIQUIDITY_CODE = Stdlib.fromHexString('a11ceb0b040000000501000403040a050e1307212b084c200000010101020304000003050600030c0c030205050001060c01050303050501030a45786368616e67654142065369676e65720a616464726573735f6f660d6164645f6c6971756964697479f5074e2be9e38616033c2a5540020710000000000000000000000000000000010000010c0e0111000c030e0011000c040a020a030a0411010102');
 
-  static MINT_COIN_A_CODE = Stdlib.fromHexString('a11ceb0b040000000501000203020505070a07110b081c1000000001020300020c03000203060c010305436f696e41046d696e74dde26d2f8225b409375ecc386bf87f4e000001050a010e0011000102');
+  static MINT_COIN_A_CODE = Stdlib.fromHexString('a11ceb0b040000000501000203020505070a07110b081c1000000001020300020c03000203060c010305436f696e41046d696e74f5074e2be9e38616033c2a5540020710000001050a010e0011000102');
 
-  static MINT_COIN_B_CODE = Stdlib.fromHexString('a11ceb0b040000000501000203020505070a07110b081c1000000001020300020c03000203060c010305436f696e42046d696e74dde26d2f8225b409375ecc386bf87f4e000001050a010e0011000102');
+  static MINT_COIN_B_CODE = Stdlib.fromHexString('a11ceb0b040000000501000203020505070a07110b081c1000000001020300020c03000203060c010305436f696e42046d696e74f5074e2be9e38616033c2a5540020710000001050a010e0011000102');
 
-  static REMOVE_LIQUIDITY_CODE = Stdlib.fromHexString('a11ceb0b040000000501000203020505070e07151c08311000000001020300030c0c03000303060c060c0203030a45786368616e676541421072656d6f76655f6c6971756964697479dde26d2f8225b409375ecc386bf87f4e000001070a020e010e001100010102');
+  static REMOVE_LIQUIDITY_CODE = Stdlib.fromHexString('a11ceb0b040000000501000403040a050e1407222e0850200000010101020304000003050600030c0c030205050001060c0105030305050203030a45786368616e67654142065369676e65720a616464726573735f6f661072656d6f76655f6c6971756964697479f5074e2be9e38616033c2a5540020710000000000000000000000000000000010000010d0e0111000c030e0011000c040a020a030a041101010102');
 
   static ScriptArgs: {[name: string]: ScriptDef} = {
     AddLiquidity: {
@@ -3932,7 +4103,7 @@ export class Stdlib {
       description: "",
       typeArgs: [],
       args: [
-        {name: "coin_a_amt", type: {type: Types.U64}}
+        {name: "exchange", type: {type: Types.Address}}, {name: "provider", type: {type: Types.Address}}, {name: "coin_a_amt", type: {type: Types.U64}}
       ]
     },
                 
@@ -4605,7 +4776,17 @@ export class Stdlib {
       description: "",
       typeArgs: [],
       args: [
-        {name: "coin_a_amt", type: {type: Types.U64}}
+        {name: "swapper", type: {type: Types.Address}}, {name: "exchange", type: {type: Types.Address}}, {name: "coin_a_amt", type: {type: Types.U64}}
+      ]
+    },
+                
+
+                ExchangeCoinBToCoinA: {
+      stdlibEncodeFunction: Stdlib.encodeExchangeCoinBToCoinAScriptFunction,
+      description: "",
+      typeArgs: [],
+      args: [
+        {name: "swapper", type: {type: Types.Address}}, {name: "exchange", type: {type: Types.Address}}, {name: "coin_b_amt", type: {type: Types.U64}}
       ]
     },
                 
@@ -4731,7 +4912,17 @@ export class Stdlib {
       description: "",
       typeArgs: [],
       args: [
-        {name: "coin_a_amt", type: {type: Types.U64}}, {name: "coin_b_amt", type: {type: Types.U64}}
+        {name: "initializer", type: {type: Types.Address}}, {name: "comm_rate", type: {type: Types.U64}}, {name: "coin_a_amt", type: {type: Types.U64}}, {name: "coin_b_amt", type: {type: Types.U64}}
+      ]
+    },
+                
+
+                InitializeLpV8Rotary: {
+      stdlibEncodeFunction: Stdlib.encodeInitializeLpV8RotaryScriptFunction,
+      description: "",
+      typeArgs: [],
+      args: [
+        
       ]
     },
                 
@@ -5055,6 +5246,16 @@ export class Stdlib {
       typeArgs: [],
       args: [
         {name: "validator_account", type: {type: Types.Address}}, {name: "consensus_pubkey", type: {type: Types.Array, arrayType: {type: Types.U8}}}, {name: "validator_network_addresses", type: {type: Types.Array, arrayType: {type: Types.U8}}}, {name: "fullnode_network_addresses", type: {type: Types.Array, arrayType: {type: Types.U8}}}
+      ]
+    },
+                
+
+                RemoveExchangeLiquidity: {
+      stdlibEncodeFunction: Stdlib.encodeRemoveExchangeLiquidityScriptFunction,
+      description: "",
+      typeArgs: [],
+      args: [
+        {name: "exchange", type: {type: Types.Address}}, {name: "provider", type: {type: Types.Address}}, {name: "lp_coin_amt", type: {type: Types.U64}}
       ]
     },
                 

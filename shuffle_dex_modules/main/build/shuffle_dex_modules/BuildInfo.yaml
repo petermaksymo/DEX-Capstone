@@ -5,7 +5,7 @@ compiled_package_info:
     CurrencyInfo: 0000000000000000000000000a550c18
     DiemFramework: "00000000000000000000000000000001"
     DiemRoot: 0000000000000000000000000a550c18
-    Sender: dde26d2f8225b409375ecc386bf87f4e
+    Sender: f5074e2be9e38616033c2a5540020710
     Std: "00000000000000000000000000000001"
     TreasuryCompliance: 0000000000000000000000000b1e55ed
     VMReserved: "00000000000000000000000000000000"
@@ -166,22 +166,25 @@ compiled_package_info:
     ? address: "00000000000000000000000000000001"
       name: XUS
     : DiemFramework
-    ? address: dde26d2f8225b409375ecc386bf87f4e
+    ? address: f5074e2be9e38616033c2a5540020710
       name: CoinA
     : Sender
-    ? address: dde26d2f8225b409375ecc386bf87f4e
+    ? address: f5074e2be9e38616033c2a5540020710
       name: CoinB
     : Sender
-    ? address: dde26d2f8225b409375ecc386bf87f4e
+    ? address: f5074e2be9e38616033c2a5540020710
       name: ExchangeAB
     : Sender
-    ? address: dde26d2f8225b409375ecc386bf87f4e
+    ? address: f5074e2be9e38616033c2a5540020710
+      name: LP_V8_Rotary
+    : Sender
+    ? address: f5074e2be9e38616033c2a5540020710
       name: Rotary
     : Sender
-    ? address: dde26d2f8225b409375ecc386bf87f4e
+    ? address: f5074e2be9e38616033c2a5540020710
       name: V8
     : Sender
-  source_digest: 6759BD17E2D4C079EB26F59F996468F1537B65854F9BAF06E42F8376A1EBFFE0
+  source_digest: E9911844FF2EFE4ECCCF18735F62246C53A9BB4EF1EC25C8A7D5652CCA48546B
   build_flags:
     dev_mode: true
     test_mode: false
@@ -190,7 +193,7 @@ compiled_package_info:
     install_dir: ~
     force_recompilation: false
     additional_named_addresses:
-      Sender: dde26d2f8225b409375ecc386bf87f4e
+      Sender: f5074e2be9e38616033c2a5540020710
 dependencies:
   - MoveStdlib
   - DiemCoreFramework
