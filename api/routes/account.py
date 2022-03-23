@@ -1,5 +1,5 @@
 from flask import jsonify, request
-from flask_praetorian import auth_accepted, current_user
+from flask_praetorian import auth_accepted, current_user, PraetorianError
 
 from api import guard
 from api.app import app
@@ -14,7 +14,7 @@ def account():
     if request.method == "GET":
         try:
             current_user()
-        except:
+        except PraetorianError:
             return "Not authenticated", 401
 
         username = current_user().username
@@ -34,7 +34,7 @@ def account():
             username=username,
             password=guard.hash_password(username),
             address=address,
-            private_bytes=private_bytes
+            private_bytes=private_bytes,
         )
         db.session.add(new_entry)
         db.session.commit()
@@ -52,6 +52,7 @@ def login():
     ret = {"access_token": guard.encode_jwt_token(user)}
 
     return jsonify(ret), 200
+
 
 @app.route("/refresh", methods=["POST"])
 def refresh():

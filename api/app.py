@@ -50,6 +50,7 @@ def reset():
 def initialize():
     return initialize_exchanges()
 
+
 # Import routes/endpoints
 import api.routes.coins
 import api.routes.account
