@@ -51,7 +51,7 @@ def wallet():
                 val.append(f"{(float(val[5][1:])/total_worth*100):.2f}%")
 
             wallet_data = {
-                "total": total_worth,
+                "total": f"{total_worth:.2f}",
                 "headers": [
                     "Token",
                     "Amount",

@@ -33,8 +33,8 @@ def pool():
                 coin1_in_pool = in_pool.get(pool, {}).get(coin1_id, 0)
                 coin2_in_pool = in_pool.get(pool, {}).get(coin2_id, 0)
 
-                usd_coin1 = get_usd_rate("coin_a") * coin1_in_pool
-                usd_coin2 = get_usd_rate("coin_a") * coin2_in_pool
+                usd_coin1 = get_usd_rate(coin1_id) * coin1_in_pool
+                usd_coin2 = get_usd_rate(coin2_id) * coin2_in_pool
 
                 name = f"{coin1_name} - {coin2_name}"
                 amount_1 = f"{coin1_in_pool} {coin1_name}"
@@ -47,7 +47,7 @@ def pool():
                     values.append(data)
 
             stake_data = {
-                "total": sum([float(v[4][1:]) for v in values]),
+                "total": f"{sum([float(v[4][1:]) for v in values]):.2f}",
                 "headers": [
                     "Pool",
                     "Amount (Token)",
