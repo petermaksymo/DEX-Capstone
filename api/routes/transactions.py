@@ -14,6 +14,8 @@ def transactions():
         script_to_event = {
             'mint_coin_a': "Mint Coin A",
             'mint_coin_b': "Mint Coin B",
+            'mint_coin_c': "Mint Coin C",
+            'mint_coin_d': "Mint USD",
         }
 
         values = []

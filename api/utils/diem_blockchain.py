@@ -7,15 +7,15 @@ from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PrivateKey
 import requests
 import re
 
+from api.constants import MODULE_ADDRESS, EXCHANGE_ADDRESS, COINS, EXCHANGES
+
 TESTNET_URL: str = "http://0.0.0.0:8080"  # "https://testnet.diem.com/v1"
 FAUCET_URL: str = "http://0.0.0.0:8000"  # "https://testnet.diem.com/mint"
 CHAIN_ID = diem_types.ChainId(4)  # testnet.CHAIN_ID
 CURRENCY = "XUS"
-MODULE_ADDRESS = "2C8DD160FC20E132C4CA6F2AFE7D41A2"
-EXCHANGE_ADDRESS = "c29814546ced3f02bea71f367c6164f2".upper()
 
 
-def create_account():
+def create_account(coin_amounts=10_000):
     """
     creates an account on the testnet
     :return:
@@ -35,6 +35,18 @@ def create_account():
     )
 
     sender_account = client.get_account(sender_auth_key.account_address())
+
+    # Mint a bunch of each coin type
+    for coin in COINS:
+        args = [{"type": "uint_64", "value": coin_amounts}]
+        run_move_script(bytes, f"Coin{coin}", f"mint_coin_{coin.lower()}", args)
+
+    for exchange in EXCHANGES:
+        # Mint LP coin for the exchange
+        args = [
+            {"type": "uint_64", "value": 0},
+        ]
+        run_move_script(bytes, f"Exchange{exchange}", f"mint_lp", args)
 
     return bytes, sender_account.address
 

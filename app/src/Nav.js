@@ -65,22 +65,6 @@ const ResponsiveAppBar = () => {
       const account = await account_res.json()
 
       await login(username)
-
-      const mint_a_data = new FormData()
-      mint_a_data.append("coin", "CoinA")
-      mint_a_data.append("amount", 1000000)
-      const mint_a = await authedFetch("/mint", {
-        method: "POST",
-        body: mint_a_data,
-      })
-
-      const mint_b_data = new FormData()
-      mint_b_data.append("coin", "CoinB")
-      mint_b_data.append("amount", 1000000)
-      const mint_b = await authedFetch("/mint", {
-        method: "POST",
-        body: mint_b_data,
-      })
     }
 
     return login(username)

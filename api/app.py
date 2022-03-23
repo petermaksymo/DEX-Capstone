@@ -53,7 +53,6 @@ def initialize():
 # Import routes/endpoints
 import api.routes.coins
 import api.routes.account
-import api.routes.mint
 import api.routes.pool
 import api.routes.transactions
 import api.routes.wallet
