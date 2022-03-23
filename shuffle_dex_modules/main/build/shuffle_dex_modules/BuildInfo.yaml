@@ -5,7 +5,7 @@ compiled_package_info:
     CurrencyInfo: 0000000000000000000000000a550c18
     DiemFramework: "00000000000000000000000000000001"
     DiemRoot: 0000000000000000000000000a550c18
-    Sender: f5074e2be9e38616033c2a5540020710
+    Sender: 2c8dd160fc20e132c4ca6f2afe7d41a2
     Std: "00000000000000000000000000000001"
     TreasuryCompliance: 0000000000000000000000000b1e55ed
     VMReserved: "00000000000000000000000000000000"
@@ -166,46 +166,43 @@ compiled_package_info:
     ? address: "00000000000000000000000000000001"
       name: XUS
     : DiemFramework
-    ? address: f5074e2be9e38616033c2a5540020710
+    ? address: 2c8dd160fc20e132c4ca6f2afe7d41a2
       name: CoinA
     : Sender
-    ? address: f5074e2be9e38616033c2a5540020710
+    ? address: 2c8dd160fc20e132c4ca6f2afe7d41a2
       name: CoinB
     : Sender
-    ? address: f5074e2be9e38616033c2a5540020710
+    ? address: 2c8dd160fc20e132c4ca6f2afe7d41a2
       name: CoinC
     : Sender
-    ? address: f5074e2be9e38616033c2a5540020710
+    ? address: 2c8dd160fc20e132c4ca6f2afe7d41a2
       name: CoinD
     : Sender
-    ? address: f5074e2be9e38616033c2a5540020710
+    ? address: 2c8dd160fc20e132c4ca6f2afe7d41a2
       name: ExchangeAB
     : Sender
-    ? address: f5074e2be9e38616033c2a5540020710
+    ? address: 2c8dd160fc20e132c4ca6f2afe7d41a2
       name: ExchangeAC
     : Sender
-    ? address: f5074e2be9e38616033c2a5540020710
+    ? address: 2c8dd160fc20e132c4ca6f2afe7d41a2
       name: ExchangeAD
     : Sender
-    ? address: f5074e2be9e38616033c2a5540020710
+    ? address: 2c8dd160fc20e132c4ca6f2afe7d41a2
       name: ExchangeBC
     : Sender
-    ? address: f5074e2be9e38616033c2a5540020710
+    ? address: 2c8dd160fc20e132c4ca6f2afe7d41a2
       name: ExchangeBD
     : Sender
-    ? address: f5074e2be9e38616033c2a5540020710
+    ? address: 2c8dd160fc20e132c4ca6f2afe7d41a2
       name: ExchangeCD
     : Sender
-    ? address: f5074e2be9e38616033c2a5540020710
-      name: LP_V8_Rotary
-    : Sender
-    ? address: f5074e2be9e38616033c2a5540020710
+    ? address: 2c8dd160fc20e132c4ca6f2afe7d41a2
       name: Rotary
     : Sender
-    ? address: f5074e2be9e38616033c2a5540020710
+    ? address: 2c8dd160fc20e132c4ca6f2afe7d41a2
       name: V8
     : Sender
-  source_digest: 1BD2E06A18375337CDA7F44492EDE10AB3F251CA47E8EDE79F723E410BB3776A
+  source_digest: 8397A660A36FB95787F8A27E815E44B47DCC9203E051D5ECBBE1DFD93E7D8753
   build_flags:
     dev_mode: true
     test_mode: false
@@ -214,7 +211,7 @@ compiled_package_info:
     install_dir: ~
     force_recompilation: false
     additional_named_addresses:
-      Sender: f5074e2be9e38616033c2a5540020710
+      Sender: 2c8dd160fc20e132c4ca6f2afe7d41a2
 dependencies:
   - MoveStdlib
   - DiemCoreFramework

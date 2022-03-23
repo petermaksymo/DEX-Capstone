@@ -23,7 +23,6 @@ def account():
         query = query.filter_by(username=username)
         result = query.first()
 
-        print(result.private_bytes)
         return jsonify(result.to_dict())
 
     if request.method == "POST":

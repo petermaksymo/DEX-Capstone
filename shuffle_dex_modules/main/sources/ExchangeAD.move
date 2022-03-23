@@ -37,6 +37,10 @@ module Sender::ExchangeAD {
 		amount
 	}
 
+ 	public(script) fun mint_lp(account: signer, amt: u64) acquires LPCoin {
+        mint(amt, &account);
+    }
+
 	//Return the value of LP coin located at addr
 	public fun get_value(addr: address): u64 acquires LPCoin {
 		borrow_global<LPCoin>(addr).value

@@ -12,13 +12,15 @@ def mint():
         coin = request.form.get("coin", 'CoinA')
         amount = request.form.get('amount', 100)
 
-        if coin not in ['CoinA', 'CoinB']:
+        if coin not in ['CoinA', 'CoinB', 'CoinC', 'CoinD']:
             return "Invalid coin", 400
 
 
         script_names = {
             'CoinA': 'mint_coin_a',
-            'CoinB': 'mint_coin_b'
+            'CoinB': 'mint_coin_b',
+            'CoinC': 'mint_coin_c',
+            'CoinD': 'mint_coin_d'
         }
 
         args = [

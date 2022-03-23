@@ -48,7 +48,7 @@ def pool():
                     values.append(data)
 
             stake_data = {
-                'total': sum([v[4] for v in values]),
+                'total': sum([float(v[4][1:]) for v in values]),
                 'headers': [
                     "Pool",
                     "Amount (Token)",

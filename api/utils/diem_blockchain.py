@@ -11,7 +11,8 @@ TESTNET_URL: str = "http://0.0.0.0:8080"  # "https://testnet.diem.com/v1"
 FAUCET_URL: str = "http://0.0.0.0:8000"  # "https://testnet.diem.com/mint"
 CHAIN_ID = diem_types.ChainId(4)  # testnet.CHAIN_ID
 CURRENCY = "XUS"
-EXCHANGE_ADDRESS = "DDE26D2F8225B409375ECC386BF87F4E"
+MODULE_ADDRESS = "2C8DD160FC20E132C4CA6F2AFE7D41A2"
+EXCHANGE_ADDRESS = "c29814546ced3f02bea71f367c6164f2".upper()
 
 
 def create_account():
@@ -55,13 +56,13 @@ def run_move_script(sender_private_bytes, module, script_name, args):
 
     arg_encoders = {
         "uint_64": lambda arg: diem.stdlib.encode_u64_argument(uintp(arg)),
-        "address": diem.stdlib.encode_address_argument
+        "address": lambda arg: diem.stdlib.encode_address_argument(diem.diem_types.AccountAddress.from_hex(arg))
     }
 
     script = diem.stdlib.TransactionPayload__ScriptFunction(
         value=diem.stdlib.ScriptFunction(
             module=diem.stdlib.ModuleId(
-                address=utils.account_address(EXCHANGE_ADDRESS),
+                address=utils.account_address(MODULE_ADDRESS),
                 name=diem.stdlib.Identifier(module),
             ),
             function=diem.stdlib.Identifier(script_name),
@@ -122,11 +123,13 @@ def get_exchange_rate(input_reserve, output_reserve, comm_rate):
 
 # Gets the exchange rate w.r.t. USD (aka Coin D)
 def get_usd_rate(coin_name):
-    pools = get_exchange_pools()
-    # pool = pools[f'pool_{coin_name[-1].lower()}d']
-    pool = pools['pool_ab']
+    if coin_name == 'coin_d':
+        return 1.0
 
-    return get_exchange_rate(int(pool[coin_name]), int(pool['coin_b']), int(pool['comm_rate']))
+    pools = get_exchange_pools()
+    pool = pools[f'pool_{coin_name[-1].lower()}d']
+
+    return get_exchange_rate(int(pool[coin_name]), int(pool['coin_d']), int(pool['comm_rate']))
 
 
 def get_usercoin_inpool(address):
@@ -175,6 +178,7 @@ def get_totalusercoin_inpool(address):
         else:
             ret[coin2_id] = ret[coin2_id] + totalcoin2
 
+
     return ret
 
 
@@ -186,7 +190,7 @@ def get_user_stake(address):
     user = {}
     pair = None
     for each in resources:
-        isLP = re.search(f'0x{EXCHANGE_ADDRESS.lower()}::Exchange..::LPCoin', each['type'])
+        isLP = re.search(f'0x{MODULE_ADDRESS.lower()}::Exchange..::LPCoin', each['type'])
         if isLP:
             pair = re.findall(f'Exchange..', each['type'])
             pair = pair[0][-2:].lower()
@@ -208,33 +212,37 @@ def get_exchange_pools():
 
     pools = {}
     for res in resources:
-        if res['type'] == f'0x{EXCHANGE_ADDRESS.lower()}::ExchangeAB::Exchange':
+        if res['type'] == f'0x{MODULE_ADDRESS.lower()}::ExchangeAB::Exchange':
             pools['pool_ab'] = res['data']
-        elif res['type'] == f'0x{EXCHANGE_ADDRESS.lower()}::ExchangeAC::Exchange':
+        elif res['type'] == f'0x{MODULE_ADDRESS.lower()}::ExchangeAC::Exchange':
             pools['pool_ac'] = res['data']
-        elif res['type'] == f'0x{EXCHANGE_ADDRESS.lower()}::ExchangeAD::Exchange':
+        elif res['type'] == f'0x{MODULE_ADDRESS.lower()}::ExchangeAD::Exchange':
             pools['pool_ad'] = res['data']
-        elif res['type'] == f'0x{EXCHANGE_ADDRESS.lower()}::ExchangeBC::Exchange':
+        elif res['type'] == f'0x{MODULE_ADDRESS.lower()}::ExchangeBC::Exchange':
             pools['pool_bc'] = res['data']
-        elif res['type'] == f'0x{EXCHANGE_ADDRESS.lower()}::ExchangeBD::Exchange':
+        elif res['type'] == f'0x{MODULE_ADDRESS.lower()}::ExchangeBD::Exchange':
             pools['pool_bd'] = res['data']
-        elif res['type'] == f'0x{EXCHANGE_ADDRESS.lower()}::ExchangeCD::Exchange':
+        elif res['type'] == f'0x{MODULE_ADDRESS.lower()}::ExchangeCD::Exchange':
             pools['pool_cd'] = res['data']
 
-    print("EXCHANGE RATE A/B:", get_exchange_rate(int(pools['pool_ab']['coin_a']), int(pools['pool_ab']['coin_b']), int(pools['pool_ab']['comm_rate'])))
-    print("EXCHANGE RATE B/A:", get_exchange_rate(int(pools['pool_ab']['coin_b']), int(pools['pool_ab']['coin_a']), int(pools['pool_ab']['comm_rate'])))
+    print(pools)
 
     return pools
 
 
 def format_resources_to_tokens(resources):
-    # Hard-coded for coin b/a right now
     tokens = {}
     for res in resources:
-        if res['type'] == f'0x{EXCHANGE_ADDRESS.lower()}::CoinB::CoinB':
+        if res['type'] == f'0x{MODULE_ADDRESS.lower()}::CoinA::CoinA':
+            tokens['coin_a'] = res['data']['value']
+
+        if res['type'] == f'0x{MODULE_ADDRESS.lower()}::CoinB::CoinB':
             tokens['coin_b'] = res['data']['value']
 
-        if res['type'] == f'0x{EXCHANGE_ADDRESS.lower()}::CoinA::CoinA':
-            tokens['coin_a'] = res['data']['value']
+        if res['type'] == f'0x{MODULE_ADDRESS.lower()}::CoinC::CoinC':
+            tokens['coin_c'] = res['data']['value']
+
+        if res['type'] == f'0x{MODULE_ADDRESS.lower()}::CoinD::CoinD':
+            tokens['coin_d'] = res['data']['value']
 
     return tokens

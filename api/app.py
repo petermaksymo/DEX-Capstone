@@ -4,6 +4,7 @@ from flask import json, jsonify
 from api import create_app
 from api.database import db
 from api.database.models import Coin
+from api.utils.init_exchanges import initialize_exchanges
 
 ENVIRONMENT = os.getenv("ENVIRONMENT", "development")
 
@@ -44,6 +45,10 @@ def reset():
 
     return "Reset Complete", 200
 
+
+@app.route("/initialize", methods=["GET"])
+def initialize():
+    return initialize_exchanges()
 
 # Import routes/endpoints
 import api.routes.coins

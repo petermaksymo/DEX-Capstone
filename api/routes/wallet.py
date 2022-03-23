@@ -21,6 +21,7 @@ def wallet():
             total_in_pool = get_totalusercoin_inpool(current_user().address)
 
             values = []
+
             for coin in tokens:
                 name = 'Coin ' + coin[-1].upper() if coin[-1] != 'd' else 'USD'
                 available = tokens.get(coin, "0")
