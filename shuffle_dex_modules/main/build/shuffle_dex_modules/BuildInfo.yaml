@@ -173,7 +173,28 @@ compiled_package_info:
       name: CoinB
     : Sender
     ? address: f5074e2be9e38616033c2a5540020710
+      name: CoinC
+    : Sender
+    ? address: f5074e2be9e38616033c2a5540020710
+      name: CoinD
+    : Sender
+    ? address: f5074e2be9e38616033c2a5540020710
       name: ExchangeAB
+    : Sender
+    ? address: f5074e2be9e38616033c2a5540020710
+      name: ExchangeAC
+    : Sender
+    ? address: f5074e2be9e38616033c2a5540020710
+      name: ExchangeAD
+    : Sender
+    ? address: f5074e2be9e38616033c2a5540020710
+      name: ExchangeBC
+    : Sender
+    ? address: f5074e2be9e38616033c2a5540020710
+      name: ExchangeBD
+    : Sender
+    ? address: f5074e2be9e38616033c2a5540020710
+      name: ExchangeCD
     : Sender
     ? address: f5074e2be9e38616033c2a5540020710
       name: LP_V8_Rotary
@@ -184,7 +205,7 @@ compiled_package_info:
     ? address: f5074e2be9e38616033c2a5540020710
       name: V8
     : Sender
-  source_digest: E9911844FF2EFE4ECCCF18735F62246C53A9BB4EF1EC25C8A7D5652CCA48546B
+  source_digest: 1BD2E06A18375337CDA7F44492EDE10AB3F251CA47E8EDE79F723E410BB3776A
   build_flags:
     dev_mode: true
     test_mode: false
