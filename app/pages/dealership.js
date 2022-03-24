@@ -9,16 +9,30 @@ import Box from "@mui/material/Box"
 import HeaderText from "../src/headerText"
 import LPCard from "../src/lpCard"
 import LiquidityAddWithdrawCard from "../src/liquidityAddWithdrawCard"
-import { getCoinData } from "../lib/api/coins"
 import { AuthContext } from "../src/authContext"
+import { getCoinData } from "../lib/api/coins"
 
 export default function Dealership({ currencies, pools }) {
   const router = useRouter()
-  const { isAuthed, isAuthLoading } = React.useContext(AuthContext)
+  const { isAuthed, isAuthLoading, authedFetch } = React.useContext(AuthContext)
 
   React.useEffect(async () => {
     if (!isAuthed && !isAuthLoading) await router.push("/")
   }, [isAuthed, isAuthLoading])
+
+  const sendpost = async ()=>{
+    const formdata = new FormData()
+    formdata.append('action', 'remove')
+    formdata.append('coin1', 'coin_a')
+    formdata.append('amount1', '12345')
+    formdata.append('coin2', 'coin_b')
+
+
+    const sendpooldata = await authedFetch("/pool?format=table", {
+      method: "POST",
+      body: formdata,
+    })
+  }
 
   return (
     <Box sx={{ display: "flex", flexDirection: "column", minHeight: "100%" }}>
@@ -75,7 +89,7 @@ export default function Dealership({ currencies, pools }) {
             ))}
           </Box>
           <Box sx={{ width: "100%" }}>
-            <LiquidityAddWithdrawCard currencies={currencies} />
+            <LiquidityAddWithdrawCard currencies={currencies} sendpost={sendpost} />
           </Box>
         </Container>
       </Box>

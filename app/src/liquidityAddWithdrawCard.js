@@ -11,7 +11,7 @@ import CoinPickerDialog from "./coinPickerDialog"
 import Coin from "./coin"
 import { force_decimal } from "../utils/functions"
 
-export default function LiquidityAddWithdrawCard({ currencies }) {
+export default function LiquidityAddWithdrawCard({ currencies, sendpost}) {
   const [addMode, setAddMode] = useState(true)
   const [coin1DialogOpen, setCoin1DialogOpen] = useState(false)
   const [coin1, setCoin1] = useState("coin_a")
@@ -192,6 +192,7 @@ export default function LiquidityAddWithdrawCard({ currencies }) {
             color="primary"
             disableElevation
             sx={{ width: "100%" }}
+            onClick={sendpost}
           >
             {addMode ? "Add" : "Withdraw"}
           </Button>
