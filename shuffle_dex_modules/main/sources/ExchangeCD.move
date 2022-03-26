@@ -47,10 +47,11 @@ module Sender::ExchangeCD {
 	}
 
 	//Destroy resource located at account's address
-	fun burn(account: address): u64 acquires LPCoin {
+	fun burn(account: address, amt:u64) acquires LPCoin {
 		assert!(lp_exist_at(account), 1);
-		let LPCoin { value: value } = move_from<LPCoin>(account);
-		value
+		let lp_coin = borrow_global_mut<LPCoin>(account);
+		assert!(amt<=lp_coin.value, 1);
+		lp_coin.value = lp_coin.value - amt;
 	}
 
 	//Check to see if LPCoin resource exists at addr
@@ -245,11 +246,10 @@ module Sender::ExchangeCD {
 
 		//Transfer LPCoin from provider to exchange and burn
 		let transferred_lp_coin = transfer_between(provider_addr, exchange_addr, lp_coin_amt);
-		let burned_lp_coin = burn(exchange_addr);
 		assert!(transferred_lp_coin == lp_coin_amt, 2);
-		assert!(burned_lp_coin == transferred_lp_coin, 3);
+		burn(exchange_addr, transferred_lp_coin);
 
-		exchange_obj.LP_minted = exchange_obj.LP_minted - burned_lp_coin;
+		exchange_obj.LP_minted = exchange_obj.LP_minted - transferred_lp_coin;
 
 		(coin_c_amt, coin_d_amt)
 	}

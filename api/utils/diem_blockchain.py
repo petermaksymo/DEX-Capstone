@@ -247,8 +247,6 @@ def get_exchange_pools():
         elif res["type"] == f"0x{MODULE_ADDRESS.lower()}::ExchangeCD::Exchange":
             pools["pool_cd"] = res["data"]
 
-    print(pools)
-
     return pools
 
 
