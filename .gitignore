@@ -3,10 +3,10 @@
 /dex_modules/storage/
 /dex_modules/tests/build/
 /dex_modules/tests/storage/
+/shuffle_dex_modules/main/build/
 
 # DB data
 /api/database/dev.db
 
 # IDE files
 .idea/
-/shuffle_dex_modules/main/build/

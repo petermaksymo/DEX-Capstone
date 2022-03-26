@@ -59,6 +59,12 @@ export default function Dealership({ currencies, pools }) {
             mb: 8,
           }}
         >
+          <Box sx={{ width: "100%" }}>
+            <LiquidityAddWithdrawCard
+              currencies={currencies}
+              setRefreshing={setRefreshing}
+            />
+          </Box>
           <Box
             sx={{
               display: "grid",
@@ -78,12 +84,6 @@ export default function Dealership({ currencies, pools }) {
                 stats={pool.stats}
               />
             ))}
-          </Box>
-          <Box sx={{ width: "100%" }}>
-            <LiquidityAddWithdrawCard
-              currencies={currencies}
-              setRefreshing={setRefreshing}
-            />
           </Box>
         </Container>
       </Box>
