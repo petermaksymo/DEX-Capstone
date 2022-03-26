@@ -5,14 +5,14 @@ from flask_praetorian import auth_required, current_user
 from api.app import app
 from api.utils.diem_blockchain import get_price_quote, get_exchange_pools, get_user_stake, get_usercoin_inpool, get_usd_rate, run_move_script
 
-MODULE_ADDRESS = "B5054D9A423CFD600765DC36619E1C43"
-EXCHANGE_ADDRESS = "4061f01e07f100061961fdc46fb1aa74".upper()
+MODULE_ADDRESS = "96556F3847CCF321C0F602B76485A413"
+EXCHANGE_ADDRESS = "52154769e64b1b80f76baebf8ede473a".upper()
 
 coin_info = {
     "coin_a": {
-    "name": "Coin A",
-    "short_name": "A",
-    "color": "#FF8686"
+        "name": "Coin A",
+        "short_name": "A",
+        "color": "#FF8686"
     },
     "coin_b": {
         "name": "Coin B",
@@ -66,14 +66,14 @@ def pool():
                 coin1_details = {
                     'title': coin1.upper(),
                     'body': coin1,
-                    'short_name': coin_info[coin2_name]['short_name'],
+                    'short_name': coin_info[coin1_name]['short_name'],
                     'color': coin_info[coin1_name]['color']
                 }
 
                 coin2_details = {
                     'title': coin2.upper(),
                     'body': coin2,
-                    'short_name': coin_info[coin1_name]['short_name'],
+                    'short_name': coin_info[coin2_name]['short_name'],
                     'color': coin_info[coin2_name]['color']
                 }
 
@@ -176,7 +176,7 @@ def pool():
         
         action = request.form.get("action")
         coin1 = request.form.get("coin1")
-        amount1 = request.form.get("amount1")
+        amount = request.form.get("amount")
         coin2 = request.form.get("coin2")
 
         if action not in ['add', 'remove']:
@@ -185,8 +185,8 @@ def pool():
         if coin1 not in ['coin_a', 'coin_b', 'coin_c', 'coin_d'] or coin2 not in ['coin_a', 'coin_b', 'coin_c', 'coin_d']:
             return "Invalid coin", 400
         
-        if amount1 is None:
-            amount1 = 0
+        if amount is None:
+            amount = 0
 
         script_names = {
             'add': 'add_exchange_liquidity',
@@ -200,7 +200,7 @@ def pool():
         args = [
             {"type": "address", "value": EXCHANGE_ADDRESS},
             {"type": "address", "value": current_user().address},
-            {"type": "uint_64", "value": amount1}
+            {"type": "uint_64", "value": amount}
         ]
 
         print('Script Name: ', script_names[action], ' exchange: ', exchange, ' args: ', args)

@@ -11,8 +11,8 @@ TESTNET_URL: str = "http://0.0.0.0:8080"  # "https://testnet.diem.com/v1"
 FAUCET_URL: str = "http://0.0.0.0:8000"  # "https://testnet.diem.com/mint"
 CHAIN_ID = diem_types.ChainId(4)  # testnet.CHAIN_ID
 CURRENCY = "XUS"
-MODULE_ADDRESS = "B5054D9A423CFD600765DC36619E1C43"
-EXCHANGE_ADDRESS = "4061f01e07f100061961fdc46fb1aa74".upper()
+MODULE_ADDRESS = "96556F3847CCF321C0F602B76485A413"
+EXCHANGE_ADDRESS = "52154769e64b1b80f76baebf8ede473a".upper()
 
 def create_account():
     """

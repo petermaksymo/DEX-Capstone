@@ -15,32 +15,15 @@ import { getCoinData } from "../lib/api/coins"
 export default function Dealership({ currencies, pools }) {
   const router = useRouter()
   const { isAuthed, isAuthLoading, authedFetch } = React.useContext(AuthContext)
+  const [refreshing, setRefreshing] = React.useState(false)
   const [pool_data, setPoolData] = React.useState(pools)
 
   React.useEffect(async () => {
     if (!isAuthed && !isAuthLoading) await router.push("/")
     const pools = await authedFetch("/pool?format=dealership")
     setPoolData(pools)
-  }, [isAuthed, isAuthLoading])
-
-  const sendpost = async ()=>{
-    const formdata = new FormData()
-    formdata.append('action', 'remove')
-    formdata.append('coin1', 'coin_a')
-    formdata.append('amount1', '12345')
-    formdata.append('coin2', 'coin_b')
-
-    const sendpooldata = await authedFetch("/pool", {
-      method: "POST",
-      body: formdata,
-    })
-  }
-
-  const getequivalent = async ()=>{
-    const getequivalentamt = await authedFetch("/pool?format=equivalentamt&coin1type=coin_a&coin2type=coin_b&coin1added=100&coin2added=0", {
-      method: "GET",
-    })
-  }
+    setRefreshing(false)
+  }, [isAuthed, isAuthLoading, refreshing])
 
   return (
     <Box sx={{ display: "flex", flexDirection: "column", minHeight: "100%" }}>
@@ -97,7 +80,10 @@ export default function Dealership({ currencies, pools }) {
             ))}
           </Box>
           <Box sx={{ width: "100%" }}>
-            <LiquidityAddWithdrawCard currencies={currencies} sendpost={sendpost} getequivalent={getequivalent}/>
+            <LiquidityAddWithdrawCard
+              currencies={currencies}
+              setRefreshing={setRefreshing}
+            />
           </Box>
         </Container>
       </Box>
