@@ -9,3 +9,4 @@
 
 # IDE files
 .idea/
+/shuffle_dex_modules/main/build/

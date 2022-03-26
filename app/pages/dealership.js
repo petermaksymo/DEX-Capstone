@@ -9,16 +9,21 @@ import Box from "@mui/material/Box"
 import HeaderText from "../src/headerText"
 import LPCard from "../src/lpCard"
 import LiquidityAddWithdrawCard from "../src/liquidityAddWithdrawCard"
-import { getCoinData } from "../lib/api/coins"
 import { AuthContext } from "../src/authContext"
+import { getCoinData } from "../lib/api/coins"
 
 export default function Dealership({ currencies, pools }) {
   const router = useRouter()
-  const { isAuthed, isAuthLoading } = React.useContext(AuthContext)
+  const { isAuthed, isAuthLoading, authedFetch } = React.useContext(AuthContext)
+  const [refreshing, setRefreshing] = React.useState(false)
+  const [pool_data, setPoolData] = React.useState(pools)
 
   React.useEffect(async () => {
     if (!isAuthed && !isAuthLoading) await router.push("/")
-  }, [isAuthed, isAuthLoading])
+    const pools = await authedFetch("/pool?format=dealership")
+    setPoolData(pools)
+    setRefreshing(false)
+  }, [isAuthed, isAuthLoading, refreshing])
 
   return (
     <Box sx={{ display: "flex", flexDirection: "column", minHeight: "100%" }}>
@@ -66,16 +71,19 @@ export default function Dealership({ currencies, pools }) {
               gap: 4,
             }}
           >
-            {map(pools, (pool) => (
+            {map(pool_data, (pool) => (
               <LPCard
-                coin1={currencies[pool.coin1]}
-                coin2={currencies[pool.coin2]}
+                coin1={pool.coin1}
+                coin2={pool.coin2}
                 stats={pool.stats}
               />
             ))}
           </Box>
           <Box sx={{ width: "100%" }}>
-            <LiquidityAddWithdrawCard currencies={currencies} />
+            <LiquidityAddWithdrawCard
+              currencies={currencies}
+              setRefreshing={setRefreshing}
+            />
           </Box>
         </Container>
       </Box>

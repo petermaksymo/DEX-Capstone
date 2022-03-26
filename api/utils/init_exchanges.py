@@ -10,7 +10,7 @@ TESTNET_URL: str = "http://0.0.0.0:8080"  # "https://testnet.diem.com/v1"
 FAUCET_URL: str = "http://0.0.0.0:8000"  # "https://testnet.diem.com/mint"
 CHAIN_ID = diem_types.ChainId(4)  # testnet.CHAIN_ID
 CURRENCY = "XUS"
-EXCHANGE_ADDRESS = "2C8DD160FC20E132C4CA6F2AFE7D41A2"
+EXCHANGE_ADDRESS = "52154769e64b1b80f76baebf8ede473a"
 COINS = ["A", "B", "C", "D"]
 EXCHANGES = ["AB", "AC", "AD", "BC", "BD", "CD"]
 
@@ -30,6 +30,7 @@ def create_admin():
 
 
 def initialize_exchanges():
+    print("creating admin")
     private_bytes, address = create_admin()
 
     print("INITIALIZING")

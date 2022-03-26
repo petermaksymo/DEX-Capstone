@@ -51,7 +51,7 @@ export default function LPCard({ coin1, coin2, stats }) {
           <Typography
             sx={{ textTransform: "uppercase", mt: 1, fontWeight: "bold" }}
           >
-            {coin1.name}
+            {coin1.title}
           </Typography>
         </Box>
         <Box
@@ -69,13 +69,13 @@ export default function LPCard({ coin1, coin2, stats }) {
           <Typography
             sx={{ textTransform: "uppercase", mt: 1, fontWeight: "bold" }}
           >
-            {coin2.name}
+            {coin2.title}
           </Typography>
         </Box>
       </Box>
       <Box sx={{ pt: 2, px: 2, color: "#800F2F" }}>
         <Detail title="Total Pool Size" value={`${stats.pool_size} USD`} />
-        <Detail title="Your Share of the Pool" value={`${stats.share} USD`} />
+        <Detail title="Your Share of the Pool" value={`${stats.share}`} />
       </Box>
 
       <Collapse in={expanded}>
@@ -87,20 +87,20 @@ export default function LPCard({ coin1, coin2, stats }) {
         >
           <Box sx={{ pb: 2, px: 2, color: "#800F2F" }}>
             <Detail
-              title={`${coin1.name} Supplied`}
-              value={`${stats.coin1Owned} ${coin1.name}`}
+              title={`${coin1.body} Supplied`}
+              value={`${stats.coin1Owned} ${coin1.body}`}
             />
             <Detail
-              title={`${coin2.name} Supplied`}
-              value={`${stats.coin2Owned} ${coin2.name}`}
+              title={`${coin2.body} Supplied`}
+              value={`${stats.coin2Owned} ${coin2.body}`}
             />
             <Detail
-              title={`${coin1.name} per ${coin2.name}`}
-              value={`${stats.pool_size} ${coin1.name}`}
+              title={`${coin1.body} per ${coin2.body}`}
+              value={`${stats.coin1per2} ${coin1.body}`}
             />
             <Detail
-              title={`${coin2.name} per ${coin1.name}`}
-              value={`${stats.pool_size} ${coin2.name}`}
+              title={`${coin2.body} per ${coin1.body}`}
+              value={`${stats.coin2per1} ${coin2.body}`}
             />
           </Box>
           <Box sx={{ display: onMobile ? "none" : "flex" }}>
