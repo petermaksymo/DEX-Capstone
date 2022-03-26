@@ -36,6 +36,12 @@ export default function Dealership({ currencies, pools }) {
     })
   }
 
+  const getequivalent = async ()=>{
+    const getequivalentamt = await authedFetch("/pool?format=equivalentamt&coin1type=coin_a&coin2type=coin_b&coin1added=100&coin2added=0", {
+      method: "GET",
+    })
+  }
+
   return (
     <Box sx={{ display: "flex", flexDirection: "column", minHeight: "100%" }}>
       <Head>
@@ -91,7 +97,7 @@ export default function Dealership({ currencies, pools }) {
             ))}
           </Box>
           <Box sx={{ width: "100%" }}>
-            <LiquidityAddWithdrawCard currencies={currencies} sendpost={sendpost} />
+            <LiquidityAddWithdrawCard currencies={currencies} sendpost={sendpost} getequivalent={getequivalent}/>
           </Box>
         </Container>
       </Box>

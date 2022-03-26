@@ -91,7 +91,7 @@ export default function LPCard({ coin1, coin2, stats }) {
               value={`${stats.coin1Owned} ${coin1.body}`}
             />
             <Detail
-              title={`${coin2.name} Supplied`}
+              title={`${coin2.body} Supplied`}
               value={`${stats.coin2Owned} ${coin2.body}`}
             />
             <Detail
@@ -99,7 +99,7 @@ export default function LPCard({ coin1, coin2, stats }) {
               value={`${stats.coin1per2} ${coin1.body}`}
             />
             <Detail
-              title={`${coin2.name} per ${coin1.body}`}
+              title={`${coin2.body} per ${coin1.body}`}
               value={`${stats.coin2per1} ${coin2.body}`}
             />
           </Box>

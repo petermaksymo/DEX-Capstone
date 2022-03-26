@@ -54,7 +54,7 @@ def pool():
                 coin1_exchange = exchange[pool][coin1_name]
                 coin2_exchange = exchange[pool][coin2_name]
 
-                totalvalue = get_usd_rate(coin1_name)*int(coin1_exchange) + get_usd_rate(coin2_name)*int(coin2_exchange)
+                totalvalue = get_usd_rate(coin1_name)*float(coin1_exchange) + get_usd_rate(coin2_name)*int(coin2_exchange)
                 poolshare =  userstake[pool]
 
                 coin1_supply = user[pool][coin1_name]
@@ -97,6 +97,31 @@ def pool():
             print(data)
             print('------------------------------------------------------------------------ \n')
             return jsonify(data)
+        elif ret_format == 'equivalentamt':
+            coin1type = request.args.get('coin1type')
+            coin2type = request.args.get('coin2type')
+            coin1added = request.args.get('coin1added')
+            coin2added = request.args.get('coin2added')
+            pool = 'pool_' + coin1type[-1] + coin2type[-1]
+
+            if float(coin1added) == 0.0:
+                equivalent = get_price_quote(float(coin2added), float(exchange[pool][coin2type]), float(exchange[pool][coin1type]), float(exchange[pool]['comm_rate']))
+                coin1added = equivalent
+            else:
+                equivalent = get_price_quote(float(coin1added), float(exchange[pool][coin1type]), float(exchange[pool][coin2type]), float(exchange[pool]['comm_rate']))
+                coin2added = equivalent
+
+            newlp = float(coin1added)/float(exchange[pool][coin1type])*float(exchange[pool]['LP_minted'])
+            newshare = (float(coin1added)+float(user[pool][coin1type]))/(float(coin1added)+float(exchange[pool][coin1type]))*100.0
+            newvalue = get_usd_rate(coin1type)*float(coin1added) * 2.0
+
+            print(coin1type, coin2type, coin1added, coin2added, equivalent, newlp, newshare, newvalue)
+            return jsonify({
+                'equivalent': equivalent,
+                'newlp': newlp,
+                'newshare': newshare,
+                'newvalue': newvalue
+            })
         elif ret_format == 'table':
             values = []
             for pool in exchange:
