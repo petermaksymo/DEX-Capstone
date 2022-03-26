@@ -21,6 +21,7 @@ def create_admin():
 
 def initialize_exchanges():
     private_bytes, address = create_admin()
+    print("EXCHANGE ADDRESS: ", address)
 
     # Initialize each exchange
     for exchange in EXCHANGES:
