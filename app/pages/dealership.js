@@ -15,9 +15,12 @@ import { getCoinData } from "../lib/api/coins"
 export default function Dealership({ currencies, pools }) {
   const router = useRouter()
   const { isAuthed, isAuthLoading, authedFetch } = React.useContext(AuthContext)
+  const [pool_data, setPoolData] = React.useState(pools)
 
   React.useEffect(async () => {
     if (!isAuthed && !isAuthLoading) await router.push("/")
+    const pools = await authedFetch("/pool?format=dealership")
+    setPoolData(pools)
   }, [isAuthed, isAuthLoading])
 
   const sendpost = async ()=>{
@@ -27,8 +30,7 @@ export default function Dealership({ currencies, pools }) {
     formdata.append('amount1', '12345')
     formdata.append('coin2', 'coin_b')
 
-
-    const sendpooldata = await authedFetch("/pool?format=table", {
+    const sendpooldata = await authedFetch("/pool", {
       method: "POST",
       body: formdata,
     })
@@ -80,10 +82,10 @@ export default function Dealership({ currencies, pools }) {
               gap: 4,
             }}
           >
-            {map(pools, (pool) => (
+            {map(pool_data, (pool) => (
               <LPCard
-                coin1={currencies[pool.coin1]}
-                coin2={currencies[pool.coin2]}
+                coin1={pool.coin1}
+                coin2={pool.coin2}
                 stats={pool.stats}
               />
             ))}

@@ -11,10 +11,9 @@ TESTNET_URL: str = "http://0.0.0.0:8080"  # "https://testnet.diem.com/v1"
 FAUCET_URL: str = "http://0.0.0.0:8000"  # "https://testnet.diem.com/mint"
 CHAIN_ID = diem_types.ChainId(4)  # testnet.CHAIN_ID
 CURRENCY = "XUS"
-MODULE_ADDRESS = "C4FA5B6A7E4016A5872943DF9DF13D60"
-EXCHANGE_ADDRESS = "be5a08fa6e183ece929b169fc7b965c9".upper()
+MODULE_ADDRESS = "B5054D9A423CFD600765DC36619E1C43"
+EXCHANGE_ADDRESS = "4061f01e07f100061961fdc46fb1aa74".upper()
 
-#old e0d016b0ff231063d022fc007c325749
 def create_account():
     """
     creates an account on the testnet
@@ -224,8 +223,6 @@ def get_exchange_pools():
             pools['pool_bd'] = res['data']
         elif res['type'] == f'0x{MODULE_ADDRESS.lower()}::ExchangeCD::Exchange':
             pools['pool_cd'] = res['data']
-
-    print(pools)
 
     return pools
 
