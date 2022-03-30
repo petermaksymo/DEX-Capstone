@@ -17,10 +17,14 @@ def transactions():
             "mint_coin_b": "Mint Coin B",
             "mint_coin_c": "Mint Coin C",
             "mint_coin_d": "Mint USD",
+            "remove_exchange_liquidity": "Remove Liquidity",
+            "add_exchange_liquidity": "Add Liquidity"
         }
 
         values = []
         for t in raw_txns:
+            print(t)
+
             date = datetime.datetime.fromtimestamp(
                 int(t["expiration_timestamp_secs"])
             ).strftime("%b %d, %Y")
@@ -28,14 +32,24 @@ def transactions():
                 t.get("payload", {}).get("function", "::a::").split("::")[2],
                 "Undefined Event",
             )
-            coin_1 = t.get("payload").get("arguments")[0]
-            coin_2 = (
-                t.get("payload").get("arguments")[1]
-                if len(t.get("payload").get("arguments")) > 1
-                else "-"
-            )
+            # Don't add undefined events to the list
+            if description == "Undefined Event":
+                continue
 
-            values.append(
+            coin_1 = '-'
+            coin_2 = '-'
+
+            if description == "Remove Liquidity" or description == "Add Liquidity":
+                coin_1 = t.get("payload").get("arguments")[2]
+            else:
+                coin_1 = t.get("payload").get("arguments")[0]
+                coin_2 = (
+                    t.get("payload").get("arguments")[1]
+                    if len(t.get("payload").get("arguments")) > 1
+                    else "-"
+                )
+
+            values.insert(0,
                 [
                     date,
                     description,

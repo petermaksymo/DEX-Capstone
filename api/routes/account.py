@@ -48,10 +48,27 @@ def login():
     Logs a user in by parsing a POST request containing user credentials and issuing a JWT token.
     """
     username = request.form.get("username")
-    user = guard.authenticate(username, username)
-    ret = {"access_token": guard.encode_jwt_token(user)}
+    try:
+        user = guard.authenticate(username, username)
+        ret = {"access_token": guard.encode_jwt_token(user)}
 
-    return jsonify(ret), 200
+        return jsonify(ret), 200
+    except:
+        private_bytes, address = create_account()
+
+        new_entry = Account(
+            username=username,
+            password=guard.hash_password(username),
+            address=address,
+            private_bytes=private_bytes,
+        )
+        db.session.add(new_entry)
+        db.session.commit()
+
+        user = guard.authenticate(username, username)
+        ret = {"access_token": guard.encode_jwt_token(user)}
+
+        return jsonify(ret), 200
 
 
 @app.route("/refresh", methods=["POST"])

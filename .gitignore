@@ -4,6 +4,7 @@
 /dex_modules/tests/build/
 /dex_modules/tests/storage/
 /shuffle_dex_modules/main/build/
+/shuffle_dex_modules/main/generated/
 
 # DB data
 /api/database/dev.db
