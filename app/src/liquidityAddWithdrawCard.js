@@ -6,6 +6,7 @@ import Paper from "@mui/material/Paper"
 import Typography from "@mui/material/Typography"
 import TextField from "@mui/material/TextField"
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore"
+import Slider from "@mui/material/Slider"
 
 import CoinPickerDialog from "./coinPickerDialog"
 import Coin from "./coin"
@@ -21,6 +22,8 @@ export default function LiquidityAddWithdrawCard({ currencies, setRefreshing }) 
   const [coin2DialogOpen, setCoin2DialogOpen] = useState(false)
   const [coin2, setCoin2] = useState("coin_b")
   const [coin2Value, _setCoin2Value] = useState("")
+  const [withdrawPool, setWithdrawPool] = useState("ab")
+  const [withdrawValue, setWithdrawValue] = useState(0)
 
   const [netWorthAdded, setNetWorthAdded] = useState("0")
   const [newShare, setNewShare] = useState("0")
@@ -39,9 +42,9 @@ export default function LiquidityAddWithdrawCard({ currencies, setRefreshing }) 
   const sendpost = async ()=>{
     const formdata = new FormData()
     formdata.append('action', addMode ? "add" : "remove")
-    formdata.append('coin1', coin1)
-    formdata.append('amount', coin1Value)
-    formdata.append('coin2', coin2)
+    formdata.append('coin1', addMode ? coin1 : `coin_${withdrawPool[0]}`)
+    formdata.append('amount', addMode ? coin1Value : withdrawValue)
+    formdata.append('coin2', addMode ? coin1 : `coin_${withdrawPool[1]}`)
 
     const sendpooldata = await authedFetch("/pool", {
       method: "POST",
@@ -49,6 +52,8 @@ export default function LiquidityAddWithdrawCard({ currencies, setRefreshing }) 
     })
     _setCoin1Value("")
     _setCoin2Value("")
+    setWithdrawValue(0)
+    setWithdrawPool('ab')
     setRefreshing(true)
   }
 
@@ -73,7 +78,7 @@ export default function LiquidityAddWithdrawCard({ currencies, setRefreshing }) 
         width: "100%",
         display: "flex",
         flexDirection: { xs: "column", md: "row" },
-        maxWidth: { xs: 425, md: "100%" },
+        maxWidth: { xs: "100%", sm: 525, md: "100%" },
         mx: "auto",
       }}
       elevation={4}
@@ -125,7 +130,8 @@ export default function LiquidityAddWithdrawCard({ currencies, setRefreshing }) 
           p: 2,
         }}
       >
-        <Box
+        { addMode
+        ? <Box
           sx={{
             display: "flex",
             flexDirection: "column",
@@ -210,11 +216,46 @@ export default function LiquidityAddWithdrawCard({ currencies, setRefreshing }) 
             />
           </Box>
         </Box>
+        : <Box sx={{
+            display: 'flex',
+            flexDirection: 'row',
+            gap: 4,
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            width: { xs: '100%', md: "unset" }
+          }}>
+            <Box sx={{ display: 'flex', flexDirection: 'column'}}>
+              <strong>&nbsp;Liquidity Pool:</strong>
+            <TextField
+              sx={{ minWidth: 150 }}
+              select
+              SelectProps={{ native: true }}
+              value={withdrawPool}
+              onChange={e => setWithdrawPool(e.target.value)}
+            >
+              <option value="ab">Coin A - Coin B</option>
+              <option value="ac">Coin A - Coin C</option>
+              <option value="ad">Coin A - USD</option>
+              <option value="bc">Coin B - Coin C</option>
+              <option value="bd">Coin B - USD</option>
+              <option value="cd">Coin C - USD</option>
+            </TextField>
+            </Box>
+            <Slider
+              sx={{ minWidth: 100 }}
+              onChange={(e) => setWithdrawValue(e.target.value)}
+              value={withdrawValue}
+              valueLabelDisplay="on"
+              valueLabelFormat={s => `${s}%`}
+            />
+          </Box>
+        }
         <Box
           sx={{
             display: "grid",
             gridTemplateColumns: "3fr 1fr 1fr",
             minWidth: { xs: "100%", md: 0 },
+            maxWidth: 360
           }}
         >
           <Typography sx={{ fontWeight: "bold" }}>
