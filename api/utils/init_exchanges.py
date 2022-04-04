@@ -17,7 +17,6 @@ EXCHANGES = ["AB", "AC", "AD", "BC", "BD", "CD"]
 
 def create_admin():
     private_bytes, address = create_account()
-
     new_entry = Account(
         username="admin",
         password=guard.hash_password("admin"),

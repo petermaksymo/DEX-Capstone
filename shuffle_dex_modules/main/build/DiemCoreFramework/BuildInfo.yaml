@@ -5,7 +5,7 @@ compiled_package_info:
     CurrencyInfo: 0000000000000000000000000a550c18
     DiemFramework: "00000000000000000000000000000001"
     DiemRoot: 0000000000000000000000000a550c18
-    Sender: 2c8dd160fc20e132c4ca6f2afe7d41a2
+    Sender: d369049154876e99f4e4e5cb528e5b1c
     Std: "00000000000000000000000000000001"
     TreasuryCompliance: 0000000000000000000000000b1e55ed
     VMReserved: "00000000000000000000000000000000"
@@ -175,6 +175,6 @@ compiled_package_info:
     install_dir: ~
     force_recompilation: false
     additional_named_addresses:
-      Sender: 2c8dd160fc20e132c4ca6f2afe7d41a2
+      Sender: d369049154876e99f4e4e5cb528e5b1c
 dependencies:
   - MoveStdlib

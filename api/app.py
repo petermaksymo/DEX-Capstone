@@ -57,3 +57,4 @@ import api.routes.mint
 import api.routes.pool
 import api.routes.transactions
 import api.routes.wallet
+import api.routes.exchange

@@ -11,8 +11,8 @@ TESTNET_URL: str = "http://0.0.0.0:8080"  # "https://testnet.diem.com/v1"
 FAUCET_URL: str = "http://0.0.0.0:8000"  # "https://testnet.diem.com/mint"
 CHAIN_ID = diem_types.ChainId(4)  # testnet.CHAIN_ID
 CURRENCY = "XUS"
-MODULE_ADDRESS = "2C8DD160FC20E132C4CA6F2AFE7D41A2"
-EXCHANGE_ADDRESS = "c29814546ced3f02bea71f367c6164f2".upper()
+MODULE_ADDRESS = "D369049154876E99F4E4E5CB528E5B1C"
+EXCHANGE_ADDRESS = "134e0a49109702d4aa7801c5672c5ab2".upper()
 
 
 def create_account():
@@ -26,8 +26,9 @@ def create_account():
 
     sender_private_key = Ed25519PrivateKey.generate()
     sender_auth_key = AuthKey.from_public_key(sender_private_key.public_key())
+    print("before mint")
     testnet.Faucet.mint(faucet, sender_auth_key.hex(), 100, CURRENCY)
-
+    print("after mint")
     bytes = sender_private_key.private_bytes(
         encoding=serialization.Encoding.Raw,
         format=serialization.PrivateFormat.Raw,

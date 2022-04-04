@@ -56,11 +56,20 @@ export default function Swap({ currencies }) {
     setCoin2Value(coin1Value)
   }
 
-  const executeExchange = () => {
+  const executeExchange = async () => {
     console.log("exchange")
+    const formdata = new FormData()
 
-    const swap_button = document.getElementById("swap-button")
-    swap_button.classList.add("rotating")
+    // console.log(coin1Value)
+
+    formdata.append('from', coin1)
+    formdata.append('to', coin2)
+    formdata.append('amt', coin1Value)
+
+    const sendpooldata = await authedFetch("/exchange", {
+      method: "POST",
+      body: formdata,
+    })
   }
 
   const MiddleBar = () => {
