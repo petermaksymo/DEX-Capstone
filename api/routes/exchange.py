@@ -16,7 +16,7 @@ def exchange():
         to_coin = request.form.get('to')[-1]
         amt = request.form.get('amt')
         
-        print(from_coin, to_coin, amt)
+        # print(from_coin, to_coin, amt)
 
         # Submit transaction to chain'
         username = current_user().username

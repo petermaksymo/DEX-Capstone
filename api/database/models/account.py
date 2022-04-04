@@ -10,7 +10,9 @@ class Account(Base, SerializerMixin):
     __tablename__ = "account"
 
     username = db.Column(db.String, unique=True, nullable=False)
-    password = db.Column(db.Text, index=False, unique=False, nullable=False) # hashed username
+    password = db.Column(
+        db.Text, index=False, unique=False, nullable=False
+    )  # hashed username
     address = db.Column(db.String, unique=True, nullable=False)
     private_bytes = db.Column(db.BLOB, unique=True, nullable=False)
 
