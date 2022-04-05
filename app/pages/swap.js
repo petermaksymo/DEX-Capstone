@@ -19,59 +19,103 @@ import { useWidth } from "../utils/hooks"
 import { force_decimal } from "../utils/functions"
 import HeaderText from "../src/headerText"
 import { AuthContext } from "../src/authContext"
+import DialogTitle from "@mui/material/DialogTitle"
+import DialogContent from "@mui/material/DialogContent"
+import DialogActions from "@mui/material/DialogActions"
+import CircularProgress from "@mui/material/CircularProgress"
+import Dialog from "@mui/material/Dialog"
 
 export default function Swap({ currencies }) {
   const router = useRouter()
   const theme = useTheme()
   const { isAuthed, isAuthLoading, authedFetch } = React.useContext(AuthContext)
   const [balances, setBalances] = useState(null)
-
-  React.useEffect(() => {
-    async function fetchData() {
-      if (!isAuthed && !isAuthLoading) await router.push("/")
-
-      const data = await authedFetch("/wallet")
-      setBalances(data)
-    }
-  }, [isAuthed, isAuthLoading, authedFetch, router])
+  const [confirmDialogOpen, setConfirmDialogOpen] = useState(false)
+  const [confirmLoading, setConfirmLoading] = useState(false)
 
   const [coin1, setCoin1] = useState("coin_a")
-  const [coin1Value, setCoin1Value] = useState("")
+  const [coin1Value, _setCoin1Value] = useState("")
   const [coin1DialogOpen, setCoin1DialogOpen] = useState(false)
-  const [coin2, setCoin2] = useState("usd")
-  const [coin2Value, setCoin2Value] = useState("")
+  const [coin2, setCoin2] = useState("coin_d")
+  const [coin2Value, _setCoin2Value] = useState("")
   const [coin2DialogOpen, setCoin2DialogOpen] = useState(false)
   const [swapRotation, setSwapRotation] = useState(180)
+
+  const setCoin1Value = (value) => {
+    if (value === "") return resetState()
+    getEquivalent("coin1", value)
+    _setCoin1Value(value)
+  }
+
+  const setCoin2Value = (value) => {
+    if (value === "") return resetState()
+    getEquivalent("coin2", value)
+    _setCoin2Value(value)
+  }
+
+  const fetchData = React.useCallback(async () => {
+    if (!isAuthed && !isAuthLoading) await router.push("/")
+
+    const data = await authedFetch("/wallet")
+    setBalances(data)
+  }, [isAuthed, isAuthLoading, authedFetch, router])
+
+  React.useEffect(() => {
+    fetchData()
+  }, [fetchData])
+
+  const resetState = () => {
+    _setCoin1Value("")
+    _setCoin2Value("")
+    setConfirmDialogOpen(false)
+    setConfirmLoading(false)
+  }
 
   const setMax = () => setCoin1Value(get(balances, coin1, 0))
 
   const swapCoins = () => {
-    console.log("swap coins")
-
     const swap_button = document.getElementById("swap-button")
     swap_button.style.transform = `rotate(-${swapRotation}deg)`
     setSwapRotation(swapRotation + 180)
 
     setCoin1(coin2)
-    setCoin1Value(coin2Value)
+    _setCoin1Value(coin2Value)
     setCoin2(coin1)
-    setCoin2Value(coin1Value)
+    _setCoin2Value(coin1Value)
   }
 
   const executeExchange = async () => {
-    console.log("exchange")
+    setConfirmLoading(true)
+
     const formdata = new FormData()
 
-    // console.log(coin1Value)
+    formdata.append("from", coin1)
+    formdata.append("to", coin2)
+    formdata.append("amt", coin1Value)
 
-    formdata.append('from', coin1)
-    formdata.append('to', coin2)
-    formdata.append('amt', coin1Value)
-
-    const sendpooldata = await authedFetch("/exchange", {
+    await authedFetch("/exchange", {
       method: "POST",
       body: formdata,
     })
+    resetState()
+    fetchData()
+  }
+
+  const getEquivalent = async (coin, value = "0") => {
+    const swapOrder = coin1.slice(-1) > coin2.slice(-1)
+
+    const query = new URLSearchParams()
+    query.append("format", "equivalentamt")
+    query.append("coin1type", swapOrder ? coin2 : coin1)
+    query.append("coin2type", swapOrder ? coin1 : coin2)
+    query.append("coin1added", (coin === "coin1") === !swapOrder ? value : "0")
+    query.append("coin2added", (coin === "coin1") === !swapOrder ? "0" : value)
+    query.append("includeCommission", "true")
+
+    const res = await authedFetch(`/pool?${query.toString()}`)
+    coin === "coin1"
+      ? _setCoin2Value(res.equivalent)
+      : _setCoin1Value(res.equivalent)
   }
 
   const MiddleBar = () => {
@@ -92,7 +136,7 @@ export default function Swap({ currencies }) {
           cursor: "pointer",
           bgcolor: "background.paper",
         }}
-        onClick={executeExchange}
+        onClick={() => setConfirmDialogOpen(true)}
       >
         <Typography
           sx={{
@@ -387,6 +431,45 @@ export default function Swap({ currencies }) {
             </Box>
           </Box>
         </Container>
+        <Dialog
+          open={confirmDialogOpen}
+          onClose={() => setConfirmDialogOpen(false)}
+          maxWidth="xs"
+          fullWidth
+        >
+          <DialogTitle>Please confirm your action</DialogTitle>
+          <DialogContent sx={{ display: "flex", flexDirection: "column" }}>
+            <Typography component="span">
+              Please click &quot;confirm&quot; below to confirm your transaction
+              of exchanging{" "}
+              <strong>
+                {coin1Value} {currencies[coin1].name}
+              </strong>{" "}
+              into approximately{" "}
+              <strong>
+                {coin2Value} {currencies[coin2].name}
+              </strong>
+              .
+            </Typography>
+          </DialogContent>
+          <DialogActions>
+            <Button
+              color="primary"
+              variant="contained"
+              disableElevation
+              onClick={executeExchange}
+              disabled={confirmLoading}
+            >
+              {confirmLoading ? <CircularProgress /> : "Confirm"}
+            </Button>
+            <Button
+              color="secondary"
+              onClick={() => setConfirmDialogOpen(false)}
+            >
+              Cancel
+            </Button>
+          </DialogActions>
+        </Dialog>
       </div>
     </main>
   )

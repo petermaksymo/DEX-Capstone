@@ -25,6 +25,8 @@ export default function Dealership({ currencies, pools }) {
       setPoolData(pools)
       setRefreshing(false)
     }
+
+    fetchPools()
   }, [isAuthed, isAuthLoading, refreshing, authedFetch, router])
 
   return (

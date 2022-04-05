@@ -39,6 +39,8 @@ export default function Garage({
       const txn_data = await authedFetch("/transactions")
       setTransactionData(txn_data)
     }
+
+    fetchData()
   }, [isAuthed, isAuthLoading, authedFetch, router])
 
   const subheaderStyle = { color: "#800F2F", fontSize: 24, fontWeight: "bold" }

@@ -1,10 +1,11 @@
 from flask import jsonify, request
 from flask_praetorian import auth_required, current_user
 
+from api.constants import EXCHANGE_ADDRESS
 from api.database import db
 from api.database.models import Account
 from api.app import app
-from api.utils.diem_blockchain import run_move_script, get_account_resources, EXCHANGE_ADDRESS
+from api.utils.diem_blockchain import run_move_script
 
 @app.route("/exchange", methods=["POST"])
 @auth_required

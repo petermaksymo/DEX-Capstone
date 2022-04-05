@@ -110,6 +110,7 @@ def pool():
             coin2type = request.args.get("coin2type")
             coin1added = request.args.get("coin1added")
             coin2added = request.args.get("coin2added")
+            includeCommission = request.args.get("includeCommission") == "true"
             pool = "pool_" + coin1type[-1] + coin2type[-1]
 
             if float(coin1added) == 0.0:
@@ -117,7 +118,7 @@ def pool():
                     float(coin2added),
                     float(exchange[pool][coin2type]),
                     float(exchange[pool][coin1type]),
-                    0.0,
+                    float(exchange[pool]["comm_rate"]) if includeCommission else 0.0,
                 )
                 coin1added = equivalent
             else:
@@ -125,7 +126,7 @@ def pool():
                     float(coin1added),
                     float(exchange[pool][coin1type]),
                     float(exchange[pool][coin2type]),
-                    0.0,
+                    float(exchange[pool]["comm_rate"]) if includeCommission else 0.0,
                 )
                 coin2added = equivalent
 

@@ -18,13 +18,23 @@ def transactions():
             "mint_coin_c": "Mint Coin C",
             "mint_coin_d": "Mint USD",
             "remove_exchange_liquidity": "Remove Liquidity",
-            "add_exchange_liquidity": "Add Liquidity"
+            "add_exchange_liquidity": "Add Liquidity",
+            "exchange_coinA_to_coinB": "Swap Coin A to Coin B",
+            "exchange_coinA_to_coinC": "Swap Coin A to Coin C",
+            "exchange_coinA_to_coinD": "Swap Coin A to USD",
+            "exchange_coinB_to_coinC": "Swap Coin B to Coin C",
+            "exchange_coinB_to_coinD": "Swap Coin B to USD",
+            "exchange_coinC_to_coinD": "Swap Coin C to USD",
+            "exchange_coinD_to_coinC": "Swap USD to Coin C",
+            "exchange_coinD_to_coinB": "Swap USD to Coin B",
+            "exchange_coinD_to_coinA": "Swap USD to Coin A",
+            "exchange_coinC_to_coinB": "Swap Coin C to Coin B",
+            "exchange_coinC_to_coinA": "Swap Coin C to Coin A",
+            "exchange_coinB_to_coinA": "Swap Coin B to Coin A",
         }
 
         values = []
         for t in raw_txns:
-            print(t)
-
             date = datetime.datetime.fromtimestamp(
                 int(t["expiration_timestamp_secs"])
             ).strftime("%b %d, %Y")
@@ -41,13 +51,15 @@ def transactions():
 
             if description == "Remove Liquidity" or description == "Add Liquidity":
                 coin_1 = t.get("payload").get("arguments")[2]
-            else:
+            elif "Mint" in description:
                 coin_1 = t.get("payload").get("arguments")[0]
                 coin_2 = (
                     t.get("payload").get("arguments")[1]
                     if len(t.get("payload").get("arguments")) > 1
                     else "-"
                 )
+            else:
+                coin_1 = t.get("payload").get("arguments")[2]
 
             values.insert(0,
                 [
