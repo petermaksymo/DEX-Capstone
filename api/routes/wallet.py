@@ -6,6 +6,8 @@ from api.utils.diem_blockchain import (
     get_account_resources,
     format_resources_to_tokens,
     get_totalusercoin_inpool,
+    get_exchange_pools,
+    get_exchange_rate,
     get_usd_rate,
 )
 
@@ -20,8 +22,38 @@ def wallet():
         tokens = format_resources_to_tokens(resources)
 
         if ret_format != "table":
-            # TODO: Add USD equivalent amount as well
-            return jsonify(tokens)
+            data = {}
+            pools = get_exchange_pools()
+            rates = {}
+
+            for pool_name in pools:
+                pool = pools[pool_name]
+                rates[f"{pool_name[-2]}{pool_name[-1]}"] = get_exchange_rate(
+                    int(pool[f"coin_{pool_name[-2]}"]),
+                    int(pool[f"coin_{pool_name[-1]}"]),
+                    int(pool["comm_rate"]),
+                )
+                rates[f"{pool_name[-1]}{pool_name[-2]}"] = get_exchange_rate(
+                    int(pool[f"coin_{pool_name[-1]}"]),
+                    int(pool[f"coin_{pool_name[-2]}"]),
+                    int(pool["comm_rate"]),
+                )
+
+            for coin in tokens:
+                coin_data = {}
+
+                coin_data["balance"] = tokens[coin]
+                coin_data[
+                    "usd_amt"
+                ] = f"{(get_usd_rate(coin) * float(coin_data['balance'])):.2f}"
+                for other_coins in tokens:
+                    if coin != other_coins:
+                        rate = rates[f"{coin[-1]}{other_coins[-1]}"]
+                        coin_data[other_coins] = f"{rate:.3f}"
+
+                data[coin] = coin_data
+
+            return jsonify(data)
         else:
             total_in_pool = get_totalusercoin_inpool(current_user().address)
 

@@ -134,6 +134,7 @@ export default function LiquidityAddWithdrawCard({
           flexDirection: { xs: "column", md: "row" },
           maxWidth: { xs: "100%", sm: 525, md: "100%" },
           mx: "auto",
+          minHeight: 118,
         }}
         elevation={4}
       >

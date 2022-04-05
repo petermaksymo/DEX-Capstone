@@ -46,8 +46,8 @@ def transactions():
             if description == "Undefined Event":
                 continue
 
-            coin_1 = '-'
-            coin_2 = '-'
+            coin_1 = "-"
+            coin_2 = "-"
 
             if description == "Remove Liquidity" or description == "Add Liquidity":
                 coin_1 = t.get("payload").get("arguments")[2]
@@ -61,14 +61,15 @@ def transactions():
             else:
                 coin_1 = t.get("payload").get("arguments")[2]
 
-            values.insert(0,
+            values.insert(
+                0,
                 [
                     date,
                     description,
                     coin_1,
                     coin_2,
                     t.get("hash"),
-                ]
+                ],
             )
 
         return jsonify(

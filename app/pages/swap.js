@@ -29,7 +29,7 @@ export default function Swap({ currencies }) {
   const router = useRouter()
   const theme = useTheme()
   const { isAuthed, isAuthLoading, authedFetch } = React.useContext(AuthContext)
-  const [balances, setBalances] = useState(null)
+  const [coinData, setCoinData] = useState(null)
   const [confirmDialogOpen, setConfirmDialogOpen] = useState(false)
   const [confirmLoading, setConfirmLoading] = useState(false)
 
@@ -57,7 +57,7 @@ export default function Swap({ currencies }) {
     if (!isAuthed && !isAuthLoading) await router.push("/")
 
     const data = await authedFetch("/wallet")
-    setBalances(data)
+    setCoinData(data)
   }, [isAuthed, isAuthLoading, authedFetch, router])
 
   React.useEffect(() => {
@@ -71,7 +71,7 @@ export default function Swap({ currencies }) {
     setConfirmLoading(false)
   }
 
-  const setMax = () => setCoin1Value(get(balances, coin1, 0))
+  const setMax = () => setCoin1Value(get(coinData, `${coin1}.balance`, 0))
 
   const swapCoins = () => {
     const swap_button = document.getElementById("swap-button")
@@ -328,11 +328,11 @@ export default function Swap({ currencies }) {
                   <strong>Current Balance:</strong>
                 </Typography>
                 <Typography>
-                  XX.XX {currencies[coin1].name} per {currencies[coin2].name}{" "}
-                  <br />
-                  {get(balances, coin1, "0")}{" "}
+                  {get(coinData, `${coin1}.${coin2}`, "XX.XX")}{" "}
+                  {currencies[coin2].name} per {currencies[coin1].name} <br />
+                  {get(coinData, `${coin1}.balance`, "0")}{" "}
                   <strong>{currencies[coin1].name}</strong> <br />
-                  XXXXXXXX <strong>USD</strong>
+                  {get(coinData, `${coin1}.usd_amt`, "0")} <strong>USD</strong>
                 </Typography>
               </Box>
             </Box>
@@ -422,11 +422,11 @@ export default function Swap({ currencies }) {
                 <strong>Current Balance:</strong>
               </Typography>
               <Typography>
-                XX.XX {currencies[coin2].name} per {currencies[coin1].name}{" "}
-                <br />
-                {get(balances, coin2, "0")}{" "}
+                {get(coinData, `${coin2}.${coin1}`, "XX.XX")}{" "}
+                {currencies[coin1].name} per {currencies[coin2].name} <br />
+                {get(coinData, `${coin2}.balance`, "0")}{" "}
                 <strong>{currencies[coin2].name}</strong> <br />
-                XXXXXXXX <strong>USD</strong>
+                {get(coinData, `${coin2}.usd_amt`, "0")} <strong>USD</strong>
               </Typography>
             </Box>
           </Box>
