@@ -81,14 +81,15 @@ def pool():
                 }
 
                 poolstats = {
-                    "pool_size": str(totalvalue),
-                    "share": str(poolshare) + "%",
+                    "pool_size": f"{totalvalue:.2f}",
+                    "share": f"{poolshare:.2f}%",
                     "coin1Owned": str(coin1_supply),
                     "coin2Owned": str(coin2_supply),
-                    "coin1per2": str(coin1per2),
-                    "coin2per1": str(coin2per1),
+                    "coin1per2": f"{coin1per2:.4f}",
+                    "coin2per1": f"{coin2per1:.4f}",
                 }
 
+                # TODO: Add lp coin amount for user, and total pool lp in data returned
                 pooldata = {
                     "coin1": coin1_details,
                     "coin2": coin2_details,
@@ -116,7 +117,7 @@ def pool():
                     float(coin2added),
                     float(exchange[pool][coin2type]),
                     float(exchange[pool][coin1type]),
-                    float(exchange[pool]["comm_rate"]),
+                    0.0,
                 )
                 coin1added = equivalent
             else:
@@ -124,7 +125,7 @@ def pool():
                     float(coin1added),
                     float(exchange[pool][coin1type]),
                     float(exchange[pool][coin2type]),
-                    float(exchange[pool]["comm_rate"]),
+                    0.0,
                 )
                 coin2added = equivalent
 
@@ -152,10 +153,10 @@ def pool():
             )
             return jsonify(
                 {
-                    "equivalent": equivalent,
-                    "newlp": newlp,
-                    "newshare": newshare,
-                    "newvalue": newvalue,
+                    "equivalent": f"{equivalent:.0f}",
+                    "newlp": f"{newlp:.0f}",
+                    "newshare": f"{newshare:.2f}",
+                    "newvalue": f"{newvalue:.2f}",
                 }
             )
         elif ret_format == "table":

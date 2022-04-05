@@ -18,12 +18,14 @@ export default function Dealership({ currencies, pools }) {
   const [refreshing, setRefreshing] = React.useState(false)
   const [pool_data, setPoolData] = React.useState(pools)
 
-  React.useEffect(async () => {
-    if (!isAuthed && !isAuthLoading) await router.push("/")
-    const pools = await authedFetch("/pool?format=dealership")
-    setPoolData(pools)
-    setRefreshing(false)
-  }, [isAuthed, isAuthLoading, refreshing])
+  React.useEffect(() => {
+    async function fetchPools() {
+      if (!isAuthed && !isAuthLoading) await router.push("/")
+      const pools = await authedFetch("/pool?format=dealership")
+      setPoolData(pools)
+      setRefreshing(false)
+    }
+  }, [isAuthed, isAuthLoading, refreshing, authedFetch, router])
 
   return (
     <Box sx={{ display: "flex", flexDirection: "column", minHeight: "100%" }}>

@@ -26,12 +26,14 @@ export default function Swap({ currencies }) {
   const { isAuthed, isAuthLoading, authedFetch } = React.useContext(AuthContext)
   const [balances, setBalances] = useState(null)
 
-  React.useEffect(async () => {
-    if (!isAuthed && !isAuthLoading) await router.push("/")
+  React.useEffect(() => {
+    async function fetchData() {
+      if (!isAuthed && !isAuthLoading) await router.push("/")
 
-    const data = await authedFetch("/wallet")
-    setBalances(data)
-  }, [isAuthed, isAuthLoading])
+      const data = await authedFetch("/wallet")
+      setBalances(data)
+    }
+  }, [isAuthed, isAuthLoading, authedFetch, router])
 
   const [coin1, setCoin1] = useState("coin_a")
   const [coin1Value, setCoin1Value] = useState("")

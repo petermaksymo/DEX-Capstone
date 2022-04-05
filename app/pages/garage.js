@@ -26,18 +26,20 @@ export default function Garage({
   const [stakeData, setStakeData] = React.useState(stake_data)
   const [transactionData, setTransactionData] = React.useState(transaction_data)
 
-  React.useEffect(async () => {
-    if (!isAuthed && !isAuthLoading) await router.push("/")
+  React.useEffect(() => {
+    async function fetchData() {
+      if (!isAuthed && !isAuthLoading) await router.push("/")
 
-    const wallet_data = await authedFetch("/wallet?format=table")
-    setWalletData(wallet_data)
+      const wallet_data = await authedFetch("/wallet?format=table")
+      setWalletData(wallet_data)
 
-    const stake_data = await authedFetch("/pool?format=table")
-    setStakeData(stake_data)
+      const stake_data = await authedFetch("/pool?format=table")
+      setStakeData(stake_data)
 
-    const txn_data = await authedFetch("/transactions")
-    setTransactionData(txn_data)
-  }, [isAuthed, isAuthLoading])
+      const txn_data = await authedFetch("/transactions")
+      setTransactionData(txn_data)
+    }
+  }, [isAuthed, isAuthLoading, authedFetch, router])
 
   const subheaderStyle = { color: "#800F2F", fontSize: 24, fontWeight: "bold" }
 

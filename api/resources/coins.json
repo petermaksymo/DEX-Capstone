@@ -17,7 +17,7 @@
     "color": "#EB83A0",
     "price": 5.5
   },
-  "usd": {
+  "coin_d": {
     "name": "USD",
     "short_name": "U",
     "color": "#6677DA",
