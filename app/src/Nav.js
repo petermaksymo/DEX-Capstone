@@ -4,6 +4,7 @@ import { useRouter } from "next/router"
 
 import AppBar from "@mui/material/AppBar"
 import Box from "@mui/material/Box"
+import CircularProgress from "@mui/material/CircularProgress"
 import Dialog from "@mui/material/Dialog"
 import DialogTitle from "@mui/material/DialogTitle"
 import DialogContent from "@mui/material/DialogContent"
@@ -31,10 +32,12 @@ const pages = [
 ]
 
 const ResponsiveAppBar = () => {
-  const { login, logout, isAuthed, authedFetch } = useContext(AuthContext)
+  const { login, logout, isAuthed } = useContext(AuthContext)
   const router = useRouter()
+
   const [signInDialogOpen, setSigninDialogOpen] = React.useState(false)
   const [username, setUsername] = React.useState("")
+  const [loginLoading, setLoginLoading] = React.useState(false)
   const [loginError, setLoginError] = React.useState(null)
   const [anchorElNav, setAnchorElNav] = React.useState(null)
   const [currentRoute, setCurrentRoute] = React.useState(
@@ -54,6 +57,7 @@ const ResponsiveAppBar = () => {
   const handleFormSubmit = (e) => {
     e.preventDefault()
 
+    setLoginLoading(true)
     const createAccount = async () => {
       const formdata = new FormData()
       formdata.append("username", username)
@@ -81,6 +85,7 @@ const ResponsiveAppBar = () => {
     setUsername("")
     setSigninDialogOpen(false)
     setLoginError(null)
+    setLoginLoading(false)
   }
 
   return (
@@ -221,6 +226,7 @@ const ResponsiveAppBar = () => {
                   <TextField
                     autoFocus
                     required
+                    disabled={loginLoading}
                     error={loginError}
                     sx={{ mt: 1 }}
                     fullWidth
@@ -235,8 +241,8 @@ const ResponsiveAppBar = () => {
                   />
                 </DialogContent>
                 <DialogActions>
-                  <Button color="primary" type="submit">
-                    Sign in
+                  <Button color="primary" type="submit" disabled={loginLoading}>
+                    {loginLoading ? <CircularProgress /> : "Sign in"}
                   </Button>
                   <Button color="secondary" onClick={handleSigninDialogClose}>
                     Cancel

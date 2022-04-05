@@ -89,7 +89,7 @@ const AuthProvider = ({ children }) => {
       .catch((err) => {
         logout()
         setIsAuthLoading(false)
-        window.location = "/login"
+        window.location = "/"
       })
   }
 
