@@ -28,7 +28,9 @@ def initialize_exchanges():
     # Mint a bunch of each coin type
     for coin in COINS:
         # Initialize Coin Events
-        run_move_script(private_bytes, f"Coin{coin}", f"initialize_coin_{coin.lower()}", [])
+        run_move_script(
+            private_bytes, f"Coin{coin}", f"initialize_coin_{coin.lower()}", []
+        )
 
         # Mint a lot of coins
         args = [{"type": "uint_64", "value": 100_000_000}]
@@ -38,7 +40,12 @@ def initialize_exchanges():
         print("EXCHANGE: ", exchange)
 
         # Initialize Coin Events
-        run_move_script(private_bytes, f"Exchange{exchange}", f"initialize_lp_coin_{exchange.lower()}", [])
+        run_move_script(
+            private_bytes,
+            f"Exchange{exchange}",
+            f"initialize_lp_coin_{exchange.lower()}",
+            [],
+        )
 
         # Mint LP coin for the exchange
         args = [

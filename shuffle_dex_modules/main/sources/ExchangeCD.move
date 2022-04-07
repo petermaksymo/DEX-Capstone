@@ -41,7 +41,7 @@ module Sender::ExchangeCD {
 			move_to<LPCoinCD>(account, LPCoinCD { value: amount });
 		};
 
-		CoinEvents::emit_mint_event<LPCoinCD>(b"LPCoinCD", amount, account_addr);
+		CoinEvents::emit_mint_event<LPCoinCD>(b"LPCoin CU", amount, account_addr);
 		amount
 	}
 
@@ -60,7 +60,7 @@ module Sender::ExchangeCD {
 		let lp_coin = borrow_global_mut<LPCoinCD>(account);
 		assert!(amt<=lp_coin.value, 1);
 		lp_coin.value = lp_coin.value - amt;
-		CoinEvents::emit_burn_event<LPCoinCD>(b"LPCoinCD", amt, account);
+		CoinEvents::emit_burn_event<LPCoinCD>(b"LPCoin CU", amt, account);
 	}
 
 	//Check to see if LPCoinCD resource exists at addr
@@ -86,7 +86,7 @@ module Sender::ExchangeCD {
 		let to_coin = borrow_global_mut<LPCoinCD>(to_addr);
 		to_coin.value = to_coin.value + transfer_amt;
 
-		CoinEvents::emit_transfer_event<LPCoinCD>(b"LPCoinCD", transfer_amt, from_addr, to_addr);
+		CoinEvents::emit_transfer_event<LPCoinCD>(b"LPCoin CU", transfer_amt, from_addr, to_addr);
 
 		//Return the transferred amount
 		transfer_amt
@@ -200,7 +200,7 @@ module Sender::ExchangeCD {
 		exchange_obj.LP_minted = exchange_obj.LP_minted + lp_coin_cmt;
 
 		ExchangeEvents::emit_add_liquidity_event<ExchangeCD>(
-			b"ExchangeCD",
+			b"Pool C - USD",
 			transferred_coin_c,
 			transferred_coin_d,
 			lp_coin_cmt,
@@ -271,7 +271,7 @@ module Sender::ExchangeCD {
 		exchange_obj.LP_minted = exchange_obj.LP_minted - transferred_lp_coin;
 
 		ExchangeEvents::emit_remove_liquidity_event<ExchangeCD>(
-			b"ExchangeCD",
+			b"Pool C - USD",
 			coin_c_amt,
 			coin_d_amt,
 			transferred_lp_coin,
@@ -350,7 +350,7 @@ module Sender::ExchangeCD {
 		exchange_obj.coin_d = exchange_obj.coin_d - transferred_coin_d;
 
 		ExchangeEvents::emit_exchange_price_change_event<ExchangeCD>(
-			b"ExchangeCD",
+			b"Pool C - USD",
 			get_spot_price(),
 		);
 
@@ -397,7 +397,7 @@ module Sender::ExchangeCD {
 		exchange_obj.coin_c = exchange_obj.coin_c - transferred_coin_c;
 
 		ExchangeEvents::emit_exchange_price_change_event<ExchangeCD>(
-			b"ExchangeCD",
+			b"Pool C - USD",
 			get_spot_price(),
 		);
 

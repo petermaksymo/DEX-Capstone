@@ -41,7 +41,7 @@ module Sender::ExchangeAB {
 			move_to<LPCoinAB>(account, LPCoinAB { value: amount });
 		};
 
-		CoinEvents::emit_mint_event<LPCoinAB>(b"LPCoinAB", amount, account_addr);
+		CoinEvents::emit_mint_event<LPCoinAB>(b"LPCoin AB", amount, account_addr);
 		amount
 	}
 
@@ -60,7 +60,7 @@ module Sender::ExchangeAB {
 		let lp_coin = borrow_global_mut<LPCoinAB>(account);
 		assert!(amt<=lp_coin.value, 1);
 		lp_coin.value = lp_coin.value - amt;
-		CoinEvents::emit_burn_event<LPCoinAB>(b"LPCoinAB", amt, account);
+		CoinEvents::emit_burn_event<LPCoinAB>(b"LPCoin AB", amt, account);
 	}
 
 	//Check to see if LPCoinAB resource exists at addr
@@ -86,7 +86,7 @@ module Sender::ExchangeAB {
 		let to_coin = borrow_global_mut<LPCoinAB>(to_addr);
 		to_coin.value = to_coin.value + transfer_amt;
 
-		CoinEvents::emit_transfer_event<LPCoinAB>(b"LPCoinAB", transfer_amt, from_addr, to_addr);
+		CoinEvents::emit_transfer_event<LPCoinAB>(b"LPCoin AB", transfer_amt, from_addr, to_addr);
 
 		//Return the transferred amount
 		transfer_amt
@@ -200,7 +200,7 @@ module Sender::ExchangeAB {
 		exchange_obj.LP_minted = exchange_obj.LP_minted + lp_coin_amt;
 
 		ExchangeEvents::emit_add_liquidity_event<ExchangeAB>(
-			b"ExchangeAB",
+			b"Pool A - B",
 			transferred_coin_a,
 			transferred_coin_b,
 			lp_coin_amt,
@@ -271,7 +271,7 @@ module Sender::ExchangeAB {
 		exchange_obj.LP_minted = exchange_obj.LP_minted - transferred_lp_coin;
 
 		ExchangeEvents::emit_remove_liquidity_event<ExchangeAB>(
-			b"ExchangeAB",
+			b"Pool A - B",
 			coin_a_amt,
 			coin_b_amt,
 			transferred_lp_coin,
@@ -350,7 +350,7 @@ module Sender::ExchangeAB {
 		exchange_obj.coin_b = exchange_obj.coin_b - transferred_coin_b;
 
 		ExchangeEvents::emit_exchange_price_change_event<ExchangeAB>(
-			b"ExchangeAB",
+			b"Pool A - B",
 			get_spot_price(),
 		);
 
@@ -397,7 +397,7 @@ module Sender::ExchangeAB {
 		exchange_obj.coin_a = exchange_obj.coin_a - transferred_coin_a;
 
 		ExchangeEvents::emit_exchange_price_change_event<ExchangeAB>(
-			b"ExchangeAB",
+			b"Pool A - B",
 			get_spot_price(),
 		);
 

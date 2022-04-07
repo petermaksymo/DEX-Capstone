@@ -9,7 +9,7 @@ module Sender::CoinC {
     public fun mint(amount: u64, account: &signer): u64 {
         let addr = Signer::address_of(account);
         move_to<CoinC>(account, CoinC { value: amount });
-        CoinEvents::emit_mint_event<CoinC>(b"CoinC", amount, addr);
+        CoinEvents::emit_mint_event<CoinC>(b"Coin C", amount, addr);
         amount
     }
 
@@ -28,7 +28,7 @@ module Sender::CoinC {
     public fun burn(account: address): u64 acquires CoinC {
         assert!(exist_at(account), 1);
         let CoinC { value: value } = move_from<CoinC>(account);
-        CoinEvents::emit_burn_event<CoinC>(b"CoinC", value, account);
+        CoinEvents::emit_burn_event<CoinC>(b"Coin C", value, account);
         value
     }
 
@@ -49,7 +49,7 @@ module Sender::CoinC {
         let to_coin = borrow_global_mut<CoinC>(to_addr);
         to_coin.value = to_coin.value + transferred_amt;
 
-        CoinEvents::emit_transfer_event<CoinC>(b"CoinC", transferred_amt, from_addr, to_addr);
+        CoinEvents::emit_transfer_event<CoinC>(b"Coin C", transferred_amt, from_addr, to_addr);
 
         transferred_amt
     }

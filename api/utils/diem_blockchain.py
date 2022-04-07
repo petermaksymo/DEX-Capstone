@@ -19,7 +19,10 @@ CURRENCY = "XUS"
 def get_exchange_account():
     client = jsonrpc.Client(TESTNET_URL)
 
-    with open(os.path.expanduser('~/.shuffle/networks/localhost/accounts/latest/dev.key'), 'rb') as key_file:
+    with open(
+        os.path.expanduser("~/.shuffle/networks/localhost/accounts/latest/dev.key"),
+        "rb",
+    ) as key_file:
         data = key_file.read()
 
         read_bytes = diem.bcs.deserialize(data, bytes)
@@ -235,9 +238,7 @@ def get_user_stake(address):
     user = {}
     pair = None
     for each in resources:
-        isLP = re.search(
-            f"^0x{exchange_address}::Exchange..::LPCoin..", each["type"]
-        )
+        isLP = re.search(f"^0x{exchange_address}::Exchange..::LPCoin..", each["type"])
         if isLP:
             pair = re.findall("Exchange..", each["type"])
             pair = pair[0][-2:].lower()
@@ -278,7 +279,7 @@ def get_exchange_pools():
 
 def format_resources_to_tokens(resources):
     exchange_address = get_exchange_address()
-    
+
     tokens = {}
     for res in resources:
         if res["type"] == f"0x{exchange_address}::CoinA::CoinA":

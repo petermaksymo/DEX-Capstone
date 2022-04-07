@@ -12,73 +12,110 @@ def transactions():
     if request.method == "GET":
         raw_txns = get_account_transactions(current_user().address)
 
-        script_to_event = {
-            "mint_coin_a": "Mint Coin A",
-            "mint_coin_b": "Mint Coin B",
-            "mint_coin_c": "Mint Coin C",
-            "mint_coin_d": "Mint USD",
-            "remove_exchange_liquidity": "Remove Liquidity",
-            "add_exchange_liquidity": "Add Liquidity",
-            "exchange_coinA_to_coinB": "Swap Coin A to Coin B",
-            "exchange_coinA_to_coinC": "Swap Coin A to Coin C",
-            "exchange_coinA_to_coinD": "Swap Coin A to USD",
-            "exchange_coinB_to_coinC": "Swap Coin B to Coin C",
-            "exchange_coinB_to_coinD": "Swap Coin B to USD",
-            "exchange_coinC_to_coinD": "Swap Coin C to USD",
-            "exchange_coinD_to_coinC": "Swap USD to Coin C",
-            "exchange_coinD_to_coinB": "Swap USD to Coin B",
-            "exchange_coinD_to_coinA": "Swap USD to Coin A",
-            "exchange_coinC_to_coinB": "Swap Coin C to Coin B",
-            "exchange_coinC_to_coinA": "Swap Coin C to Coin A",
-            "exchange_coinB_to_coinA": "Swap Coin B to Coin A",
-        }
+        def decode_hex(hex):
+            return bytearray.fromhex(hex[2:]).decode()
+
+        coin_from_letter = {"A": "Coin A", "B": "Coin B", "C": "Coin C", "USD": "USD"}
 
         values = []
         for t in raw_txns:
-            date = datetime.datetime.fromtimestamp(
-                int(t["expiration_timestamp_secs"])
-            ).strftime("%b %d, %Y")
-            description = script_to_event.get(
-                t.get("payload", {}).get("function", "::a::").split("::")[2],
-                "Undefined Event",
-            )
-            # Don't add undefined events to the list
-            if description == "Undefined Event":
+            payload = t["payload"]
+            events = t["events"]
+
+            # All notable transactions have events
+            if len(events) == 0:
                 continue
+            date = datetime.datetime.fromtimestamp(
+                int(events[0]["data"]["timestamp"])
+            ).strftime("%b %d, %Y")
 
-            coin_1 = "-"
-            coin_2 = "-"
+            if "MintCoinEvent" in events[0]["type"]:
+                data = events[0]["data"]
+                amount = data["amount"]
+                coin = decode_hex(data["coin"])
 
-            if description == "Remove Liquidity" or description == "Add Liquidity":
-                coin_1 = t.get("payload").get("arguments")[2]
-            elif "Mint" in description:
-                coin_1 = t.get("payload").get("arguments")[0]
-                coin_2 = (
-                    t.get("payload").get("arguments")[1]
-                    if len(t.get("payload").get("arguments")) > 1
-                    else "-"
+                # Ignore 0 coin mints
+                if amount == "0":
+                    continue
+
+                values.insert(
+                    0,
+                    [
+                        date,
+                        f"Mint {coin}",
+                        "-",
+                        f"{amount} {coin}",
+                        t.get("hash"),
+                    ],
                 )
-            else:
-                coin_1 = t.get("payload").get("arguments")[2]
+            elif "exchange_coin" in payload["function"]:
+                sent, received = {}, {}
 
-            values.insert(
-                0,
-                [
-                    date,
-                    description,
-                    coin_1,
-                    coin_2,
-                    t.get("hash"),
-                ],
-            )
+                for event in events:
+                    if "TransferCoinEvent" in event["type"]:
+                        data = event["data"]
+
+                        if data["from_addr"][2:] == current_user().address:
+                            sent["coin"] = decode_hex(data["coin"])
+                            sent["amount"] = data["amount"]
+                        else:
+                            received["coin"] = decode_hex(data["coin"])
+                            received["amount"] = data["amount"]
+
+                values.insert(
+                    0,
+                    [
+                        date,
+                        f"Exchange {sent['coin']} for {received['coin']}",
+                        f"{sent['amount']} {sent['coin']}",
+                        f"{received['amount']} {received['coin']}",
+                        t.get("hash"),
+                    ],
+                )
+            elif "add_exchange_liquidity" in payload["function"]:
+                event = next(e for e in events if "AddLiquidityEvent" in e["type"])
+                data = event["data"]
+
+                exchange = decode_hex(data["exchange"])  # eg. 'Pool A - B'
+                coin1 = coin_from_letter[exchange.split()[1]]
+                coin2 = coin_from_letter[exchange.split()[-1]]
+
+                values.insert(
+                    0,
+                    [
+                        date,
+                        f"Add Liqudity to {exchange}",
+                        f"{data['a_amount']} {coin1}, \n{data['b_amount']} {coin2}",
+                        f"{data['lp_amount']} LPCoin",
+                        t.get("hash"),
+                    ],
+                )
+            elif "remove_exchange_liquidity" in payload["function"]:
+                event = next(e for e in events if "RemoveLiquidityEvent" in e["type"])
+                data = event["data"]
+
+                exchange = decode_hex(data["exchange"])  # eg. 'Pool A - B'
+                coin1 = coin_from_letter[exchange.split()[1]]
+                coin2 = coin_from_letter[exchange.split()[-1]]
+
+                values.insert(
+                    0,
+                    [
+                        date,
+                        f"Withdraw Liqudity from {exchange}",
+                        f"{data['lp_amount']} LPCoin",
+                        f"{data['a_amount']} {coin1}, \n{data['b_amount']} {coin2}",
+                        t.get("hash"),
+                    ],
+                )
 
         return jsonify(
             {
                 "headers": [
                     "Date",
                     "Description",
-                    "Amount (Token)",
-                    "Amount (Token)",
+                    "Sent",
+                    "Received",
                     "Hash",
                 ],
                 "values": values,

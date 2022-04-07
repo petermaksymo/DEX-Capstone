@@ -41,7 +41,7 @@ module Sender::ExchangeBD {
 			move_to<LPCoinBD>(account, LPCoinBD { value: amount });
 		};
 
-		CoinEvents::emit_mint_event<LPCoinBD>(b"LPCoinBD", amount, account_addr);
+		CoinEvents::emit_mint_event<LPCoinBD>(b"LPCoin BU", amount, account_addr);
 		amount
 	}
 
@@ -60,7 +60,7 @@ module Sender::ExchangeBD {
 		let lp_coin = borrow_global_mut<LPCoinBD>(account);
 		assert!(amt<=lp_coin.value, 1);
 		lp_coin.value = lp_coin.value - amt;
-		CoinEvents::emit_burn_event<LPCoinBD>(b"LPCoinBD", amt, account);
+		CoinEvents::emit_burn_event<LPCoinBD>(b"LPCoin BU", amt, account);
 	}
 
 	//Check to see if LPCoinBD resource exists at addr
@@ -86,7 +86,7 @@ module Sender::ExchangeBD {
 		let to_coin = borrow_global_mut<LPCoinBD>(to_addr);
 		to_coin.value = to_coin.value + transfer_amt;
 
-		CoinEvents::emit_transfer_event<LPCoinBD>(b"LPCoinBD", transfer_amt, from_addr, to_addr);
+		CoinEvents::emit_transfer_event<LPCoinBD>(b"LPCoin BU", transfer_amt, from_addr, to_addr);
 
 		//Return the transferred amount
 		transfer_amt
@@ -200,7 +200,7 @@ module Sender::ExchangeBD {
 		exchange_obj.LP_minted = exchange_obj.LP_minted + lp_coin_bmt;
 
 		ExchangeEvents::emit_add_liquidity_event<ExchangeBD>(
-			b"ExchangeBD",
+			b"Pool B - USD",
 			transferred_coin_b,
 			transferred_coin_d,
 			lp_coin_bmt,
@@ -271,7 +271,7 @@ module Sender::ExchangeBD {
 		exchange_obj.LP_minted = exchange_obj.LP_minted - transferred_lp_coin;
 
 		ExchangeEvents::emit_remove_liquidity_event<ExchangeBD>(
-			b"ExchangeBD",
+			b"Pool B - USD",
 			coin_b_amt,
 			coin_d_amt,
 			transferred_lp_coin,
@@ -350,7 +350,7 @@ module Sender::ExchangeBD {
 		exchange_obj.coin_d = exchange_obj.coin_d - transferred_coin_d;
 
 		ExchangeEvents::emit_exchange_price_change_event<ExchangeBD>(
-			b"ExchangeBD",
+			b"Pool B - USD",
 			get_spot_price(),
 		);
 
@@ -397,7 +397,7 @@ module Sender::ExchangeBD {
 		exchange_obj.coin_b = exchange_obj.coin_b - transferred_coin_b;
 
 		ExchangeEvents::emit_exchange_price_change_event<ExchangeBD>(
-			b"ExchangeBD",
+			b"Pool B - USD",
 			get_spot_price(),
 		);
 
