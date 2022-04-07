@@ -1,7 +1,6 @@
 from flask import jsonify, request
 from flask_praetorian import auth_required, current_user
 
-from api.constants import EXCHANGE_ADDRESS
 from api.database import db
 from api.database.models import Account
 from api.app import app
@@ -37,7 +36,6 @@ def exchange():
 
         args = [
             {"type": "address", "value": current_user().address},
-            {"type": "address", "value": EXCHANGE_ADDRESS},
             {"type": "uint_64", "value": amt},
         ]
 

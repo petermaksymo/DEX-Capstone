@@ -11,7 +11,6 @@ from api.utils.diem_blockchain import (
     get_price_quote,
     run_move_script,
 )
-from api.constants import EXCHANGE_ADDRESS
 
 
 coin_info = {
@@ -239,7 +238,6 @@ def pool():
         exchange = "Exchange" + temp + temp2
 
         args = [
-            {"type": "address", "value": EXCHANGE_ADDRESS},
             {"type": "address", "value": current_user().address},
             {"type": "uint_64", "value": amount},
         ]

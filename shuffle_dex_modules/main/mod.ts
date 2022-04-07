@@ -72,27 +72,45 @@ export async function mintCoinBFunction(
 }
 
 
-export async function initializeExchange(
-  coin_a_amt: bigint,
-  coin_b_amt: bigint
-) {
-  const payload = codegen.Stdlib.encodeInitializeExchangeScriptFunction(
-    coin_a_amt,
-    coin_b_amt
+export async function initializeEventsA() {
+  const payloadA = codegen.Stdlib.encodeInitializeCoinAScriptFunction();
+  return await DiemHelpers.buildAndSubmitTransaction(
+      defaultUserContext.address,
+      await devapi.sequenceNumber(),
+      await defaultUserContext.readPrivateKey(),
+      payloadA,
   );
+}
+
+export async function initializeEventsB() {
+  const payloadB = codegen.Stdlib.encodeInitializeCoinBScriptFunction();
   return await DiemHelpers.buildAndSubmitTransaction(
     defaultUserContext.address,
     await devapi.sequenceNumber(),
     await defaultUserContext.readPrivateKey(),
-    payload,
+    payloadB,
   );
 }
 
+export async function initializeLPAB() {
+  const payloadA = codegen.Stdlib.encodeInitializeLpCoinAbScriptFunction();
+  return await DiemHelpers.buildAndSubmitTransaction(
+      defaultUserContext.address,
+      await devapi.sequenceNumber(),
+      await defaultUserContext.readPrivateKey(),
+      payloadA,
+  );
+}
+
+// ScriptFunction example; client side creation and signing of transactions.
+// https://github.com/diem/diem/blob/main/json-rpc/docs/method_submit.md#method-submit
 export async function addLiquidity(
-  coin_a_amt: bigint
+  amt: bigint,
 ) {
   const payload = codegen.Stdlib.encodeAddExchangeLiquidityScriptFunction(
-    coin_a_amt
+    DiemHelpers.hexToAccountAddress("f342bc282b4be87f402127ee2a7e8c0c"),
+    DiemHelpers.hexToAccountAddress(defaultUserContext.address),
+    amt,
   );
   return await DiemHelpers.buildAndSubmitTransaction(
     defaultUserContext.address,
@@ -102,11 +120,15 @@ export async function addLiquidity(
   );
 }
 
-export async function exchangeCoinAToCoinB(
-  coin_a_amt: bigint
+// ScriptFunction example; client side creation and signing of transactions.
+// https://github.com/diem/diem/blob/main/json-rpc/docs/method_submit.md#method-submit
+export async function removeLiquidity(
+  amt: bigint,
 ) {
-  const payload = codegen.Stdlib.encodeExchangeCoinAToCoinBScriptFunction(
-    coin_a_amt
+  const payload = codegen.Stdlib.encodeRemoveExchangeLiquidityScriptFunction(
+    DiemHelpers.hexToAccountAddress("f342bc282b4be87f402127ee2a7e8c0c"),
+    DiemHelpers.hexToAccountAddress(defaultUserContext.address),
+    amt,
   );
   return await DiemHelpers.buildAndSubmitTransaction(
     defaultUserContext.address,
@@ -115,6 +137,54 @@ export async function exchangeCoinAToCoinB(
     payload,
   );
 }
+
+// ScriptFunction example; client side creation and signing of transactions.
+// https://github.com/diem/diem/blob/main/json-rpc/docs/method_submit.md#method-submit
+export async function swapCoinACoinB(
+  amt: bigint,
+) {
+  const payload = codegen.Stdlib.encodeExchangeCoinAToCoinBScriptFunction(
+    DiemHelpers.hexToAccountAddress(defaultUserContext.address),
+    DiemHelpers.hexToAccountAddress("f342bc282b4be87f402127ee2a7e8c0c"),
+    amt,
+  );
+  return await DiemHelpers.buildAndSubmitTransaction(
+    defaultUserContext.address,
+    await devapi.sequenceNumber(),
+    await defaultUserContext.readPrivateKey(),
+    payload,
+  );
+}
+
+
+//
+// export async function addLiquidity(
+//   coin_a_amt: bigint
+// ) {
+//   const payload = codegen.Stdlib.encodeAddExchangeLiquidityScriptFunction(
+//     coin_a_amt
+//   );
+//   return await DiemHelpers.buildAndSubmitTransaction(
+//     defaultUserContext.address,
+//     await devapi.sequenceNumber(),
+//     await defaultUserContext.readPrivateKey(),
+//     payload,
+//   );
+// }
+//
+// export async function exchangeCoinAToCoinB(
+//   coin_a_amt: bigint
+// ) {
+//   const payload = codegen.Stdlib.encodeExchangeCoinAToCoinBScriptFunction(
+//     coin_a_amt
+//   );
+//   return await DiemHelpers.buildAndSubmitTransaction(
+//     defaultUserContext.address,
+//     await devapi.sequenceNumber(),
+//     await defaultUserContext.readPrivateKey(),
+//     payload,
+//   );
+// }
 
 
 
