@@ -55,6 +55,7 @@ def initialize():
 import api.routes.coins
 import api.routes.account
 import api.routes.pool
+import api.routes.quotes
 import api.routes.transactions
 import api.routes.wallet
 import api.routes.exchange

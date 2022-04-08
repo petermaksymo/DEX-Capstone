@@ -6,13 +6,40 @@ from cryptography.hazmat.primitives import serialization
 from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PrivateKey
 import requests
 import re
+import os
 
-from api.constants import MODULE_ADDRESS, EXCHANGE_ADDRESS, COINS, EXCHANGES
+from api.constants import COINS, EXCHANGES
 
 TESTNET_URL: str = "http://0.0.0.0:8080"  # "https://testnet.diem.com/v1"
 FAUCET_URL: str = "http://0.0.0.0:8000"  # "https://testnet.diem.com/mint"
 CHAIN_ID = diem_types.ChainId(4)  # testnet.CHAIN_ID
 CURRENCY = "XUS"
+
+
+def get_exchange_account():
+    client = jsonrpc.Client(TESTNET_URL)
+
+    with open(
+        os.path.expanduser("~/.shuffle/networks/localhost/accounts/latest/dev.key"),
+        "rb",
+    ) as key_file:
+        data = key_file.read()
+
+        read_bytes = diem.bcs.deserialize(data, bytes)
+        sender_private_key = Ed25519PrivateKey.from_private_bytes(read_bytes[0])
+        sender_auth_key = AuthKey.from_public_key(sender_private_key.public_key())
+        sender_account = client.get_account(sender_auth_key.account_address())
+        private_bytes = sender_private_key.private_bytes(
+            encoding=serialization.Encoding.Raw,
+            format=serialization.PrivateFormat.Raw,
+            encryption_algorithm=serialization.NoEncryption(),
+        )
+
+        return sender_account.address, private_bytes
+
+
+def get_exchange_address():
+    return get_exchange_account()[0]
 
 
 def create_account(coin_amounts=10_000):
@@ -59,6 +86,7 @@ def run_move_script(sender_private_bytes, module, script_name, args):
     :param args: List of dicts of unencoded arguments needed for the script. See arg_encoders
     :return: "success" on success or it will error out
     """
+    exchange_address = get_exchange_address()
     client = jsonrpc.Client(TESTNET_URL)
 
     sender_private_key = Ed25519PrivateKey.from_private_bytes(sender_private_bytes)
@@ -75,7 +103,7 @@ def run_move_script(sender_private_bytes, module, script_name, args):
     script = diem.stdlib.TransactionPayload__ScriptFunction(
         value=diem.stdlib.ScriptFunction(
             module=diem.stdlib.ModuleId(
-                address=utils.account_address(MODULE_ADDRESS),
+                address=utils.account_address(exchange_address),
                 name=diem.stdlib.Identifier(module),
             ),
             function=diem.stdlib.Identifier(script_name),
@@ -202,6 +230,7 @@ def get_totalusercoin_inpool(address):
 
 
 def get_user_stake(address):
+    exchange_address = get_exchange_address()
     resources = get_account_resources(address)
     exchange = get_exchange_pools()
 
@@ -209,9 +238,7 @@ def get_user_stake(address):
     user = {}
     pair = None
     for each in resources:
-        isLP = re.search(
-            f"0x{MODULE_ADDRESS.lower()}::Exchange..::LPCoin", each["type"]
-        )
+        isLP = re.search(f"^0x{exchange_address}::Exchange..::LPCoin..", each["type"])
         if isLP:
             pair = re.findall("Exchange..", each["type"])
             pair = pair[0][-2:].lower()
@@ -229,39 +256,60 @@ def get_user_stake(address):
 
 
 def get_exchange_pools():
-    resources = get_account_resources(EXCHANGE_ADDRESS)
+    exchange_address = get_exchange_address()
+    resources = get_account_resources(exchange_address)
 
     pools = {}
     for res in resources:
-        if res["type"] == f"0x{MODULE_ADDRESS.lower()}::ExchangeAB::Exchange":
+        if res["type"] == f"0x{exchange_address}::ExchangeAB::ExchangeAB":
             pools["pool_ab"] = res["data"]
-        elif res["type"] == f"0x{MODULE_ADDRESS.lower()}::ExchangeAC::Exchange":
+        elif res["type"] == f"0x{exchange_address}::ExchangeAC::ExchangeAC":
             pools["pool_ac"] = res["data"]
-        elif res["type"] == f"0x{MODULE_ADDRESS.lower()}::ExchangeAD::Exchange":
+        elif res["type"] == f"0x{exchange_address}::ExchangeAD::ExchangeAD":
             pools["pool_ad"] = res["data"]
-        elif res["type"] == f"0x{MODULE_ADDRESS.lower()}::ExchangeBC::Exchange":
+        elif res["type"] == f"0x{exchange_address}::ExchangeBC::ExchangeBC":
             pools["pool_bc"] = res["data"]
-        elif res["type"] == f"0x{MODULE_ADDRESS.lower()}::ExchangeBD::Exchange":
+        elif res["type"] == f"0x{exchange_address}::ExchangeBD::ExchangeBD":
             pools["pool_bd"] = res["data"]
-        elif res["type"] == f"0x{MODULE_ADDRESS.lower()}::ExchangeCD::Exchange":
+        elif res["type"] == f"0x{exchange_address}::ExchangeCD::ExchangeCD":
             pools["pool_cd"] = res["data"]
 
     return pools
 
 
 def format_resources_to_tokens(resources):
+    exchange_address = get_exchange_address()
+
     tokens = {}
     for res in resources:
-        if res["type"] == f"0x{MODULE_ADDRESS.lower()}::CoinA::CoinA":
+        if res["type"] == f"0x{exchange_address}::CoinA::CoinA":
             tokens["coin_a"] = res["data"]["value"]
 
-        if res["type"] == f"0x{MODULE_ADDRESS.lower()}::CoinB::CoinB":
+        if res["type"] == f"0x{exchange_address}::CoinB::CoinB":
             tokens["coin_b"] = res["data"]["value"]
 
-        if res["type"] == f"0x{MODULE_ADDRESS.lower()}::CoinC::CoinC":
+        if res["type"] == f"0x{exchange_address}::CoinC::CoinC":
             tokens["coin_c"] = res["data"]["value"]
 
-        if res["type"] == f"0x{MODULE_ADDRESS.lower()}::CoinD::CoinD":
+        if res["type"] == f"0x{exchange_address}::CoinD::CoinD":
             tokens["coin_d"] = res["data"]["value"]
 
     return tokens
+
+
+def get_events(module, field_name):
+    """
+    Queries the diem blockchain for our custom events
+    :param module: The module the events belong to, eg: CoinA, ExchangeAB
+    :param field_name: The field_name of event stream stored in the metadata
+           eg:exchange_price_change_events
+    :return: response from diem
+    """
+    ex_addr = f"0x{get_exchange_address()}"
+
+    ev_prefix = "Exchange" if "Exchange" in module else "Coin"
+    event_handle_struct = f"{ex_addr}::{ev_prefix}Events::{ev_prefix}Metadata<{ex_addr}::{module}::{module}>"
+    url = f"{TESTNET_URL}/accounts/{ex_addr}/events/{event_handle_struct}/{field_name}"
+
+    res = requests.get(url).json()
+    return res

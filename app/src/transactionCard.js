@@ -205,7 +205,10 @@ export default function TransactionCard({ data }) {
         ))}
         {map(displayData.values, (d) =>
           map(d, (item) => (
-            <Typography className="grid-item" sx={{ p: 1 }}>
+            <Typography
+              className="grid-item"
+              sx={{ p: 1, whiteSpace: "pre-line" }}
+            >
               {item}
             </Typography>
           ))

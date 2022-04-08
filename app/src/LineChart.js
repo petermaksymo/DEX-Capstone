@@ -42,9 +42,9 @@ export default function MyResponsiveLine({ data /* see data tab */ }) {
       data={data}
       theme={nivoTheme}
       colors={theme.palette.primary.main}
-      xScale={{ format: "%Y-%m-%dT%H:%M:%S.%L%Z", type: "time" }}
+      xScale={{ format: "%Y-%m-%dT%H:%M:%S", type: "time" }}
       yScale={{ type: "linear", min: min, max: "auto" }}
-      yFormat=" >-.2f"
+      yFormat=" >-.3f"
       areaBaselineValue={min}
       curve="linear"
       axisTop={null}
