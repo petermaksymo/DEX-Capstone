@@ -97,7 +97,7 @@ module Sender::ExchangeBC {
 	//
 
 	//Initialize the exchange with commision rate and 0's for coins
-	public fun initialize(exchange_acct: &signer, comm_rate: u64, coin_b_amt: u64, coin_c_amt: u64) acquires LPCoinBC {
+	public fun initialize(exchange_acct: &signer, comm_rate: u64, coin_b_amt: u64, coin_c_amt: u64) acquires LPCoinBC, ExchangeBC {
 		//Make sure initializer has enough funds
 		assert!(CoinB::exist_at(@Sender), 1);
 		assert!(CoinB::get_value(@Sender) >= coin_b_amt, 2);
@@ -127,9 +127,14 @@ module Sender::ExchangeBC {
 							    comm_rate: comm_rate});
 		
 		ExchangeEvents::init_metadata<ExchangeBC>(exchange_acct);
+
+		ExchangeEvents::emit_exchange_price_change_event<ExchangeBC>(
+			b"Pool B - C",
+			get_spot_price(),
+		);
 	}
 
-	public(script) fun initialize_exchange(exchange: signer, comm_rate: u64, coin_b_amt: u64, coin_c_amt: u64) acquires LPCoinBC {
+	public(script) fun initialize_exchange(exchange: signer, comm_rate: u64, coin_b_amt: u64, coin_c_amt: u64) acquires LPCoinBC, ExchangeBC {
 		initialize(&exchange, comm_rate, coin_b_amt, coin_c_amt)
 	}
 

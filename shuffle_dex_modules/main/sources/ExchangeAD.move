@@ -97,7 +97,7 @@ module Sender::ExchangeAD {
 	//
 
 	//Initialize the exchange with commision rate and 0's for coins
-	public fun initialize(exchange_acct: &signer, comm_rate: u64, coin_a_amt: u64, coin_d_amt: u64) acquires LPCoinAD {
+	public fun initialize(exchange_acct: &signer, comm_rate: u64, coin_a_amt: u64, coin_d_amt: u64) acquires LPCoinAD, ExchangeAD {
 		//Make sure initializer has enough funds
 		assert!(CoinA::exist_at(@Sender), 1);
 		assert!(CoinA::get_value(@Sender) >= coin_a_amt, 2);
@@ -127,9 +127,14 @@ module Sender::ExchangeAD {
 							    comm_rate: comm_rate});
 		
 		ExchangeEvents::init_metadata<ExchangeAD>(exchange_acct);
+
+		ExchangeEvents::emit_exchange_price_change_event<ExchangeAD>(
+			b"Pool A - USD",
+			get_spot_price(),
+		);
 	}
 
-	public(script) fun initialize_exchange(exchange: signer, comm_rate: u64, coin_a_amt: u64, coin_d_amt: u64) acquires LPCoinAD {
+	public(script) fun initialize_exchange(exchange: signer, comm_rate: u64, coin_a_amt: u64, coin_d_amt: u64) acquires LPCoinAD, ExchangeAD {
 		initialize(&exchange, comm_rate, coin_a_amt, coin_d_amt)
 	}
 

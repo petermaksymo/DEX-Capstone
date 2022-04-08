@@ -97,7 +97,7 @@ module Sender::ExchangeCD {
 	//
 
 	//Initialize the exchange with commision rate and 0's for coins
-	public fun initialize(exchange_acct: &signer, comm_rate: u64, coin_c_amt: u64, coin_d_amt: u64) acquires LPCoinCD {
+	public fun initialize(exchange_acct: &signer, comm_rate: u64, coin_c_amt: u64, coin_d_amt: u64) acquires LPCoinCD, ExchangeCD {
 		//Make sure initializer has enough funds
 		assert!(CoinC::exist_at(@Sender), 1);
 		assert!(CoinC::get_value(@Sender) >= coin_c_amt, 2);
@@ -127,9 +127,14 @@ module Sender::ExchangeCD {
 							    comm_rate: comm_rate});
 		
 		ExchangeEvents::init_metadata<ExchangeCD>(exchange_acct);
+
+		ExchangeEvents::emit_exchange_price_change_event<ExchangeCD>(
+			b"Pool C - USD",
+			get_spot_price(),
+		);
 	}
 
-	public(script) fun initialize_exchange(exchange: signer, comm_rate: u64, coin_c_amt: u64, coin_d_amt: u64) acquires LPCoinCD {
+	public(script) fun initialize_exchange(exchange: signer, comm_rate: u64, coin_c_amt: u64, coin_d_amt: u64) acquires LPCoinCD, ExchangeCD {
 		initialize(&exchange, comm_rate, coin_c_amt, coin_d_amt)
 	}
 

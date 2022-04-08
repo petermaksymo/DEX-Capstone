@@ -1,4 +1,5 @@
 from flask import jsonify, request
+from datetime import datetime
 
 from api.app import app
 from api.utils.diem_blockchain import get_events
@@ -19,6 +20,9 @@ def quotes():
         )
         res = get_events(module, "exchange_price_change_events")
 
+        if len(res) == 0:
+            raise Exception("uninitialized")
+
         def parse_event(event):
             data = event["data"]
 
@@ -26,9 +30,10 @@ def quotes():
             if flip:
                 price = 1 / price
 
-            return data["timestamp"], f"{price:.3f}"
+            return {'x': datetime.fromtimestamp(int(data["timestamp"])).isoformat(), 'y': price}
 
         if is_single:
-            return parse_event(res[-1])[1], 200
+            price = parse_event(res[-1])['y']
+            return f"{price:.4f}", 200
 
         return jsonify([parse_event(e) for e in res]), 200
