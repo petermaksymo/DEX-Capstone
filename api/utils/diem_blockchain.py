@@ -295,3 +295,21 @@ def format_resources_to_tokens(resources):
             tokens["coin_d"] = res["data"]["value"]
 
     return tokens
+
+
+def get_events(module, field_name):
+    """
+    Queries the diem blockchain for our custom events
+    :param module: The module the events belong to, eg: CoinA, ExchangeAB
+    :param field_name: The field_name of event stream stored in the metadata
+           eg:exchange_price_change_events
+    :return: response from diem
+    """
+    ex_addr = f"0x{get_exchange_address()}"
+
+    ev_prefix = "Exchange" if "Exchange" in module else "Coin"
+    event_handle_struct = f"{ex_addr}::{ev_prefix}Events::{ev_prefix}Metadata<{ex_addr}::{module}::{module}>"
+    url = f"{TESTNET_URL}/accounts/{ex_addr}/events/{event_handle_struct}/{field_name}"
+
+    res = requests.get(url).json()
+    return res
