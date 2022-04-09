@@ -42,13 +42,21 @@ export default function Swap({ currencies }) {
   const [swapRotation, setSwapRotation] = useState(180)
 
   const setCoin1Value = (value) => {
+    const user_balance = get(coinData, `${coin1}.balance`)
+
     if (value === "") return resetState()
+    value = Math.min(value, user_balance)
+
     getEquivalent("coin1", value)
     _setCoin1Value(value)
   }
 
   const setCoin2Value = (value) => {
+    const user_balance = get(coinData, `${coin2}.balance`)
+
     if (value === "") return resetState()
+    value = Math.min(value, user_balance)
+
     getEquivalent("coin2", value)
     _setCoin2Value(value)
   }

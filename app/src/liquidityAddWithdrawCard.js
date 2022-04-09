@@ -20,6 +20,7 @@ import Dialog from "@mui/material/Dialog"
 
 export default function LiquidityAddWithdrawCard({
   currencies,
+  poolData,
   setRefreshing,
 }) {
   const { authedFetch } = React.useContext(AuthContext)
@@ -35,6 +36,7 @@ export default function LiquidityAddWithdrawCard({
   const [coin2Value, _setCoin2Value] = useState("")
 
   const [withdrawPool, setWithdrawPool] = useState("ab")
+  const [withdrawPercent, _setWithdrawPercent] = useState(0)
   const [withdrawValue, setWithdrawValue] = useState(0)
 
   const [netWorthAdded, setNetWorthAdded] = useState("0")
@@ -63,9 +65,29 @@ export default function LiquidityAddWithdrawCard({
     resetState()
   }
 
+  const setWithdrawPercent = (value) => {
+    _setWithdrawPercent(value)
+
+    const updateStats = async ()  => {
+      const pool = poolData[`pool_${withdrawPool}`].stats
+      const total_lp = parseInt(pool.totallp)
+      const user_lp = parseInt(pool.userlp)
+
+      const withdraw_amt = value/100.0*user_lp
+      const new_lp = user_lp - withdraw_amt
+
+      setNetWorthAdded((withdraw_amt/total_lp*parseFloat(pool.pool_size)).toFixed(2))
+      setNewShare((new_lp/total_lp*100).toFixed(3))
+      setNewLP(withdraw_amt.toFixed(0))
+      setWithdrawValue(withdraw_amt)
+    }
+    updateStats()
+  }
+
   const resetState = () => {
     _setCoin1Value("")
     _setCoin2Value("")
+    _setWithdrawPercent(0)
     setWithdrawValue(0)
     setNetWorthAdded("0")
     setNewShare("0")
@@ -307,8 +329,8 @@ export default function LiquidityAddWithdrawCard({
               </Box>
               <Slider
                 sx={{ minWidth: 100 }}
-                onChange={(e) => setWithdrawValue(e.target.value)}
-                value={withdrawValue}
+                onChange={(e) => setWithdrawPercent(e.target.value)}
+                value={withdrawPercent}
                 valueLabelDisplay="on"
                 valueLabelFormat={(s) => `${s}%`}
               />

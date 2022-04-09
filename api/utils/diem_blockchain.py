@@ -213,8 +213,8 @@ def get_totalusercoin_inpool(address):
         coin1_id = "coin_" + pool[-2]
         coin2_id = "coin_" + pool[-1]
 
-        totalcoin1 = float(user[pool]) * float(exchange[pool][coin1_id]) / 100
-        totalcoin2 = float(user[pool]) * float(exchange[pool][coin2_id]) / 100
+        totalcoin1 = int(float(user[pool]) * float(exchange[pool][coin1_id]) / 100)
+        totalcoin2 = int(float(user[pool]) * float(exchange[pool][coin2_id]) / 100)
 
         if coin1_id not in ret:
             ret[coin1_id] = totalcoin1

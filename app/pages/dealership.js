@@ -66,6 +66,7 @@ export default function Dealership({ currencies, pools }) {
           <Box sx={{ width: "100%" }}>
             <LiquidityAddWithdrawCard
               currencies={currencies}
+              poolData={pool_data}
               setRefreshing={setRefreshing}
             />
           </Box>

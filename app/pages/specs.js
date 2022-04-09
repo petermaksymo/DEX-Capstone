@@ -7,12 +7,9 @@ import Paper from "@mui/material/Paper"
 
 import LineChart from "../src/LineChart"
 import { getGraphData } from "../lib/graphData"
-import Link from "../src/Link"
 import Head from "next/head"
 
 export default function Specs({ data }) {
-  console.log(data)
-
   return (
     <Container maxWidth="xl">
       <Head>

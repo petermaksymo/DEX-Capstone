@@ -64,7 +64,7 @@ def wallet():
                 available = tokens.get(coin, "0")
                 in_pool = total_in_pool.get(coin, "0")
                 amount = str(int(available) + int(in_pool))
-                perc_in_pool = f"{(float(in_pool) / float(available) * 100):.2f}%"
+                perc_in_pool = f"{(float(in_pool) / float(amount) * 100):.2f}%"
                 worth = f"${(get_usd_rate(coin) * int(amount)):.2f}"
 
                 data = [
