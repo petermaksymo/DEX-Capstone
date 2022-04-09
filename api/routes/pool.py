@@ -6,6 +6,7 @@ from api.app import app
 from api.utils.diem_blockchain import (
     get_exchange_pools,
     get_user_stake,
+    get_user_lp,
     get_usercoin_inpool,
     get_usd_rate,
     get_price_quote,
@@ -32,6 +33,12 @@ def pool():
         user = get_usercoin_inpool(current_user().address)
         userstake = get_user_stake(current_user().address)
         userpools = user.keys()
+        userlp = get_user_lp(current_user().address)
+
+        print('================User===============\n', user)
+        print('==============Exchange=============\n', exchange)
+        print('=============User Stake============\n', userstake)
+        print('===============User LP=============\n', userlp)
 
         if ret_format == "dealership":
             data = {}
@@ -86,9 +93,12 @@ def pool():
                     "coin2Owned": str(coin2_supply),
                     "coin1per2": f"{coin1per2:.4f}",
                     "coin2per1": f"{coin2per1:.4f}",
+                    "userlp": f"{userlp[pool]}",
+                    "totallp": f"{exchange[pool]['LP_minted']}"
                 }
 
                 # TODO: Add lp coin amount for user, and total pool lp in data returned
+
                 pooldata = {
                     "coin1": coin1_details,
                     "coin2": coin2_details,
@@ -141,16 +151,6 @@ def pool():
             )
             newvalue = get_usd_rate(coin1type) * float(coin1added) * 2.0
 
-            print(
-                coin1type,
-                coin2type,
-                coin1added,
-                coin2added,
-                equivalent,
-                newlp,
-                newshare,
-                newvalue,
-            )
             return jsonify(
                 {
                     "equivalent": f"{equivalent:.0f}",

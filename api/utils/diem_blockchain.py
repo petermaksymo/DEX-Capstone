@@ -229,6 +229,25 @@ def get_totalusercoin_inpool(address):
     return ret
 
 
+def get_user_lp(address):
+    exchange_address = get_exchange_address()
+    resources = get_account_resources(address)
+    exchange = get_exchange_pools()
+
+    # Cleaning up user return data/getting all their pool contributions
+    user = {}
+    pair = None
+    for each in resources:
+        isLP = re.search(f"^0x{exchange_address}::Exchange..::LPCoin..", each["type"])
+        if isLP:
+            pair = re.findall("Exchange..", each["type"])
+            pair = pair[0][-2:].lower()
+            temp = "pool_" + pair
+            user[temp] = each["data"]["value"]
+
+    return user
+
+
 def get_user_stake(address):
     exchange_address = get_exchange_address()
     resources = get_account_resources(address)
