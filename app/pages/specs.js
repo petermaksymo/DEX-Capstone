@@ -8,8 +8,9 @@ import Paper from "@mui/material/Paper"
 import LineChart from "../src/LineChart"
 import { getGraphData } from "../lib/graphData"
 import Head from "next/head"
+import { getCoinData } from "../lib/api/coins"
 
-export default function Specs({ data }) {
+export default function Specs({ data, currencies }) {
   return (
     <Container maxWidth="xl">
       <Head>
@@ -32,29 +33,29 @@ export default function Specs({ data }) {
           gap: 2,
         }}
       >
-        {data.map((d, idx) => (
-          <Paper sx={{ padding: 2 }} key={idx}>
-            <Typography variant="h6">
-              <strong>{d.id}:</strong> {d.data[d.data.length - 1].y}{" "}
-              {d.id.split("-")[1]} per {d.id.split("-")[0]}
-            </Typography>
-            <Box sx={{ height: { xs: 200, md: 250 } }}>
-              <LineChart data={[d]} />
-            </Box>
-          </Paper>
-        ))}
+        {data.map((d, idx) => {
+          const coin1 = `coin_${d.id.split(" - ")[0].slice(-1).toLowerCase()}`
+          const coin2 = `coin_${d.id.split(" - ")[1].slice(-1).toLowerCase()}`
+
+          return (
+            <LineChart
+              chartData={d}
+              coin1={currencies[coin1]}
+              coin2={currencies[coin2]}
+            />
+          )
+        })}
       </Box>
     </Container>
   )
 }
 
 export async function getStaticProps() {
-  const data = await getGraphData()
-
   return {
     props: {
-      data,
+      data: await getGraphData(),
+      currencies: await getCoinData(),
     },
-    revalidate: 30
+    revalidate: 30,
   }
 }

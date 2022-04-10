@@ -68,16 +68,18 @@ export default function LiquidityAddWithdrawCard({
   const setWithdrawPercent = (value) => {
     _setWithdrawPercent(value)
 
-    const updateStats = async ()  => {
+    const updateStats = async () => {
       const pool = poolData[`pool_${withdrawPool}`].stats
       const total_lp = parseInt(pool.totallp)
       const user_lp = parseInt(pool.userlp)
 
-      const withdraw_amt = value/100.0*user_lp
+      const withdraw_amt = (value / 100.0) * user_lp
       const new_lp = user_lp - withdraw_amt
 
-      setNetWorthAdded((withdraw_amt/total_lp*parseFloat(pool.pool_size)).toFixed(2))
-      setNewShare((new_lp/total_lp*100).toFixed(3))
+      setNetWorthAdded(
+        ((withdraw_amt / total_lp) * parseFloat(pool.pool_size)).toFixed(2)
+      )
+      setNewShare(((new_lp / total_lp) * 100).toFixed(3))
       setNewLP(withdraw_amt.toFixed(0))
       setWithdrawValue(withdraw_amt)
     }
