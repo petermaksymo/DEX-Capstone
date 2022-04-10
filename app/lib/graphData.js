@@ -1,6 +1,3 @@
-import moment from "moment"
-import zipObject from "lodash/zipObject"
-
 export async function getGraphData() {
   const exchanges = [
     { coin1: "coin_a", coin2: "coin_b" },

@@ -8,24 +8,24 @@ import Typography from "@mui/material/Typography"
 import Box from "@mui/material/Box"
 import Coin from "./coin"
 
-export default function MyResponsiveLine({
-  chartData,
-  coin1,
-  coin2 /* see data tab */,
-}) {
+export default function MyResponsiveLine({ chartData, coin1, coin2 }) {
   const [time, setTime] = React.useState("")
-  const [value, setValue] = React.useState("1")
+  const [value, setValue] = React.useState("")
   const data = chartData.data
 
   React.useEffect(() => resetValues(), [])
 
   const resetValues = () => {
     const mostRecentPoint = data[data.length - 1]
-    setTime(moment(mostRecentPoint.x).format("dddd, MMMM D - h:mm:ss A"))
-    setValue(mostRecentPoint.y)
+    setTime(moment(mostRecentPoint.x).format("dddd, MMMM DD - h:mm:ss A"))
+    setValue(parseFloat(mostRecentPoint.y).toFixed(3))
   }
 
   const theme = useTheme()
+
+  const max = React.useMemo(() => {
+    return Math.max(...data.map((d) => d.y))
+  }, [data])
 
   const nivoTheme = React.useMemo(() => ({
     background: "rgba(0, 0, 0, 0)",
@@ -93,15 +93,18 @@ export default function MyResponsiveLine({
           </Typography>
         </Box>
       </Box>
-      <Box sx={{ padding: 1, bgcolor: "#FFF3F2" }}>
-        <Typography variant="h6">
-          {value} {chartData.id.split("-")[1]} per {chartData.id.split("-")[0]}
-        </Typography>
-        <Typography>{time}</Typography>
+      <Box sx={{ padding: 1, position: "relative" }}>
+        <Box sx={{ position: "absolute", top: 0, left: 0, padding: 1 }}>
+          <Typography variant="h6">
+            {value} {chartData.id.split("-")[1]} per{" "}
+            {chartData.id.split("-")[0]}
+          </Typography>
+          <Typography>{time}</Typography>
+        </Box>
         <Box sx={{ height: { xs: 200, md: 250 } }}>
           <ResponsiveLine
             data={[chartData]}
-            margin={{ top: 0, right: 50, bottom: 30, left: 0 }}
+            margin={{ top: 0, right: 25, bottom: 30, left: 0 }}
             theme={nivoTheme}
             onMouseMove={(point, event) => {
               setTime(point.data.xFormatted)
@@ -109,8 +112,8 @@ export default function MyResponsiveLine({
             }}
             onMouseLeave={resetValues}
             colors={theme.palette.primary.main}
-            xScale={{ format: "%Y-%m-%dT%H:%M:%S", type: "time" }}
-            yScale={{ type: "linear", min: 0, max: "auto" }}
+            xScale={{ format: "%Y-%m-%dT%H:%M:%S%Z", type: "time" }}
+            yScale={{ type: "linear", min: 0, max: max * 1.75 }}
             yFormat=" >-.3f"
             xFormat="time:%A, %B %d - %X"
             areaBaselineValue={0}
@@ -134,8 +137,8 @@ export default function MyResponsiveLine({
               legend: "",
             }}
             axisLeft={null}
-            enableGridX={true}
-            enableGridY={true}
+            enableGridX={false}
+            enableGridY={false}
             enablePoints={false}
             enableArea={true}
             areaOpacity={0.5}

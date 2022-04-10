@@ -35,10 +35,10 @@ def pool():
         userpools = user.keys()
         userlp = get_user_lp(current_user().address)
 
-        print('================User===============\n', user)
-        print('==============Exchange=============\n', exchange)
-        print('=============User Stake============\n', userstake)
-        print('===============User LP=============\n', userlp)
+        print("================User===============\n", user)
+        print("==============Exchange=============\n", exchange)
+        print("=============User Stake============\n", userstake)
+        print("===============User LP=============\n", userlp)
 
         if ret_format == "dealership":
             data = {}
@@ -94,7 +94,7 @@ def pool():
                     "coin1per2": f"{coin1per2:.4f}",
                     "coin2per1": f"{coin2per1:.4f}",
                     "userlp": f"{userlp[pool]}",
-                    "totallp": f"{exchange[pool]['LP_minted']}"
+                    "totallp": f"{exchange[pool]['LP_minted']}",
                 }
 
                 # TODO: Add lp coin amount for user, and total pool lp in data returned
