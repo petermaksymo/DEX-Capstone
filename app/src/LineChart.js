@@ -93,7 +93,7 @@ export default function MyResponsiveLine({ chartData, coin1, coin2 }) {
           </Typography>
         </Box>
       </Box>
-      <Box sx={{ padding: 1, position: "relative" }}>
+      <Box sx={{position: "relative" }}>
         <Box sx={{ position: "absolute", top: 0, left: 0, padding: 1 }}>
           <Typography variant="h6">
             {value} {chartData.id.split("-")[1]} per{" "}
@@ -104,20 +104,20 @@ export default function MyResponsiveLine({ chartData, coin1, coin2 }) {
         <Box sx={{ height: { xs: 200, md: 250 } }}>
           <ResponsiveLine
             data={[chartData]}
-            margin={{ top: 0, right: 25, bottom: 30, left: 0 }}
+            margin={{ top: 0, right: 25, bottom: 30, left: 8 }}
             theme={nivoTheme}
             onMouseMove={(point, event) => {
               setTime(point.data.xFormatted)
               setValue(point.data.yFormatted)
             }}
             onMouseLeave={resetValues}
-            colors={theme.palette.primary.main}
+            colors={"#A4133C"}
             xScale={{ format: "%Y-%m-%dT%H:%M:%S%Z", type: "time" }}
             yScale={{ type: "linear", min: 0, max: max * 1.75 }}
             yFormat=" >-.3f"
             xFormat="time:%A, %B %d - %X"
             areaBaselineValue={0}
-            curve="catmullRom"
+            curve="linear"
             lineWidth={3}
             axisTop={null}
             axisBottom={{

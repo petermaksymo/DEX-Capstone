@@ -1,4 +1,4 @@
-export async function getGraphData() {
+export async function getGraphData(interval=180) {
   const exchanges = [
     { coin1: "coin_a", coin2: "coin_b" },
     { coin1: "coin_a", coin2: "coin_c" },
@@ -10,7 +10,7 @@ export async function getGraphData() {
 
   const get_quote_data = async (coin1, coin2) => {
     const res = await fetch(
-      `http://localhost:5000/quotes?coin1=${coin1}&coin2=${coin2}&single=false`
+      `http://localhost:5000/quotes?coin1=${coin1}&coin2=${coin2}&single=false&interval=${interval}`
     )
     return res.json()
   }

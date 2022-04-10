@@ -9,6 +9,7 @@ from api.utils.diem_blockchain import get_events
 @app.route("/quotes", methods=["GET"])
 def quotes():
     if request.method == "GET":
+        time_interval = int(request.args.get("interval", 180)) * 60
         is_single = request.args.get("single", "true") == "true"
         coin1 = request.args.get("coin1", "coin_a")
         coin2 = request.args.get("coin2", "coin_b")
@@ -37,7 +38,7 @@ def quotes():
             return f"{price:.4f}", 200
 
         data = []
-        cutoff = int(time.time() - 3600 * 3)  # 3 hours ago
+        cutoff = int(time.time() - time_interval)  # 3 hours ago
         first = None
         for entry in res:
             parsed = parse_event(entry)

@@ -13,12 +13,16 @@ export default function Specs({ initialData, currencies }) {
   const [data, setData] = React.useState(initialData)
 
   React.useEffect(() => {
+    const params = (new URL(document.location)).searchParams
+    const interval = params.get("interval") || 180
+    const updatetime = params.get("updatetime") || 30
+
     const updateData = async () => {
-      const new_data = await getGraphData()
+      const new_data = await getGraphData(interval)
       setData(new_data)
     }
 
-    setInterval(updateData, 30 * 1000)
+    setInterval(updateData, updatetime * 1000)
   }, [])
 
   return (
@@ -32,7 +36,7 @@ export default function Specs({ initialData, currencies }) {
       </Head>
       <Box
         sx={{
-          bgcolor: "#E37065",
+          bgcolor: "#D9718E",
           color: "background.paper",
           py: { xs: 1, sm: 2, md: 6 },
         }}
@@ -44,18 +48,19 @@ export default function Specs({ initialData, currencies }) {
           />
         </Container>
       </Box>
-      <Box sx={{ bgcolor: "#FFF3F2", height: "100%", width: "100%" }}>
+      <Box sx={{ bgcolor: "#FFF4EF", height: "100%", width: "100%", flex: 1}}>
         <Container
           sx={{
             display: "grid",
             gridTemplateColumns: {
               xs: "1fr",
               sm: "1fr 1fr",
+              xl: "1fr 1fr 1fr",
             },
             gap: 2,
             my: 2,
           }}
-          maxWidth="xl"
+          maxWidth="none"
         >
           {data.map((d, idx) => {
             const coin1 = `coin_${d.id.split(" - ")[0].slice(-1).toLowerCase()}`
