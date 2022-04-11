@@ -1,4 +1,4 @@
-export async function getGraphData(interval=180) {
+export async function getGraphData(interval = 180) {
   const exchanges = [
     { coin1: "coin_a", coin2: "coin_b" },
     { coin1: "coin_a", coin2: "coin_c" },

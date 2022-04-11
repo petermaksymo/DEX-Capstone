@@ -11,9 +11,10 @@ import HeaderText from "../src/headerText"
 
 export default function Specs({ initialData, currencies }) {
   const [data, setData] = React.useState(initialData)
+  const [interval, _setInterval] = React.useState(180)
 
   React.useEffect(() => {
-    const params = (new URL(document.location)).searchParams
+    const params = new URL(document.location).searchParams
     const interval = params.get("interval") || 180
     const updatetime = params.get("updatetime") || 30
 
@@ -22,6 +23,7 @@ export default function Specs({ initialData, currencies }) {
       setData(new_data)
     }
 
+    _setInterval(parseInt(interval))
     setInterval(updateData, updatetime * 1000)
   }, [])
 
@@ -48,7 +50,7 @@ export default function Specs({ initialData, currencies }) {
           />
         </Container>
       </Box>
-      <Box sx={{ bgcolor: "#FFF4EF", height: "100%", width: "100%", flex: 1}}>
+      <Box sx={{ bgcolor: "#FFF4EF", height: "100%", width: "100%", flex: 1 }}>
         <Container
           sx={{
             display: "grid",
@@ -72,6 +74,7 @@ export default function Specs({ initialData, currencies }) {
                 chartData={d}
                 coin1={currencies[coin1]}
                 coin2={currencies[coin2]}
+                interval={interval}
               />
             )
           })}
