@@ -59,3 +59,4 @@ import api.routes.quotes
 import api.routes.transactions
 import api.routes.wallet
 import api.routes.exchange
+import api.routes.bot
