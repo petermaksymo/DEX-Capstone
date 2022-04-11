@@ -2,6 +2,7 @@ import React, { useState } from "react"
 import map from "lodash/map"
 
 import { useTheme } from "@mui/material"
+import Button from "@mui/material/Button"
 import Dialog from "@mui/material/Dialog"
 import DialogTitle from "@mui/material/DialogTitle"
 import DialogActions from "@mui/material/DialogActions"
@@ -42,7 +43,11 @@ const CoinPickerDialog = ({
           </MenuItem>
         ))}
       </MenuList>
-      <DialogActions>close</DialogActions>
+      <DialogActions>
+        <Button color="primary" onClick={onClose}>
+          Close
+        </Button>
+      </DialogActions>
     </Dialog>
   )
 }

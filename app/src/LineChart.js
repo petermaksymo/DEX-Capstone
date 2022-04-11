@@ -8,7 +8,12 @@ import Typography from "@mui/material/Typography"
 import Box from "@mui/material/Box"
 import Coin from "./coin"
 
-export default function MyResponsiveLine({ chartData, coin1, coin2 }) {
+export default function MyResponsiveLine({
+  chartData,
+  coin1,
+  coin2,
+  interval,
+}) {
   const [time, setTime] = React.useState("")
   const [value, setValue] = React.useState("")
   const data = chartData.data
@@ -93,7 +98,7 @@ export default function MyResponsiveLine({ chartData, coin1, coin2 }) {
           </Typography>
         </Box>
       </Box>
-      <Box sx={{position: "relative" }}>
+      <Box sx={{ position: "relative" }}>
         <Box sx={{ position: "absolute", top: 0, left: 0, padding: 1 }}>
           <Typography variant="h6">
             {value} {chartData.id.split("-")[1]} per{" "}
@@ -125,7 +130,7 @@ export default function MyResponsiveLine({ chartData, coin1, coin2 }) {
               tickSize: 5,
               tickPadding: 5,
               tickRotation: 0,
-              tickValues: "every 30 minutes",
+              tickValues: `every ${(interval / 6).toFixed(0)} minutes`,
               format: "%I:%M %p",
               legend: "",
             }}

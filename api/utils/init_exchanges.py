@@ -9,8 +9,8 @@ def create_admin():
     address, private_bytes = get_exchange_account()
 
     new_entry = Account(
-        username="admin",
-        password=guard.hash_password("admin"),
+        username="1f8c16044419c48333715ae2a712e6e0a30722d3c56bc9f581496910af47df8d",
+        password=guard.hash_password("1f8c16044419c48333715ae2a712e6e0a30722d3c56bc9f581496910af47df8d"),
         address=address,
         private_bytes=private_bytes,
     )
