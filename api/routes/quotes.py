@@ -39,7 +39,7 @@ def quotes():
 
         data = []
         cutoff = int(time.time() - time_interval)  # 3 hours ago
-        first = None
+        first = parse_event(res[0])
         for entry in res:
             parsed = parse_event(entry)
             ttime = parsed["x"]

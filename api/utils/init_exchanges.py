@@ -22,9 +22,6 @@ def create_admin():
 def initialize_exchanges():
     private_bytes, address = create_admin()
 
-    print(private_bytes)
-    print(address)
-
     # Mint a bunch of each coin type
     for coin in COINS:
         # Initialize Coin Events
@@ -37,7 +34,14 @@ def initialize_exchanges():
         run_move_script(private_bytes, f"Coin{coin}", f"mint_coin_{coin.lower()}", args)
 
     for exchange in EXCHANGES:
-        print("EXCHANGE: ", exchange)
+        init_values = {
+            "AB": 2,
+            "AC": 4,
+            "AD": 8,
+            "BC": 2,
+            "BD": 4,
+            "CD": 2
+        }
 
         # Initialize Coin Events
         run_move_script(
@@ -56,8 +60,8 @@ def initialize_exchanges():
         # Initialize each exchange
         args = [
             {"type": "uint_64", "value": 30},  # comm_rate
-            {"type": "uint_64", "value": 1_000_000},  # coin1
-            {"type": "uint_64", "value": 5_000_000},  # coin2
+            {"type": "uint_64", "value": 500_000},  # coin1
+            {"type": "uint_64", "value": init_values[exchange] * 500_000},  # coin2
         ]
         run_move_script(
             private_bytes, f"Exchange{exchange}", "initialize_exchange", args

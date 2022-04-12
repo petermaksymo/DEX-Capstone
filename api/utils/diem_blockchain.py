@@ -146,7 +146,7 @@ def get_account_resources(address):
 
 
 def get_account_transactions(address):
-    res = requests.get(f"{TESTNET_URL}/accounts/{address}/transactions")
+    res = requests.get(f"{TESTNET_URL}/accounts/{address}/transactions?limit=1000")
     txns = res.json()
 
     return [
@@ -328,7 +328,8 @@ def get_events(module, field_name):
 
     ev_prefix = "Exchange" if "Exchange" in module else "Coin"
     event_handle_struct = f"{ex_addr}::{ev_prefix}Events::{ev_prefix}Metadata<{ex_addr}::{module}::{module}>"
-    url = f"{TESTNET_URL}/accounts/{ex_addr}/events/{event_handle_struct}/{field_name}"
+    url = f"{TESTNET_URL}/accounts/{ex_addr}/events/{event_handle_struct}/{field_name}?limit=1000"
+    print(url)
 
     res = requests.get(url).json()
     return res

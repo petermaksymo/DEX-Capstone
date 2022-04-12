@@ -1,5 +1,5 @@
 from flask import jsonify, request
-from flask_praetorian import auth_required, current_user
+from random import randint
 
 from api.database import db
 from api.database.models import Account
@@ -14,7 +14,7 @@ def bot():
     if request.method == "GET":
 
         query = db.session.query(Account)
-        query = query.filter_by(username='admin')
+        query = query.filter_by(username='tradingBot')
         result = query.first()
         traded = False
 
@@ -25,7 +25,7 @@ def bot():
             multiplier, rate, path = arb_trader(pool_info, i) 
 
             if multiplier[0] > 1.1:
-                print(path)
+                # print(path)
 
                 amt = 1000
 
@@ -34,14 +34,20 @@ def bot():
                     trade(result, coin_mapping[i], coin_mapping[j], amt)
                     traded = True
             
-            print(multiplier)
-            print(rate)
-            print(path)
+            # print(multiplier)
+            # print(rate)
+            # print(path)
 
-    if traded:
-        return "trade success", 200
-    else:
-        return "No trade/trade failed", 200
+        if traded:
+            return "trade success", 200
+        else:
+            rand_coin1 = randint(0, 3)
+            rand_coin2 = randint(0, 3)
+            while rand_coin1 == rand_coin2:
+                rand_coin2 = randint(0, 3)
+
+            trade(result, coin_mapping[rand_coin1], coin_mapping[rand_coin2], randint(20_000, 50_000))
+            return "Made chaos", 200
 
 def trade(account, from_coin, to_coin, amt):
 

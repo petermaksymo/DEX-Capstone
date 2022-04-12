@@ -1,9 +1,11 @@
 import os
 from flask import json, jsonify
 
-from api import create_app
+from api import create_app, guard
 from api.database import db
+from api.database.models import Account
 from api.database.models import Coin
+from api.utils.diem_blockchain import create_account
 from api.utils.init_exchanges import initialize_exchanges
 
 ENVIRONMENT = os.getenv("ENVIRONMENT", "development")
@@ -16,9 +18,8 @@ def index():
     return jsonify(status="API is Up!")
 
 
-# A Sketchy way to reset the db data
-@app.route("/db_reset", methods=["GET"])
-def reset():
+@app.route("/initialize", methods=["GET"])
+def initialize():
     if ENVIRONMENT != "development":
         return "Unauthorized", 401
 
@@ -43,12 +44,31 @@ def reset():
         db.session.add(new_coin)
         db.session.commit()
 
-    return "Reset Complete", 200
+    # Initialize the exchange pools and events
+    initialize_exchanges()
 
+    # Create accounts for the bot and for us
+    private_bytes, address = create_account(1_000_000_000)
+    new_entry = Account(
+        username='tradingBot',
+        password=guard.hash_password('tradingBot'),
+        address=address,
+        private_bytes=private_bytes,
+    )
+    db.session.add(new_entry)
+    db.session.commit()
 
-@app.route("/initialize", methods=["GET"])
-def initialize():
-    return initialize_exchanges()
+    private_bytes, address = create_account(1_000_000_000)
+    new_entry = Account(
+        username='ihateece444',
+        password=guard.hash_password('ihateece444'),
+        address=address,
+        private_bytes=private_bytes,
+    )
+    db.session.add(new_entry)
+    db.session.commit()
+
+    return "Success!", 200
 
 
 # Import routes/endpoints

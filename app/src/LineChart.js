@@ -109,7 +109,7 @@ export default function MyResponsiveLine({
         <Box sx={{ height: { xs: 200, md: 250 } }}>
           <ResponsiveLine
             data={[chartData]}
-            margin={{ top: 0, right: 25, bottom: 30, left: 8 }}
+            margin={{ top: 8, right: 36, bottom: 28, left: 8 }}
             theme={nivoTheme}
             onMouseMove={(point, event) => {
               setTime(point.data.xFormatted)
