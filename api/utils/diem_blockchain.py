@@ -329,7 +329,7 @@ def get_events(module, field_name):
     ev_prefix = "Exchange" if "Exchange" in module else "Coin"
     event_handle_struct = f"{ex_addr}::{ev_prefix}Events::{ev_prefix}Metadata<{ex_addr}::{module}::{module}>"
 
-    data = cache.get(module+field_name)
+    data = cache.get(event_handle_struct)
     if data is None:
         data = []
 
@@ -339,11 +339,24 @@ def get_events(module, field_name):
         url = f"{TESTNET_URL}/accounts/{ex_addr}/events/{event_handle_struct}/{field_name}?start={start}&limit=100"
 
         res = requests.get(url).json()
+
         if len(res) == 1:
-            # No new data since last search
-            return data
+            if len(data) == 0:
+                data = res
+            else:
+                # No new data since last search
+                return data
 
         all_fetched = len(res) < 100
         data += res[1:]
 
+    # purge data older than 3 hours
+    cutoff = int(time.time() - 3*60*60)
+    for d in data:
+        if len(data) > 1 and int(d['data']['timestamp']) < cutoff:
+            data.pop(0)
+        else:
+            break
+
+    cache.set(event_handle_struct, data)
     return data

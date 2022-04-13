@@ -80,7 +80,7 @@ export default function TransactionCard({ data }) {
                       <Typography
                         key={`transaction-${row}-${idx}`}
                         className="grid-item"
-                        sx={{ p: 1 }}
+                        sx={{ p: 1, whiteSpace: "pre-line" }}
                       >
                         {col}
                       </Typography>
@@ -134,29 +134,6 @@ export default function TransactionCard({ data }) {
           </Box>
         </Collapse>
       </Box>
-      <Collapse in={expanded}>
-        <Box
-          sx={{
-            width: "100%",
-            display: "grid",
-            gridTemplateColumns: `repeat(${displayData.headers.length}, 1fr)`,
-          }}
-        >
-          {map(
-            takeRight(displayData.values, displayData.values.length - 3),
-            (d, row) =>
-              map(d, (item, idx) => (
-                <Typography
-                  key={`transaction-expanded-${row}-${idx}`}
-                  className="grid-item"
-                  sx={{ p: 1 }}
-                >
-                  {item}
-                </Typography>
-              ))
-          )}
-        </Box>
-      </Collapse>
       <Button
         sx={{
           bgcolor: `#4E184C !important`,

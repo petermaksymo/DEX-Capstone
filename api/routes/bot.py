@@ -18,21 +18,21 @@ def bot():
         result = query.first()
         traded = False
 
-        # for i in range(4):
-        #
-        #     pool_info = get_exchange_pools()
-        #
-        #     multiplier, rate, path = arb_trader(pool_info, i)
-        #
-        #     if multiplier[0] > 1.1:
-        #         # print(path)
-        #
-        #         amt = 1000
-        #
-        #         for i, j in zip(path[0][:-1], path[0][1:]):
-        #             amt *= rate[i][j]
-        #             trade(result, coin_mapping[i], coin_mapping[j], amt)
-        #             traded = True
+        for i in range(4):
+
+            pool_info = get_exchange_pools()
+
+            multiplier, rate, path = arb_trader(pool_info, i)
+
+            if multiplier[0] > 1.1:
+                # print(path)
+
+                amt = 1000
+
+                for i, j in zip(path[0][:-1], path[0][1:]):
+                    amt *= rate[i][j]
+                    trade(result, coin_mapping[i], coin_mapping[j], amt)
+                    traded = True
             
             # print(multiplier)
             # print(rate)

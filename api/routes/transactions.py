@@ -27,7 +27,7 @@ def transactions():
                 continue
             date = datetime.datetime.fromtimestamp(
                 int(events[0]["data"]["timestamp"])
-            ).strftime("%b %d, %Y")
+            ).strftime("%b %d, %Y - %I:%M %p")
 
             if "MintCoinEvent" in events[0]["type"]:
                 data = events[0]["data"]
@@ -44,7 +44,7 @@ def transactions():
                         date,
                         f"Mint {coin}",
                         "-",
-                        f"{amount} {coin}",
+                        f"+ {amount} {coin}",
                         t.get("hash"),
                     ],
                 )
@@ -67,8 +67,8 @@ def transactions():
                     [
                         date,
                         f"Exchange {sent['coin']} for {received['coin']}",
-                        f"{sent['amount']} {sent['coin']}",
-                        f"{received['amount']} {received['coin']}",
+                        f"- {sent['amount']} {sent['coin']}",
+                        f"+ {received['amount']} {received['coin']}",
                         t.get("hash"),
                     ],
                 )
@@ -85,8 +85,8 @@ def transactions():
                     [
                         date,
                         f"Add Liqudity to {exchange}",
-                        f"{data['a_amount']} {coin1}, \n{data['b_amount']} {coin2}",
-                        f"{data['lp_amount']} LPCoin",
+                        f"- {data['a_amount']} {coin1}, \n- {data['b_amount']} {coin2}",
+                        f"+ {data['lp_amount']} LPCoin",
                         t.get("hash"),
                     ],
                 )
@@ -103,8 +103,8 @@ def transactions():
                     [
                         date,
                         f"Withdraw Liqudity from {exchange}",
-                        f"{data['lp_amount']} LPCoin",
-                        f"{data['a_amount']} {coin1}, \n{data['b_amount']} {coin2}",
+                        f"- {data['lp_amount']} LPCoin",
+                        f"+ {data['a_amount']} {coin1}, \n+ {data['b_amount']} {coin2}",
                         t.get("hash"),
                     ],
                 )

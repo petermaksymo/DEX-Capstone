@@ -73,7 +73,7 @@ export default function LiquidityAddWithdrawCard({
       const total_lp = parseInt(pool.totallp)
       const user_lp = parseInt(pool.userlp)
 
-      const withdraw_amt = (value / 100.0) * user_lp
+      const withdraw_amt = Math.floor((value / 100.0) * user_lp)
       const new_lp = user_lp - withdraw_amt
 
       setNetWorthAdded(

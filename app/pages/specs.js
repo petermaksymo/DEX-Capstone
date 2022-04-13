@@ -24,7 +24,9 @@ export default function Specs({ initialData, currencies }) {
     }
 
     _setInterval(parseInt(interval))
-    setInterval(updateData, updatetime * 1000)
+    const intervalID = setInterval(updateData, updatetime * 1000)
+
+    return () => clearInterval(intervalID)
   }, [])
 
   return (
