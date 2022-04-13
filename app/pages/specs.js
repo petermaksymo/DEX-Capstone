@@ -16,7 +16,7 @@ export default function Specs({ initialData, currencies }) {
   React.useEffect(() => {
     const params = new URL(document.location).searchParams
     const interval = params.get("interval") || 180
-    const updatetime = params.get("updatetime") || 30
+    const updatetime = params.get("updatetime") || 10
 
     const updateData = async () => {
       const new_data = await getGraphData(interval)

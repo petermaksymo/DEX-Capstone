@@ -44,8 +44,13 @@ export default function Index() {
             user will get a proof of liquidity (LP) token. They can then later
             trade in their LP tokens to gain back their proportion of of the
             liquidity pool.
+            <br />
+            Our DEX uses a Constant product Market Maker (CMM) pricing
+            algorithm. This means that the price of one token with respect to
+            the other is derived from the relative volume of tokens in the
+            liquidity pool.
           </Typography>
-          <Image src={PoolDiagram} alt="Diagram describing swap pool"/>
+          <Image src={PoolDiagram} alt="Diagram describing swap pool" />
 
           <Divider sx={{ my: 2 }} />
           <Typography variant="h4" component="h1" gutterBottom>
@@ -92,7 +97,7 @@ export default function Index() {
           <Typography variant="h5" component="h1" gutterBottom>
             User Token Flow Diagram
           </Typography>
-          <Image src={PoolDiagram} alt="Diagram describing swap pool"/>
+          <Image src={PoolDiagram} alt="Diagram describing swap pool" />
           <Typography variant="h5" component="h1" gutterBottom>
             Requirements
           </Typography>
@@ -166,7 +171,7 @@ export default function Index() {
           <Typography variant="h5" component="h1" gutterBottom>
             System Context Diagram
           </Typography>
-          <Image src={SystemDiagram} alt="Diagram describing system"/>
+          <Image src={SystemDiagram} alt="Diagram describing system" />
           <Typography variant="h5" component="h1" gutterBottom>
             Design Challenges
           </Typography>
@@ -235,8 +240,8 @@ export default function Index() {
               <li>
                 <strong>Integrate with wallet providers:</strong> Wallet
                 providers do not yet support Diem and the Diem wallet did not
-                have resources for the team to inte- grate it into our project
-                in time.
+                have resources for the team to integrate it into our project in
+                time.
               </li>
               <li>
                 <strong>Utilize the First Party Diem Framework</strong> for

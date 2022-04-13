@@ -148,14 +148,14 @@ export default function Swap({ currencies }) {
             width: "100%",
           }}
         >
-          <Box sx={{ flex: 1, display: { xs: 'none', sm: 'flex'} }} />
+          <Box sx={{ flex: 1, display: { xs: "none", sm: "flex" } }} />
           <Box
             sx={{
               width: 71,
               height: 71,
               background: theme.palette.background.paper,
               borderRadius: "50%",
-              display: {xs: 'none', sm: "flex" },
+              display: { xs: "none", sm: "flex" },
               cursor: "pointer",
             }}
             onClick={swapCoins}
@@ -167,8 +167,15 @@ export default function Swap({ currencies }) {
               style={{ margin: "auto" }}
             />
           </Box>
-          <Box sx={{ flex: 1, margin: "auto", display: "flex", justifyContent: "space-around" }}>
-            <Box sx={{ flex: 1, display: { xs: 'none', sm: 'flex'} }} />
+          <Box
+            sx={{
+              flex: 1,
+              margin: "auto",
+              display: "flex",
+              justifyContent: "space-around",
+            }}
+          >
+            <Box sx={{ flex: 1, display: { xs: "none", sm: "flex" } }} />
             <Button
               variant="contained"
               color="inherit"

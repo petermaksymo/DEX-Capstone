@@ -1,5 +1,5 @@
-const withPWA = require('next-pwa')
-const runtimeCaching = require('next-pwa/cache')
+const withPWA = require("next-pwa")
+const runtimeCaching = require("next-pwa/cache")
 
 module.exports = withPWA({
   webpack5: true,
@@ -12,7 +12,7 @@ module.exports = withPWA({
     return config
   },
   pwa: {
-    dest: 'public',
+    dest: "public",
     runtimeCaching,
   },
 })
