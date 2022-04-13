@@ -8,17 +8,35 @@ import Typography from "@mui/material/Typography"
 import Box from "@mui/material/Box"
 import Coin from "./coin"
 
+const FACTORS = [1, 2, 3, 4, 5, 6, 10, 12, 15, 20, 30, 60]
+
 export default function MyResponsiveLine({
   chartData,
   coin1,
   coin2,
-  interval,
+  id,
 }) {
   const [time, setTime] = React.useState("")
   const [value, setValue] = React.useState("")
+  const [split, setSplit] = React.useState(30)
   const data = chartData.data
 
   React.useEffect(() => resetValues(), [data])
+
+  React.useEffect(() => {
+    const width = document.getElementById(id)?.offsetWidth || 300
+    const diff_min = moment(data[data.length-1].x).diff(data[0].x, 'minutes')
+
+    let new_split = 1
+    let i = 0
+    while(i < FACTORS.length-1) {
+      if (diff_min / (width/80) > FACTORS[i])
+        new_split = FACTORS[i+1]
+      i += 1
+    }
+
+    setSplit(new_split)
+  }, [data])
 
   const resetValues = () => {
     const mostRecentPoint = data[data.length - 1]
@@ -98,7 +116,7 @@ export default function MyResponsiveLine({
           </Typography>
         </Box>
       </Box>
-      <Box sx={{ position: "relative" }}>
+      <Box id={id} sx={{ position: "relative" }}>
         <Box sx={{ position: "absolute", top: 0, left: 0, padding: 1 }}>
           <Typography variant="h6">
             {value} {chartData.id.split("-")[1]} per{" "}
@@ -106,7 +124,7 @@ export default function MyResponsiveLine({
           </Typography>
           <Typography>{time}</Typography>
         </Box>
-        <Box sx={{ height: { xs: 200, md: 250 } }}>
+        <Box sx={{ height: { xs: 200, md: 250, lg:300 } }}>
           <ResponsiveLine
             data={[chartData]}
             margin={{ top: 8, right: 36, bottom: 28, left: 8 }}
@@ -130,7 +148,7 @@ export default function MyResponsiveLine({
               tickSize: 5,
               tickPadding: 5,
               tickRotation: 0,
-              tickValues: `every ${(interval / 6).toFixed(0)} minutes`,
+              tickValues: `every ${split} minutes`,
               format: "%I:%M %p",
               legend: "",
             }}

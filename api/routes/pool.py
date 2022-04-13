@@ -173,9 +173,9 @@ def pool():
                 usd_coin1 = get_usd_rate(coin1_id) * coin1_in_pool
                 usd_coin2 = get_usd_rate(coin2_id) * coin2_in_pool
 
-                name = f"{coin1_name} - {coin2_name}"
-                amount_1 = f"{coin1_in_pool} {coin1_name}"
-                amount_2 = f"{coin2_in_pool} {coin2_name}"
+                name = f"{coin1_name} - {coin2_name}".replace("Coin D", "USD")
+                amount_1 = f"{coin1_in_pool} {coin1_name}".replace("Coin D", "USD")
+                amount_2 = f"{coin2_in_pool} {coin2_name}".replace("Coin D", "USD")
                 perc_pool = f"{userstake.get(pool, -1):.2f}%"
                 worth = f"${(usd_coin1 + usd_coin2):.2f}"
 

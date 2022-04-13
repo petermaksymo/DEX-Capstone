@@ -72,6 +72,7 @@ export default function Specs({ initialData, currencies }) {
 
             return (
               <LineChart
+                id={`swap-chart-${idx}`}
                 key={idx}
                 chartData={d}
                 coin1={currencies[coin1]}
