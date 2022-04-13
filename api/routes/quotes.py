@@ -2,6 +2,7 @@ from flask import jsonify, request
 from datetime import datetime, timezone
 import time
 
+from api import cache
 from api.app import app
 from api.utils.diem_blockchain import get_events
 
@@ -10,7 +11,6 @@ from api.utils.diem_blockchain import get_events
 def quotes():
     if request.method == "GET":
         time_interval = int(request.args.get("interval", 180)) * 60
-        is_single = request.args.get("single", "true") == "true"
         coin1 = request.args.get("coin1", "coin_a")
         coin2 = request.args.get("coin2", "coin_b")
         flip = coin1 > coin2
@@ -20,6 +20,12 @@ def quotes():
             if flip
             else f"Exchange{coin1[-1].upper()}{coin2[-1].upper()}"
         )
+
+        return jsonify(get_data_for_pair(time_interval, module, flip)), 200
+
+
+@cache.memoize(timeout=5)
+def get_data_for_pair(time_interval, module, flip):
         res = get_events(module, "exchange_price_change_events")
 
         if len(res) == 0:
@@ -32,10 +38,6 @@ def quotes():
             if flip:
                 price = 1 / price
             return {"x": int(data["timestamp"]), "y": price}
-
-        if is_single:
-            price = parse_event(res[-1])["y"]
-            return f"{price:.4f}", 200
 
         data = []
         cutoff = int(time.time() - time_interval)  # 3 hours ago
@@ -65,4 +67,4 @@ def quotes():
             }
         )
 
-        return jsonify(data), 200
+        return data

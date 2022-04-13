@@ -12,6 +12,12 @@ class Config(object):
     SQLALCHEMY_DATABASE_URI = "sqlite:///database/dev.db"
     SQLALCHEMY_TRACK_MODIFICATIONS = True
 
+    CACHE_TYPE = 'FileSystemCache'
+    CACHE_DIR = './database/cache'
+    CACHE_THRESHOLD = 250
+    CACHE_DEFAULT_TIMEOUT = 300
+    CACHE_IGNORE_ERRORS = True
+
 
 class ProductionConfig(Config):
     """Base Configuration"""

@@ -8,6 +8,7 @@ import requests
 import re
 import os
 
+from api import cache
 from api.constants import COINS, EXCHANGES
 
 TESTNET_URL: str = "http://0.0.0.0:8080"  # "https://testnet.diem.com/v1"
@@ -325,11 +326,24 @@ def get_events(module, field_name):
     :return: response from diem
     """
     ex_addr = f"0x{get_exchange_address()}"
-
     ev_prefix = "Exchange" if "Exchange" in module else "Coin"
     event_handle_struct = f"{ex_addr}::{ev_prefix}Events::{ev_prefix}Metadata<{ex_addr}::{module}::{module}>"
-    url = f"{TESTNET_URL}/accounts/{ex_addr}/events/{event_handle_struct}/{field_name}?limit=1000"
-    print(url)
 
-    res = requests.get(url).json()
-    return res
+    data = cache.get(module+field_name)
+    if data is None:
+        data = []
+
+    all_fetched = False
+    while not all_fetched:
+        start = data[-1]['sequence_number'] if len(data) > 0 else 0
+        url = f"{TESTNET_URL}/accounts/{ex_addr}/events/{event_handle_struct}/{field_name}?start={start}&limit=100"
+
+        res = requests.get(url).json()
+        if len(res) == 1:
+            # No new data since last search
+            return data
+
+        all_fetched = len(res) < 100
+        data += res[1:]
+
+    return data

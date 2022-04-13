@@ -18,7 +18,7 @@ export default function MyResponsiveLine({
   const [value, setValue] = React.useState("")
   const data = chartData.data
 
-  React.useEffect(() => resetValues(), [])
+  React.useEffect(() => resetValues(), [data])
 
   const resetValues = () => {
     const mostRecentPoint = data[data.length - 1]

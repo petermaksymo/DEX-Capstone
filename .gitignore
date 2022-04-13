@@ -8,6 +8,7 @@
 
 # DB data
 /api/database/dev.db
+/api/database/cache/
 
 # IDE files
 .idea/

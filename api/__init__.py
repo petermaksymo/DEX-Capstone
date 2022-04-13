@@ -2,6 +2,7 @@ import os
 from flask import Flask
 from flask_praetorian import Praetorian
 from flask_cors import CORS
+from flask_caching import Cache
 
 from api.database import db
 
@@ -12,7 +13,7 @@ ENVIRONMENT = os.getenv("ENVIRONMENT", "development")
 
 
 guard = Praetorian()
-
+cache = Cache()
 
 def create_app(config_name):
     app = Flask(__name__)
@@ -23,12 +24,14 @@ def create_app(config_name):
     app.app_context().push
 
     db.init_app(app)
+    cache.init_app(app)
 
     CORS(app, origins=["*", "http://localhost:3000"])
 
     guard.init_app(app, Account)
 
     with app.app_context():
+        cache.clear()
         db.create_all()
 
         return app
