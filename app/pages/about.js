@@ -45,7 +45,7 @@ export default function Index() {
             trade in their LP tokens to gain back their proportion of of the
             liquidity pool.
           </Typography>
-          <Image src={PoolDiagram} />
+          <Image src={PoolDiagram} alt="Diagram describing swap pool"/>
 
           <Divider sx={{ my: 2 }} />
           <Typography variant="h4" component="h1" gutterBottom>
@@ -92,7 +92,7 @@ export default function Index() {
           <Typography variant="h5" component="h1" gutterBottom>
             User Token Flow Diagram
           </Typography>
-          <Image src={PoolDiagram} />
+          <Image src={PoolDiagram} alt="Diagram describing swap pool"/>
           <Typography variant="h5" component="h1" gutterBottom>
             Requirements
           </Typography>
@@ -166,7 +166,7 @@ export default function Index() {
           <Typography variant="h5" component="h1" gutterBottom>
             System Context Diagram
           </Typography>
-          <Image src={SystemDiagram} />
+          <Image src={SystemDiagram} alt="Diagram describing system"/>
           <Typography variant="h5" component="h1" gutterBottom>
             Design Challenges
           </Typography>

@@ -126,94 +126,79 @@ export default function Swap({ currencies }) {
       : _setCoin1Value(res.equivalent)
   }
 
-  const MiddleBar = () => {
-    const width = useWidth()
-    const onMobile = ["xs", "sm"].includes(width)
-
-    const SwapButton = () => (
-      <Button
-        variant="contained"
-        color="inherit"
-        disableElevation
+  const MiddleBar = (
+    <Box
+      fullWidth
+      sx={{ background: theme.palette.background.paper, height: 10 }}
+    >
+      <Container
+        maxWidth="xl"
         sx={{
-          borderRadius: "25px",
-          my: "10px",
-          minWidth: { xs: 165, md: 270 },
-          py: 1,
-          textAlign: "center",
-          cursor: "pointer",
-          bgcolor: "background.paper",
+          position: "relative",
         }}
-        onClick={() => setConfirmDialogOpen(true)}
-      >
-        <Typography
-          sx={{
-            color: "primary.main",
-            fontSize: 24,
-            fontWeight: "bold",
-          }}
-        >
-          Swap
-        </Typography>
-      </Button>
-    )
-
-    return (
-      <Box
-        fullWidth
-        sx={{ background: theme.palette.background.paper, height: 10 }}
       >
         <Container
           maxWidth="xl"
           sx={{
-            position: "relative",
+            position: "absolute",
+            top: -30,
+            left: 0,
+            display: "flex",
+            justifyContent: { xs: "space-around", md: "space-between" },
+            width: "100%",
           }}
         >
-          <Container
-            maxWidth="xl"
+          <Box sx={{ flex: 1, display: { xs: 'none', sm: 'flex'} }} />
+          <Box
             sx={{
-              position: "absolute",
-              top: -30,
-              left: 0,
-              display: "flex",
-              justifyContent: { xs: "space-around", md: "space-between" },
-              width: "100%",
+              width: 71,
+              height: 71,
+              background: theme.palette.background.paper,
+              borderRadius: "50%",
+              display: {xs: 'none', sm: "flex" },
+              cursor: "pointer",
             }}
+            onClick={swapCoins}
           >
-            {onMobile ? (
-              <SwapButton />
-            ) : (
-              <>
-                <Box sx={{ flex: 1 }} />
-                <Box
-                  sx={{
-                    width: 71,
-                    height: 71,
-                    background: theme.palette.background.paper,
-                    borderRadius: "50%",
-                    display: "flex",
-                    cursor: "pointer",
-                  }}
-                  onClick={swapCoins}
-                >
-                  <Logo
-                    id="swap-button"
-                    className="swap"
-                    size={71}
-                    style={{ margin: "auto" }}
-                  />
-                </Box>
-                <div style={{ flex: 1, margin: "auto", display: "flex" }}>
-                  <div style={{ flex: 1 }} />
-                  <SwapButton />
-                </div>
-              </>
-            )}
-          </Container>
+            <Logo
+              id="swap-button"
+              className="swap"
+              size={71}
+              style={{ margin: "auto" }}
+            />
+          </Box>
+          <Box sx={{ flex: 1, margin: "auto", display: "flex", justifyContent: "space-around" }}>
+            <Box sx={{ flex: 1, display: { xs: 'none', sm: 'flex'} }} />
+            <Button
+              variant="contained"
+              color="inherit"
+              disableElevation
+              sx={{
+                borderRadius: "25px",
+                my: "10px",
+                minWidth: { xs: 165, md: 270 },
+                py: 1,
+                textAlign: "center",
+                cursor: "pointer",
+                bgcolor: "background.paper",
+              }}
+              onClick={() => setConfirmDialogOpen(true)}
+            >
+              <Typography
+                sx={{
+                  color: "primary.main",
+                  fontSize: 24,
+                  fontWeight: "bold",
+                }}
+              >
+                Swap
+              </Typography>
+            </Button>
+          </Box>
         </Container>
-      </Box>
-    )
-  }
+      </Container>
+    </Box>
+  )
 
   return (
     <main
@@ -310,6 +295,7 @@ export default function Swap({ currencies }) {
                 />
                 <TextField
                   variant="outlined"
+                  type="number"
                   value={coin1Value}
                   onChange={(e) => setCoin1Value(force_decimal(e.target.value))}
                   InputProps={{
@@ -347,7 +333,7 @@ export default function Swap({ currencies }) {
           </Box>
         </Container>
       </Box>
-      <MiddleBar />
+      {MiddleBar}
       <div style={{ background: currencies[coin2].color, flex: 1 }}>
         <Container
           maxWidth="xl"
@@ -407,6 +393,7 @@ export default function Swap({ currencies }) {
               <TextField
                 variant="outlined"
                 value={coin2Value}
+                type="number"
                 onChange={(e) => setCoin2Value(force_decimal(e.target.value))}
                 InputProps={{
                   endAdornment: (

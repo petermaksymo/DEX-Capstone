@@ -10,12 +10,7 @@ import Coin from "./coin"
 
 const FACTORS = [1, 2, 3, 4, 5, 6, 10, 12, 15, 20, 30, 60]
 
-export default function MyResponsiveLine({
-  chartData,
-  coin1,
-  coin2,
-  id,
-}) {
+export default function MyResponsiveLine({ chartData, coin1, coin2, id }) {
   const [time, setTime] = React.useState("")
   const [value, setValue] = React.useState("")
   const [split, setSplit] = React.useState(30)
@@ -25,13 +20,12 @@ export default function MyResponsiveLine({
 
   React.useEffect(() => {
     const width = document.getElementById(id)?.offsetWidth || 300
-    const diff_min = moment(data[data.length-1].x).diff(data[0].x, 'minutes')
+    const diff_min = moment(data[data.length - 1].x).diff(data[0].x, "minutes")
 
     let new_split = 1
     let i = 0
-    while(i < FACTORS.length-1) {
-      if (diff_min / (width/80) > FACTORS[i])
-        new_split = FACTORS[i+1]
+    while (i < FACTORS.length - 1) {
+      if (diff_min / (width / 80) > FACTORS[i]) new_split = FACTORS[i + 1]
       i += 1
     }
 
@@ -124,7 +118,7 @@ export default function MyResponsiveLine({
           </Typography>
           <Typography>{time}</Typography>
         </Box>
-        <Box sx={{ height: { xs: 200, md: 250, lg:300 } }}>
+        <Box sx={{ height: { xs: 200, md: 250, lg: 300 } }}>
           <ResponsiveLine
             data={[chartData]}
             margin={{ top: 8, right: 36, bottom: 28, left: 8 }}
