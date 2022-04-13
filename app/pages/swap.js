@@ -304,6 +304,7 @@ export default function Swap({ currencies }) {
                   variant="outlined"
                   type="number"
                   value={coin1Value}
+                  inputProps={{ min: 0, step: 0.01 }}
                   onChange={(e) => setCoin1Value(force_decimal(e.target.value))}
                   InputProps={{
                     endAdornment: (
@@ -401,6 +402,7 @@ export default function Swap({ currencies }) {
                 variant="outlined"
                 value={coin2Value}
                 type="number"
+                inputProps={{ min: 0, step: 0.01 }}
                 onChange={(e) => setCoin2Value(force_decimal(e.target.value))}
                 InputProps={{
                   endAdornment: (

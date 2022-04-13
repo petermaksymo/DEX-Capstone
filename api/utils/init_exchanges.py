@@ -30,7 +30,7 @@ def initialize_exchanges():
         )
 
         # Mint a lot of coins
-        args = [{"type": "uint_64", "value": 100_000_000}]
+        args = [{"type": "uint_64", "value": 1_000_000_000}]
         run_move_script(private_bytes, f"Coin{coin}", f"mint_coin_{coin.lower()}", args)
 
     for exchange in EXCHANGES:
@@ -60,8 +60,8 @@ def initialize_exchanges():
         # Initialize each exchange
         args = [
             {"type": "uint_64", "value": 30},  # comm_rate
-            {"type": "uint_64", "value": 500_000},  # coin1
-            {"type": "uint_64", "value": init_values[exchange] * 500_000},  # coin2
+            {"type": "uint_64", "value": 50_000_000},  # coin1
+            {"type": "uint_64", "value": init_values[exchange] * 50_000_000},  # coin2
         ]
         run_move_script(
             private_bytes, f"Exchange{exchange}", "initialize_exchange", args

@@ -3,7 +3,7 @@ from flask_praetorian import auth_required, current_user
 import datetime
 
 from api.app import app
-from api.utils.diem_blockchain import get_account_transactions
+from api.utils.diem_blockchain import get_account_transactions, convert_fixed
 
 
 @app.route("/transactions", methods=["GET"])
@@ -31,11 +31,11 @@ def transactions():
 
             if "MintCoinEvent" in events[0]["type"]:
                 data = events[0]["data"]
-                amount = data["amount"]
+                amount = convert_fixed(data["amount"])
                 coin = decode_hex(data["coin"])
 
                 # Ignore 0 coin mints
-                if amount == "0":
+                if amount == "0.00":
                     continue
 
                 values.insert(
@@ -57,10 +57,10 @@ def transactions():
 
                         if data["from_addr"][2:] == current_user().address:
                             sent["coin"] = decode_hex(data["coin"])
-                            sent["amount"] = data["amount"]
+                            sent["amount"] = convert_fixed(data["amount"])
                         else:
                             received["coin"] = decode_hex(data["coin"])
-                            received["amount"] = data["amount"]
+                            received["amount"] = convert_fixed(data["amount"])
 
                 values.insert(
                     0,
@@ -85,8 +85,8 @@ def transactions():
                     [
                         date,
                         f"Add Liqudity to {exchange}",
-                        f"- {data['a_amount']} {coin1}, \n- {data['b_amount']} {coin2}",
-                        f"+ {data['lp_amount']} LPCoin",
+                        f"- {convert_fixed(data['a_amount'])} {coin1}, \n- {convert_fixed(data['b_amount'])} {coin2}",
+                        f"+ {convert_fixed(data['lp_amount'])} LPCoin",
                         t.get("hash"),
                     ],
                 )
@@ -103,8 +103,8 @@ def transactions():
                     [
                         date,
                         f"Withdraw Liqudity from {exchange}",
-                        f"- {data['lp_amount']} LPCoin",
-                        f"+ {data['a_amount']} {coin1}, \n+ {data['b_amount']} {coin2}",
+                        f"- {convert_fixed(data['lp_amount'])} LPCoin",
+                        f"+ {convert_fixed(data['a_amount'])} {coin1}, \n+ {convert_fixed(data['b_amount'])} {coin2}",
                         t.get("hash"),
                     ],
                 )

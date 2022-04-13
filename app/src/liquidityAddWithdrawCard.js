@@ -70,17 +70,17 @@ export default function LiquidityAddWithdrawCard({
 
     const updateStats = async () => {
       const pool = poolData[`pool_${withdrawPool}`].stats
-      const total_lp = parseInt(pool.totallp)
-      const user_lp = parseInt(pool.userlp)
+      const total_lp = parseFloat(pool.totallp)
+      const user_lp = parseFloat(pool.userlp)
 
-      const withdraw_amt = Math.floor((value / 100.0) * user_lp)
+      const withdraw_amt = Math.floor((value / 100.0) * user_lp * 100)/100
       const new_lp = user_lp - withdraw_amt
 
       setNetWorthAdded(
         ((withdraw_amt / total_lp) * parseFloat(pool.pool_size)).toFixed(2)
       )
       setNewShare(((new_lp / total_lp) * 100).toFixed(3))
-      setNewLP(withdraw_amt.toFixed(0))
+      setNewLP(withdraw_amt.toFixed(2))
       setWithdrawValue(withdraw_amt)
     }
     updateStats()
@@ -248,7 +248,7 @@ export default function LiquidityAddWithdrawCard({
                   value={coin1Value}
                   type="number"
                   required
-                  inputProps={{ min: 1 }}
+                  inputProps={{ min: 0, step: 0.01 }}
                   onChange={(e) => setCoin1Value(force_decimal(e.target.value))}
                 />
                 <CoinPickerDialog
@@ -288,7 +288,7 @@ export default function LiquidityAddWithdrawCard({
                   placeholder="0"
                   type="number"
                   required
-                  inputProps={{ min: 1 }}
+                  inputProps={{ min: 0, step: 0.01 }}
                   value={coin2Value}
                   onChange={(e) => setCoin2Value(force_decimal(e.target.value))}
                 />

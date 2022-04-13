@@ -15,7 +15,7 @@ def exchange():
         # Parse request
         from_coin = request.form.get("from")[-1]
         to_coin = request.form.get("to")[-1]
-        amt = request.form.get("amt")
+        amt = int(float(request.form.get("amt"))*100)
 
         # print(from_coin, to_coin, amt)
 
@@ -40,8 +40,6 @@ def exchange():
         ]
 
         res = run_move_script(result.private_bytes, module, func_name, args)
-
-        print(res)
 
         # return result to user
         return jsonify(res)

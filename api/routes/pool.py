@@ -11,6 +11,7 @@ from api.utils.diem_blockchain import (
     get_usd_rate,
     get_price_quote,
     run_move_script,
+    convert_fixed,
 )
 
 
@@ -34,11 +35,6 @@ def pool():
         userstake = get_user_stake(current_user().address)
         userpools = user.keys()
         userlp = get_user_lp(current_user().address)
-
-        print("================User===============\n", user)
-        print("==============Exchange=============\n", exchange)
-        print("=============User Stake============\n", userstake)
-        print("===============User LP=============\n", userlp)
 
         if ret_format == "dealership":
             data = {}
@@ -87,17 +83,15 @@ def pool():
                 }
 
                 poolstats = {
-                    "pool_size": f"{totalvalue:.2f}",
+                    "pool_size": convert_fixed(totalvalue),
                     "share": f"{poolshare:.2f}%",
-                    "coin1Owned": str(coin1_supply),
-                    "coin2Owned": str(coin2_supply),
+                    "coin1Owned": convert_fixed(coin1_supply),
+                    "coin2Owned": convert_fixed(coin2_supply),
                     "coin1per2": f"{coin1per2:.4f}",
                     "coin2per1": f"{coin2per1:.4f}",
-                    "userlp": f"{userlp[pool]}",
-                    "totallp": f"{exchange[pool]['LP_minted']}",
+                    "userlp": convert_fixed(userlp[pool]),
+                    "totallp": convert_fixed(exchange[pool]['LP_minted']),
                 }
-
-                # TODO: Add lp coin amount for user, and total pool lp in data returned
 
                 pooldata = {
                     "coin1": coin1_details,
@@ -106,19 +100,12 @@ def pool():
                 }
                 data[pool] = pooldata
 
-            print(
-                "---------------(DEALERSHIP)This is pool data for user------------------- \n"
-            )
-            print(data)
-            print(
-                "------------------------------------------------------------------------ \n"
-            )
             return jsonify(data)
         elif ret_format == "equivalentamt":
             coin1type = request.args.get("coin1type")
             coin2type = request.args.get("coin2type")
-            coin1added = request.args.get("coin1added")
-            coin2added = request.args.get("coin2added")
+            coin1added = float(request.args.get("coin1added"))*100
+            coin2added = float(request.args.get("coin2added"))*100
             includeCommission = request.args.get("includeCommission") == "true"
             pool = "pool_" + coin1type[-1] + coin2type[-1]
 
@@ -153,10 +140,10 @@ def pool():
 
             return jsonify(
                 {
-                    "equivalent": f"{equivalent:.0f}",
-                    "newlp": f"{newlp:.0f}",
+                    "equivalent": convert_fixed(equivalent),
+                    "newlp": convert_fixed(newlp),
                     "newshare": f"{newshare:.2f}",
-                    "newvalue": f"{newvalue:.2f}",
+                    "newvalue": convert_fixed(newvalue),
                 }
             )
         elif ret_format == "table":
@@ -174,10 +161,10 @@ def pool():
                 usd_coin2 = get_usd_rate(coin2_id) * coin2_in_pool
 
                 name = f"{coin1_name} - {coin2_name}".replace("Coin D", "USD")
-                amount_1 = f"{coin1_in_pool} {coin1_name}".replace("Coin D", "USD")
-                amount_2 = f"{coin2_in_pool} {coin2_name}".replace("Coin D", "USD")
+                amount_1 = f"{convert_fixed(coin1_in_pool)} {coin1_name}".replace("Coin D", "USD")
+                amount_2 = f"{convert_fixed(coin2_in_pool)} {coin2_name}".replace("Coin D", "USD")
                 perc_pool = f"{userstake.get(pool, -1):.2f}%"
-                worth = f"${(usd_coin1 + usd_coin2):.2f}"
+                worth = f"${convert_fixed(usd_coin1 + usd_coin2)}"
 
                 data = [name, amount_1, amount_2, perc_pool, worth]
                 if perc_pool != "-1.00%":
@@ -196,22 +183,13 @@ def pool():
                 "mobile_cols": [0, 3, 4],
             }
 
-            print(
-                "---------------(GARAGE)This is stake data for user------------------- \n"
-            )
-            print(stake_data)
-            print(
-                "--------------------------------------------------------------------- \n"
-            )
             return jsonify(stake_data)
         else:
             return jsonify(exchange)
     elif request.method == "POST":
-        print("IN POOL POST")
-
         action = request.form.get("action")
         coin1 = request.form.get("coin1")
-        amount = request.form.get("amount")
+        amount = int(float(request.form.get("amount"))*100)
         coin2 = request.form.get("coin2")
 
         if action not in ["add", "remove"]:

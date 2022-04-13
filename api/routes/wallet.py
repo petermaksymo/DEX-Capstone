@@ -9,6 +9,7 @@ from api.utils.diem_blockchain import (
     get_exchange_pools,
     get_exchange_rate,
     get_usd_rate,
+    convert_fixed
 )
 
 
@@ -42,10 +43,10 @@ def wallet():
             for coin in tokens:
                 coin_data = {}
 
-                coin_data["balance"] = tokens[coin]
+                coin_data["balance"] = convert_fixed(tokens[coin])
                 coin_data[
                     "usd_amt"
-                ] = f"{(get_usd_rate(coin) * float(coin_data['balance'])):.2f}"
+                ] = convert_fixed(get_usd_rate(coin) * float(tokens[coin]))
                 for other_coins in tokens:
                     if coin != other_coins:
                         rate = rates[f"{coin[-1]}{other_coins[-1]}"]
@@ -65,15 +66,15 @@ def wallet():
                 in_pool = total_in_pool.get(coin, "0")
                 amount = str(int(available) + int(in_pool))
                 perc_in_pool = f"{(float(in_pool) / float(amount) * 100):.2f}%"
-                worth = f"${(get_usd_rate(coin) * int(amount)):.2f}"
+                worth = get_usd_rate(coin) * int(amount)
 
                 data = [
                     name,
-                    amount,
-                    available,
-                    in_pool,
+                    convert_fixed(amount),
+                    convert_fixed(available),
+                    convert_fixed(in_pool),
                     perc_in_pool,
-                    worth,
+                    f"${convert_fixed(worth)}",
                 ]
                 values.append(data)
 

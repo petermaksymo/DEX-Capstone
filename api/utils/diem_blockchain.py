@@ -43,7 +43,7 @@ def get_exchange_address():
     return get_exchange_account()[0]
 
 
-def create_account(coin_amounts=10_000):
+def create_account(coin_amounts=1_000_000):
     """
     creates an account on the testnet
     :return:
@@ -360,3 +360,7 @@ def get_events(module, field_name):
 
     cache.set(event_handle_struct, data)
     return data
+
+
+def convert_fixed(value):
+    return f"{(float(value)/100.0):.2f}"
