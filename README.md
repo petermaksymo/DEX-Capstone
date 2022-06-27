@@ -1,89 +1,69 @@
-# ECE496 DEX
+# LSSwap
 
-## Install
+A Decentralized Exchange Prototype for the Diem Blockchain.
 
-Install the move cli with optional debug flag - Note: as of Jan 27 the move cli has been moved to a separate repo:
-```
-cargo install --debug --git https://github.com/diem/move#6ab59227 move-cli
-```
-CD into the `dex_modules` directory which contains our Move modules/scripts
+Website: [lsswap.maksymowsky.com](https://lsswap.maksymowsky.com)
 
-Run our `clean_and_publish.sh` script to publish the DEX modules:
-```
-./clean_and_publish.sh
-```
-You can then run scripts with:
-```
-./better_move.sh run scripts/<script_name>
-```
+# Table of Contents
 
-## Testing:
-Testing can be done with:
-```
-move sandbox exp-test
-```
+1. [Project Purpose](#project-purpose)
+2. [Version](#version)
+3. [Tech Stack](#tech-stack)
+4. [Development Environment](#development-environment)
+5. [License](#license)
+6. [Contributing](#contributing)
+7. [Resources](#resources)
 
-To update the baseline of test cases:
-```
-UPDATE_BASELINE=1 move sandbox exp-test
-```
+# Project Purpose
+This is a final-year undergraduate capstone project at the University of Toronto. 
+The goal was to teach our team about developing for the blockchain as well as showcase 
+our learnings through a public demo to teach the wider public about Decentralized Exchanges 
+and Blockchain. Due to limited resources, the team is aware of severe shortcomings regarding 
+the security and dependence on a centralized API for this project. Significant changes would
+need to be made to make this a viable DEX. This was strictly intended as a showcase and learning experience.
 
-## Publishing to local test net:
-Modules can be published to local diem test net to run on the blockchain.
+# Version
 
-Run diem local test net with 
-```
-cargo run -p diem-node -- --test
-```
+v1.0.0
 
-Then in a new terminal, run diem client with follow command (replace variable with the ones provided by your local test net instance)
-```
-cargo run -p cli -- -c $CHAIN_ID -m $ROOT_KEY -u $endpoint --waypoint $WAYPOINT
-```
+# Tech Stack
 
-In diem client, enable custom_scripts `dev s` and then compile modules to be published
-```
-dev c <path to src folder> language/move-stdlib/modules language/move-stdlib/nursery
-```
-It should produce results similar to following
-```
->> Compiling program
-    Finished dev [unoptimized + debuginfo] target(s) in 0.58s
-     Running `target/debug/move-build src -o /tmp/77102b2265db0a777f82e839c2bd8d1f -d language/move-stdlib/modules -d language/move-stdlib/nursery`
-Successfully compiled a program at:
-  /tmp/77102b2265db0a777f82e839c2bd8d1f/scripts/main.mv
-  /tmp/77102b2265db0a777f82e839c2bd8d1f/modules/0_CoinA.mv
-```
+### Frontend (app):
+- React.js
+- Next.js
+- Material UI
 
-To publish modules
-```
-dev publish 0000000000000000000000000a550c18 <path to module from the compiled result>
-```
-Note: Module has to be at address 0x1 to be successfully published 
+### Backend (api):
+- Flask
+- SQLAlchemy
 
-To execute script
-```
-dev execute 0000000000000000000000000a550c18 <path to script from the compiled result> [parameters]
-```
-Note: Script execution can only be done with root account on local net as far we can tell. The signer for the root account is automatically passed as the first argument. Other accounts have to be passed as an address. We will need to discuss the end-user workflow once Noah and Peter come back. 
+### Database:
+- sqlite
 
+### Blockchain:
+- Diem
 
-## Creating Parent VASP Account
+# Development Environment
 
-Generate an auth key and address using the client from the python sdk [client](https://github.com/diem/my-first-client/tree/master/python/src).
+See the [Wiki](https://github.com/petermaksymo/DEX-Capstone/wiki).
 
-Using the top half of the authentication_key as the dummy_prefix in create_parent_vasp_account.move.
+# License
 
-Compile the script and then execute it as the TC account, with the address of the account you created (from the client) as the argument.
-```
-dev execute <TC account address> <loaction of compiled code> <address of account>
-```
+[MIT License](http://choosealicense.com/licenses/mit/)
 
-You can inspect it with `query account_state <address>`
+# Contributing
 
+This project is considered "complete" and no upkeep is planned. Feel free to fork the repository and continue on your own. Please contact * [Peter](https://github.com/petermaksymo) if you have any questions. 
 
-## Bringing up the Web App
+# Contributors
 
-1. `cd` into the `app` directory
-2. Run `yarn install`, [yarn installation](https://classic.yarnpkg.com/lang/en/docs/install/#debian-stable)
-3. Run `yarn run dev` and the app should be running on `localhost:3000`
+* [Peter Maksymowsky](https://github.com/petermaksymo)
+* [Alan (Jia Bao) Du](https://github.com/PomeloFruit)
+* [Hankle Liu](https://github.com/HankleLiu2)
+* [Noah Patton](https://github.com/NPatton3467)
+
+# Resources
+[Figma Designs](https://www.figma.com/file/cTVIfCZV0398GEuEGTfgWy/LS-Swap)
+
+[Github Wiki](https://github.com/petermaksymo/DEX-Capstone/wiki)
+
