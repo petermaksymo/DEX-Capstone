@@ -1,0 +1,10 @@
+version: '2.4'
+
+services:
+  api:
+    container_name: api
+    build: ./
+    volumes:
+      - $HOME/.shuffle/networks/localhost/accounts/latest:/shuffle
+    environment:
+      - PYTHONUNBUFFERED=1

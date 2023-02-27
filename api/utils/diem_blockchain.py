@@ -21,7 +21,7 @@ def get_exchange_account():
     client = jsonrpc.Client(TESTNET_URL)
 
     with open(
-        os.path.expanduser("~/.shuffle/networks/localhost/accounts/latest/dev.key"),
+        "/shuffle/dev.key",
         "rb",
     ) as key_file:
         data = key_file.read()
