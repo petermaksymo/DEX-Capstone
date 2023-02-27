@@ -61,7 +61,7 @@ def trade(account, from_coin, to_coin, amt):
 
     args = [
         {"type": "address", "value": account.address},
-        {"type": "uint_64", "value": amt*10},
+        {"type": "uint_64", "value": amt*100},
     ]
 
     res = run_move_script(account.private_bytes, module, func_name, args)

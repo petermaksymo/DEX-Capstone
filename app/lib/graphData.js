@@ -1,4 +1,6 @@
-export async function getGraphData(interval = 180) {
+const API_BASE_URL = process.env.API_BASE_URL
+
+export async function getGraphData(interval = 180, is_server=true) {
   const exchanges = [
     { coin1: "coin_a", coin2: "coin_b" },
     { coin1: "coin_a", coin2: "coin_c" },
@@ -8,9 +10,10 @@ export async function getGraphData(interval = 180) {
     { coin1: "coin_c", coin2: "coin_d" },
   ]
 
+  const base_URL = is_server ? 'http://localhost:5000' : API_BASE_URL
   const get_quote_data = async (coin1, coin2) => {
     const res = await fetch(
-      `http://localhost:5000/quotes?coin1=${coin1}&coin2=${coin2}&single=false&interval=${interval}`
+      `${base_URL}/quotes?coin1=${coin1}&coin2=${coin2}&single=false&interval=${interval}`
     )
     return res.json()
   }

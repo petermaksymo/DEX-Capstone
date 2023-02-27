@@ -23,6 +23,8 @@ import { AuthContext } from "./authContext"
 import Logo from "../src/logo"
 import StyledLink from "../src/Link"
 
+const API_BASE_URL = process.env.API_BASE_URL
+
 const pages = [
   { title: "My Garage", link: "garage" },
   { title: "Swap Meet", link: "swap" },
@@ -62,7 +64,7 @@ const ResponsiveAppBar = () => {
       const formdata = new FormData()
       formdata.append("username", username)
 
-      const account_res = await fetch("http://localhost:5000/account", {
+      const account_res = await fetch(`${API_BASE_URL}/account`, {
         method: "POST",
         body: formdata,
       })

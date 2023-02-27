@@ -1,10 +1,11 @@
-version: '2.4'
+version: '3.3'
 
 services:
   api:
     container_name: api
-    build: ./
+    build: api/
     volumes:
       - $HOME/.shuffle/networks/localhost/accounts/latest:/shuffle
     environment:
       - PYTHONUNBUFFERED=1
+      - APP_BASE_URL=http://localhost:3000

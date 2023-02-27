@@ -35,12 +35,12 @@ def initialize_exchanges():
 
     for exchange in EXCHANGES:
         init_values = {
-            "AB": 2,
-            "AC": 4,
-            "AD": 8,
-            "BC": 2,
-            "BD": 4,
-            "CD": 2
+            "AB": 1.1,
+            "AC": 1.2,
+            "AD": 1.4,
+            "BC": 1.1,
+            "BD": 1.2,
+            "CD": 1.1
         }
 
         # Initialize Coin Events

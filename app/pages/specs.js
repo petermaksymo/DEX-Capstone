@@ -19,7 +19,7 @@ export default function Specs({ initialData, currencies }) {
     const updatetime = params.get("updatetime") || 10
 
     const updateData = async () => {
-      const new_data = await getGraphData(interval)
+      const new_data = await getGraphData(interval, false)
       setData(new_data)
     }
 

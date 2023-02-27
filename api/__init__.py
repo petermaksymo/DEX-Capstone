@@ -10,7 +10,7 @@ import api.database.models
 from api.database.models import Account
 
 ENVIRONMENT = os.getenv("ENVIRONMENT", "development")
-
+APP_BASE_URL = os.getenv("APP_BASE_URL", 'http://localhost:3000')
 
 guard = Praetorian()
 cache = Cache()
@@ -26,7 +26,7 @@ def create_app(config_name):
     db.init_app(app)
     cache.init_app(app)
 
-    CORS(app, origins=["*", "http://localhost:3000"])
+    CORS(app, origins=[APP_BASE_URL])
 
     guard.init_app(app, Account)
 
